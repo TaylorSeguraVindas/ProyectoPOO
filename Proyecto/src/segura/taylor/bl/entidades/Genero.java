@@ -4,10 +4,18 @@ import java.util.Objects;
 
 public class Genero {
     //Variables
+    private String id;
     private String nombre;
     private String descripcion;
 
     //Propiedades
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -24,7 +32,8 @@ public class Genero {
 
     //Constructores
     public Genero(){}
-    public Genero(String nombre, String descripcion) {
+    public Genero(String id, String nombre, String descripcion) {
+        this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
@@ -33,7 +42,8 @@ public class Genero {
     @Override
     public String toString() {
         return "Genero{" +
-                "nombre='" + nombre + '\'' +
+                "id='" + id + '\'' +
+                ", nombre='" + nombre + '\'' +
                 ", descripcion='" + descripcion + '\'' +
                 '}';
     }
@@ -43,13 +53,14 @@ public class Genero {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Genero genero = (Genero) o;
-        return Objects.equals(nombre, genero.nombre) &&
+        return Objects.equals(id, genero.id) &&
+                Objects.equals(nombre, genero.nombre) &&
                 Objects.equals(descripcion, genero.descripcion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nombre, descripcion);
+        return Objects.hash(id, nombre, descripcion);
     }
 
     public boolean modificar(String pNombre, String pDesc){

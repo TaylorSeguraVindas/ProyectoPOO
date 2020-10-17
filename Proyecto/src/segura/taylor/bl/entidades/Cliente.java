@@ -7,6 +7,7 @@ public class Cliente extends Usuario{
     private String fechaNacimiento;
     private int edad;
     private String idPais;
+    private Biblioteca biblioteca;
 
     //Propiedades
     public String getFechaNacimiento() {
@@ -30,16 +31,24 @@ public class Cliente extends Usuario{
         this.idPais = idPais;
     }
 
+    public Biblioteca getBiblioteca() {
+        return biblioteca;
+    }
+    public void setBiblioteca(Biblioteca biblioteca) {
+        this.biblioteca = biblioteca;
+    }
+
     //Constructores
     public Cliente(){
         this.tipoUsuario = TipoUsuario.Normal;
     }
-    public Cliente(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String idPais) {
+    public Cliente(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String idPais, Biblioteca biblioteca) {
         super(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
         this.tipoUsuario = TipoUsuario.Normal;
         this.fechaNacimiento = fechaNacimiento;
         this.edad = edad;
         this.idPais = idPais;
+        this.biblioteca = biblioteca;
     }
 
     //Metodos
@@ -49,6 +58,7 @@ public class Cliente extends Usuario{
                 "fechaNacimiento='" + fechaNacimiento + '\'' +
                 ", edad=" + edad +
                 ", idPais='" + idPais + '\'' +
+                ", biblioteca=" + biblioteca +
                 ", id='" + id + '\'' +
                 ", tipoUsuario=" + tipoUsuario +
                 ", correo='" + correo + '\'' +
@@ -68,11 +78,12 @@ public class Cliente extends Usuario{
         Cliente cliente = (Cliente) o;
         return edad == cliente.edad &&
                 Objects.equals(fechaNacimiento, cliente.fechaNacimiento) &&
-                Objects.equals(idPais, cliente.idPais);
+                Objects.equals(idPais, cliente.idPais) &&
+                Objects.equals(biblioteca, cliente.biblioteca);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), fechaNacimiento, edad, idPais);
+        return Objects.hash(super.hashCode(), fechaNacimiento, edad, idPais, biblioteca);
     }
 }

@@ -95,4 +95,10 @@ public class Compositor {
     public int hashCode() {
         return Objects.hash(id, nombre, apellidos, paisNacimiento, fechaNacimiento, edad);
     }
+
+    public boolean modificar(String pNombre, String pApellidos){
+        this.nombre = (pNombre != "") ? pNombre : this.nombre;
+        this.apellidos = (pApellidos != "") ? pApellidos : this.nombre;
+        return true;
+    }
 }

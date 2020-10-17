@@ -7,6 +7,7 @@ public class ListaReproduccion extends RepositorioCanciones {
     //Variables
     private String idCreador;
     private double calificacion;
+    private String imagen;
 
     //Propiedades
     public String getIdCreador() {
@@ -23,12 +24,20 @@ public class ListaReproduccion extends RepositorioCanciones {
         this.calificacion = calificacion;
     }
 
+    public String getImagen() {
+        return imagen;
+    }
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
     //Constructores
     public ListaReproduccion(){}
-    public ListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String idCreador, double calificacion) {
+    public ListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String idCreador, double calificacion, String imagen) {
         super(id, nombre, fechaCreacion, canciones);
         this.idCreador = idCreador;
         this.calificacion = calificacion;
+        this.imagen = imagen;
     }
 
     //Metodos
@@ -38,6 +47,7 @@ public class ListaReproduccion extends RepositorioCanciones {
         return "ListaReproduccion{" +
                 "idCreador='" + idCreador + '\'' +
                 ", calificacion=" + calificacion +
+                ", imagen='" + imagen + '\'' +
                 ", id='" + id + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", fechaCreacion='" + fechaCreacion + '\'' +
@@ -52,12 +62,13 @@ public class ListaReproduccion extends RepositorioCanciones {
         if (!super.equals(o)) return false;
         ListaReproduccion that = (ListaReproduccion) o;
         return Double.compare(that.calificacion, calificacion) == 0 &&
-                Objects.equals(idCreador, that.idCreador);
+                Objects.equals(idCreador, that.idCreador) &&
+                Objects.equals(imagen, that.imagen);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), idCreador, calificacion);
+        return Objects.hash(super.hashCode(), idCreador, calificacion, imagen);
     }
 
     public Cancion cargarCancion(int posicion){
@@ -65,5 +76,11 @@ public class ListaReproduccion extends RepositorioCanciones {
             return canciones.get(posicion);
         }
         return null;
+    }
+
+    public boolean modificar(String pNombre, String pImagen){
+        this.nombre = (pNombre != "") ? pNombre : this.nombre;
+        this.imagen = (pImagen != "") ? pImagen : this.imagen;
+        return true;
     }
 }

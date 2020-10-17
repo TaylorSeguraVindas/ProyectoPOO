@@ -8,6 +8,7 @@ public class Cancion {
     private String id;
     private String nombre;
     private String recurso;
+    private String nombreAlbum;
     private Genero genero;
     private Artista artista;
     private Compositor compositor;
@@ -35,6 +36,13 @@ public class Cancion {
     }
     public void setRecurso(String recurso) {
         this.recurso = recurso;
+    }
+
+    public String getNombreAlbum() {
+        return nombreAlbum;
+    }
+    public void setNombreAlbum(String nombreAlbum) {
+        this.nombreAlbum = nombreAlbum;
     }
 
     public Genero getGenero() {
@@ -83,10 +91,12 @@ public class Cancion {
     public Cancion(){
         calificaciones = new ArrayList<Calificacion>();
     }
-    public Cancion(String id, String nombre, String recurso, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
+
+    public Cancion(String id, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
         this.id = id;
         this.nombre = nombre;
         this.recurso = recurso;
+        this.nombreAlbum = nombreAlbum;
         this.genero = genero;
         this.artista = artista;
         this.compositor = compositor;
@@ -102,6 +112,7 @@ public class Cancion {
                 "id='" + id + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", recurso='" + recurso + '\'' +
+                ", nombreAlbum='" + nombreAlbum + '\'' +
                 ", genero=" + genero +
                 ", artista=" + artista +
                 ", compositor=" + compositor +
@@ -120,6 +131,7 @@ public class Cancion {
                 Objects.equals(id, cancion.id) &&
                 Objects.equals(nombre, cancion.nombre) &&
                 Objects.equals(recurso, cancion.recurso) &&
+                Objects.equals(nombreAlbum, cancion.nombreAlbum) &&
                 Objects.equals(genero, cancion.genero) &&
                 Objects.equals(artista, cancion.artista) &&
                 Objects.equals(compositor, cancion.compositor) &&
@@ -129,7 +141,13 @@ public class Cancion {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, recurso, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        return Objects.hash(id, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+    }
+
+    public boolean modificar(String pNombreAlbum, double pPrecio){
+        this.nombreAlbum = (pNombreAlbum != "") ? pNombreAlbum : this.nombreAlbum;
+        this.precio = (pPrecio != precio) ? pPrecio : this.precio;
+        return true;
     }
 
     public double obtenerPromedioEstrellas(){

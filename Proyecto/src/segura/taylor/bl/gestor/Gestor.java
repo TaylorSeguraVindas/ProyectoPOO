@@ -1,10 +1,10 @@
 package segura.taylor.bl.gestor;
 
 import java.util.ArrayList;
-
 import segura.taylor.bl.entidades.*;
 
 public class Gestor {
+
     //Variables
     private ArrayList<Album> albunes = new ArrayList<>();
     private ArrayList<Artista> artistas = new ArrayList<>();
@@ -14,6 +14,7 @@ public class Gestor {
     private ArrayList<ListaReproduccion> listasReproduccion = new ArrayList<>();
     private ArrayList<Pais> paises = new ArrayList<>();
     private ArrayList<Usuario> usuarios = new ArrayList<>();
+
 
     //*******Manejo de usuarios*******
     //Admin
@@ -25,20 +26,16 @@ public class Gestor {
         usuarios.add(admin);
         return true;
     }
-
     //Cliente
     public boolean crearUsuario(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String idPais){
         //Si no hay admin no se puede registrar usuarios.
         if(usuarios.size() == 0) return false;
 
-        //TODO condicion para ver si el usuario ya existe.
+        //TODO condicion para no repetir usuarios.
 
         Cliente nuevoCliente = new Cliente(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, idPais);
         usuarios.add(nuevoCliente);
         return true;
-    }
-    public ArrayList<Usuario> listarUsuarios(){
-        return usuarios;
     }
     public Usuario buscarUsuario(String dato){
         for (Usuario objUsuario: usuarios) {
@@ -59,6 +56,15 @@ public class Gestor {
         }
         return false;
     }
+    public ArrayList<Usuario> listarUsuarios(){
+        return usuarios;
+    }
+
+    public boolean agregarCancionABibliotecaCliente(){
+        //TODO terminar esta funcion.
+        return false;
+    }
+
     public boolean existeAdmin(){
         return (usuarios.get(0).getTipoUsuario() == Usuario.TipoUsuario.Admin);
     }
@@ -76,10 +82,10 @@ public class Gestor {
     //*******Manejo de albunes********
     public boolean crearAlbum(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor){
         Album nuevoAlbum = new Album(id, nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas, compositor);
-        return false;
-    }
-    public ArrayList<Album> listarAlbunes(){
-        return albunes;
+
+        //TODO condicion para no repetir albunes.
+        albunes.add(nuevoAlbum);
+        return true;
     }
     public boolean modificarAlbum(Album pAlbum, String pNombre, String pImagen){
         int indice = obtenerIndiceAlbum(pAlbum);
@@ -96,6 +102,9 @@ public class Gestor {
             return true;
         }
         return false;
+    }
+    public ArrayList<Album> listarAlbunes(){
+        return albunes;
     }
 
     public boolean agregarCancionEnAlbum(Cancion pCancion, Album pAlbum){
@@ -164,19 +173,48 @@ public class Gestor {
 
 
     //*********Manejo de Listas de Reproduccion***************
-    public boolean crearListaReproduccion(){
+    public boolean crearListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String idCreador, String imagen){
+        if(buscarListaReproduccion(id) == null){
+            ListaReproduccion nuevaLista = new ListaReproduccion(id, nombre, fechaCreacion, canciones, idCreador, 0.0, imagen);
+            listasReproduccion.add(nuevaLista);
+            return true;
+        }
+
+        return false;
+    }
+    public boolean modificarListaReproduccion(ListaReproduccion pLista, String pNombre, String pImagen){
+        int indice = obtenerIndiceListaReproduccion(pLista);
+
+        if(indice != -1){
+            return listasReproduccion.get(indice).modificar(pNombre, pImagen);
+        }
+        return false;
+    }
+    public boolean eliminarListaReproduccion(ListaReproduccion pListaReproduccion){
+        if(existeListaReproduccion(pListaReproduccion)){
+            listasReproduccion.remove(pListaReproduccion);
+            return true;
+        }
         return false;
     }
     public ArrayList<ListaReproduccion> listarListasReproduccion(){
         return listasReproduccion;
     }
-    public boolean agregarCancionALista(Cancion cancion, ListaReproduccion lista) {
+
+    public boolean agregarCancionALista(Cancion pCancion, ListaReproduccion pLista) {
+        int indice = obtenerIndiceListaReproduccion(pLista);
+
+        if(indice != -1){
+            return listasReproduccion.get(indice).agregarCancion(pCancion);
+        }
         return false;
     }
-    public boolean modificarListaReproduccion(){
-        return false;
-    }
-    public boolean eliminarListaReproduccion(ListaReproduccion listaReproduccion){
+    public boolean removerCancionALista(Cancion pCancion, ListaReproduccion pLista) {
+        int indice = obtenerIndiceListaReproduccion(pLista);
+
+        if(indice != -1){
+            return listasReproduccion.get(indice).removerCancion(pCancion);
+        }
         return false;
     }
 
@@ -207,40 +245,117 @@ public class Gestor {
         return false;
     }
 
+
     //*****************Manejo de artistas*******************
-    public boolean crearArtista(){
+    public boolean crearArtista(String id, String nombre, String apellidos, String nombreArtistico, String fechaNacimiento, String fechaDefuncion, String paisNacimiento, Genero genero, int edad, String descripcion){
+        Artista nuevoArtista = new Artista(id, nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
+
+        //TODO condicion para no repetir artistas
+        artistas.add(nuevoArtista);
+        return true;
+    }
+    public boolean modificarArtista(Artista pArtista, String pNombre, String pApellidos, String pNomArtistico, String pFechaDefuncion){
+        int indice = obtenerIndiceArtista(pArtista);
+
+        if(indice != -1){
+            return artistas.get(indice).modificar(pNombre, pApellidos, pNomArtistico, pFechaDefuncion);
+        }
+        return false;
+    }
+    public boolean eliminarArtista(Artista pArtista){
+        if(existeArtista(pArtista)){
+            artistas.remove(pArtista);
+            return true;
+        }
         return false;
     }
     public ArrayList<Artista> listarArtistas(){
         return artistas;
     }
+
     public Artista buscarArtista(String dato){
-        return new Artista();
+        for (Artista objArtista: artistas) {
+            if(objArtista.getId().equals(dato) || objArtista.getNombre().equals(dato)){
+                return objArtista;
+            }
+        }
+        return null;
     }
-    public boolean modificarArtista(){
-        return false;
+    public int obtenerIndiceArtista(Artista pArtista){
+        int indice = 0;
+        for (Artista objArtista: artistas) {
+            if(objArtista.equals(pArtista)){
+                return indice;
+            }
+            indice++;
+        }
+        return -1;
     }
-    public boolean eliminarArtista(Artista artista){
+    public boolean existeArtista(Artista pArtista){
+        for (Artista objArtista: artistas) {
+            if(objArtista.equals(pArtista)){
+                return true;
+            }
+        }
         return false;
     }
 
+
     //*******************Manejo de canciones******************
-    public boolean crearCancion(){
+    public boolean crearCancion(String id, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio){
+        Cancion nuevaCancion = new Cancion(id, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+
+        //TODO condicion para no repetir canciones.
+        canciones.add(nuevaCancion);
+        return true;
+    }
+    public boolean modificarCancion(Cancion pCancion, String pNombreAlbum, double pPrecio){
+        int indice = obtenerIndiceCancion(pCancion);
+
+        if(indice != 1){
+            return canciones.get(indice).modificar(pNombreAlbum, pPrecio);
+        }
+        return false;
+    }
+    public boolean eliminarCancion(Cancion pCancion){
+        if(existeCancion(pCancion)){
+            canciones.remove(pCancion);
+            return true;
+        }
         return false;
     }
     public ArrayList<Cancion> listarCanciones(){
         return canciones;
     }
+
     public Cancion buscarCancion(String dato){
-        return new Cancion();
+        for (Cancion objCancion: canciones) {
+            if(objCancion.getId().equals(dato) || objCancion.getNombre().equals(dato)){
+                return objCancion;
+            }
+        }
+        return null;
     }
-    public boolean modificarCancion(){
-        return false;
+    public int obtenerIndiceCancion(Cancion pCancion){
+        int indice = 0;
+        for (Cancion objCancion: canciones) {
+            if(objCancion.equals(pCancion)){
+                return indice;
+            }
+            indice++;
+        }
+        return -1;
     }
-    public boolean eliminarCancion(Cancion cancion){
+    public boolean existeCancion(Cancion pCancion){
+        for (Cancion objCancion: canciones) {
+            if(objCancion.equals(pCancion)){
+                return true;
+            }
+        }
         return false;
     }
 
+    
     //**************Manejo de compositores********************
     public boolean crearCompositor(){
         return false;
@@ -258,6 +373,7 @@ public class Gestor {
         return false;
     }
 
+
     //******************Manejo de Generos******************
     public boolean crearGenero(){
         return false;
@@ -274,6 +390,7 @@ public class Gestor {
     public boolean eliminarGenero(Genero genero){
         return false;
     }
+
 
     //*****************Manejo de Paises********************
     public boolean crearPais(){

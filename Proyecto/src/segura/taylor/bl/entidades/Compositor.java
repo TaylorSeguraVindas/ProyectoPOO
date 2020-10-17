@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Compositor {
     //Variables
+    private String id;
     private String nombre;
     private String apellidos;
     private String paisNacimiento;
@@ -11,6 +12,13 @@ public class Compositor {
     private int edad;
 
     //Propiedades
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -48,7 +56,8 @@ public class Compositor {
 
     //Constructores
     public Compositor(){}
-    public Compositor(String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad) {
+    public Compositor(String id, String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad) {
+        this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.paisNacimiento = paisNacimiento;
@@ -60,7 +69,8 @@ public class Compositor {
     @Override
     public String toString() {
         return "Compositor{" +
-                "nombre='" + nombre + '\'' +
+                "id='" + id + '\'' +
+                ", nombre='" + nombre + '\'' +
                 ", apellidos='" + apellidos + '\'' +
                 ", paisNacimiento='" + paisNacimiento + '\'' +
                 ", fechaNacimiento='" + fechaNacimiento + '\'' +
@@ -74,6 +84,7 @@ public class Compositor {
         if (o == null || getClass() != o.getClass()) return false;
         Compositor that = (Compositor) o;
         return edad == that.edad &&
+                Objects.equals(id, that.id) &&
                 Objects.equals(nombre, that.nombre) &&
                 Objects.equals(apellidos, that.apellidos) &&
                 Objects.equals(paisNacimiento, that.paisNacimiento) &&
@@ -82,6 +93,6 @@ public class Compositor {
 
     @Override
     public int hashCode() {
-        return Objects.hash(nombre, apellidos, paisNacimiento, fechaNacimiento, edad);
+        return Objects.hash(id, nombre, apellidos, paisNacimiento, fechaNacimiento, edad);
     }
 }

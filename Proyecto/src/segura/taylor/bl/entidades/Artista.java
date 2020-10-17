@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Artista {
     //Variables
+    private String id;
     private String nombre;
     private String apellidos;
     private String nombreArtistico;
@@ -15,6 +16,13 @@ public class Artista {
     private String descripcion;
 
     //Propiedades
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -80,7 +88,8 @@ public class Artista {
 
     //Constructores
     public Artista(){}
-    public Artista(String nombre, String apellidos, String nombreArtistico, String fechaNacimiento, String fechaDefuncion, String paisNacimiento, Genero genero, int edad, String descripcion) {
+    public Artista(String id, String nombre, String apellidos, String nombreArtistico, String fechaNacimiento, String fechaDefuncion, String paisNacimiento, Genero genero, int edad, String descripcion) {
+        this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.nombreArtistico = nombreArtistico;
@@ -94,10 +103,12 @@ public class Artista {
 
     //Metodos
 
+
     @Override
     public String toString() {
         return "Artista{" +
-                "nombre='" + nombre + '\'' +
+                "id='" + id + '\'' +
+                ", nombre='" + nombre + '\'' +
                 ", apellidos='" + apellidos + '\'' +
                 ", nombreArtistico='" + nombreArtistico + '\'' +
                 ", fechaNacimiento='" + fechaNacimiento + '\'' +
@@ -115,6 +126,7 @@ public class Artista {
         if (o == null || getClass() != o.getClass()) return false;
         Artista artista = (Artista) o;
         return edad == artista.edad &&
+                Objects.equals(id, artista.id) &&
                 Objects.equals(nombre, artista.nombre) &&
                 Objects.equals(apellidos, artista.apellidos) &&
                 Objects.equals(nombreArtistico, artista.nombreArtistico) &&
@@ -127,7 +139,7 @@ public class Artista {
 
     @Override
     public int hashCode() {
-        return Objects.hash(nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
+        return Objects.hash(id, nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
     }
 
     public boolean modificar(String pNombre, String pApellidos, String pNomArtistico, String pFechaDefuncion){

@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Usuario {
     //Enums
-    enum TipoUsuario{
+    public enum TipoUsuario{
         Admin,
         Normal
     }
@@ -22,6 +22,13 @@ public class Usuario {
     //Propiedades
     public TipoUsuario getTipoUsuario() {
         return tipoUsuario;
+    }
+
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCorreo() {
@@ -69,7 +76,7 @@ public class Usuario {
     //Constructores
     public Usuario(){}
 
-    public Usuario(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario) {
+    public Usuario(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario) {
         this.correo = correo;
         this.contrasenna = contrasenna;
         this.nombre = nombre;
@@ -82,7 +89,8 @@ public class Usuario {
     @Override
     public String toString() {
         return "Usuario{" +
-                "tipoUsuario=" + tipoUsuario +
+                "id='" + id + '\'' +
+                ", tipoUsuario=" + tipoUsuario +
                 ", correo='" + correo + '\'' +
                 ", contrasenna='" + contrasenna + '\'' +
                 ", nombre='" + nombre + '\'' +
@@ -97,7 +105,8 @@ public class Usuario {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
-        return  tipoUsuario == usuario.tipoUsuario &&
+        return Objects.equals(id, usuario.id) &&
+                tipoUsuario == usuario.tipoUsuario &&
                 Objects.equals(correo, usuario.correo) &&
                 Objects.equals(contrasenna, usuario.contrasenna) &&
                 Objects.equals(nombre, usuario.nombre) &&
@@ -108,7 +117,7 @@ public class Usuario {
 
     @Override
     public int hashCode() {
-        return Objects.hash(tipoUsuario, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
+        return Objects.hash(id, tipoUsuario, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
     }
 
     public boolean modificar(String pNombreUsuario, String pImagenPerfil, String pContrasenna, String pNombre, String pApellidos){

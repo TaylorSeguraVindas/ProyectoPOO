@@ -84,6 +84,11 @@ public class Album extends RepositorioCanciones{
         return Objects.hash(super.hashCode(), fechaLanzamiento, imagen, artistas, compositor);
     }
 
+    public boolean modificar(String pNombre, String pImagen){
+        this.nombre = (pNombre != "") ? pNombre : this.nombre;
+        this.imagen = (pImagen != "") ? pImagen : this.imagen;
+        return true;
+    }
     public boolean agregarArtista(Artista artista){
         if(!tieneArtista(artista)){
             artistas.add(artista);

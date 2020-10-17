@@ -34,8 +34,8 @@ public class Cliente extends Usuario{
     public Cliente(){
         this.tipoUsuario = TipoUsuario.Normal;
     }
-    public Cliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String idPais) {
-        super(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
+    public Cliente(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String idPais) {
+        super(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
         this.tipoUsuario = TipoUsuario.Normal;
         this.fechaNacimiento = fechaNacimiento;
         this.edad = edad;

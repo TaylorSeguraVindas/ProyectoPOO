@@ -132,6 +132,7 @@ public class Gestor {
         return -1;
     }
 
+
     //*******Manejo de albunes********
     public boolean crearAlbum(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor){
         Album nuevoAlbum = new Album(id, nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas, compositor);
@@ -405,6 +406,7 @@ public class Gestor {
         return false;
     }
 
+    
     //**************Manejo de compositores********************
     public boolean crearCompositor(String id, String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad){
         Compositor nuevoCompositor = new Compositor(id, nombre, apellidos, paisNacimiento, fechaNacimiento, edad);

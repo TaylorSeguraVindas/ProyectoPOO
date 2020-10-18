@@ -1,5 +1,6 @@
 package segura.taylor.bl.gestor;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import segura.taylor.bl.entidades.*;
 
@@ -154,6 +155,13 @@ public class Gestor {
 
     //*******Manejo de albunes********
     public boolean crearAlbum(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor){
+        if(canciones == null){
+            canciones = new ArrayList<Cancion>();
+        }
+        if(artistas == null){
+            artistas = new ArrayList<Artista>();
+        }
+
         Album nuevoAlbum = new Album(id, nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas, compositor);
 
         //Evitar repeticion de datos.
@@ -251,6 +259,10 @@ public class Gestor {
 
     //*********Manejo de Listas de Reproduccion***************
     public boolean crearListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String idCreador, String imagen){
+        if(canciones == null){
+            canciones = new ArrayList<Cancion>();
+        }
+
         ListaReproduccion nuevaLista = new ListaReproduccion(id, nombre, fechaCreacion, canciones, idCreador, 0.0, imagen);
 
         //Evitar repeticion de datos.
@@ -386,6 +398,10 @@ public class Gestor {
 
     //*******************Manejo de canciones******************
     public Cancion crearCancion(String id, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio){
+        if(calificaciones == null){
+            calificaciones = new ArrayList<Calificacion>();
+        }
+
         Cancion nuevaCancion = new Cancion(id, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
         return nuevaCancion;
     }

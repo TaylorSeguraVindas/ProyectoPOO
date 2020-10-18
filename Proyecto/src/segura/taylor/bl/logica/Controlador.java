@@ -622,10 +622,23 @@ public class Controlador {
         String fechaDefuncion = ui.leerLinea();
         ui.imprimir("Pais de nacimiento: ");
         String paisNacimiento = ui.leerLinea();
-        ui.imprimir("Nombre genero: ");
-        String nombreGenero = ui.leerLinea();
 
-        Genero genero = gestor.buscarGenero(nombreGenero);
+        //Genero
+        ui.imprimir("ID del genero: ");
+        String idGenero = ui.leerLinea();
+        Genero genero = gestor.buscarGenero(idGenero);
+
+        if(genero == null){
+            ui.imprimirLinea("****No se ha encontrado un genero con ese ID, desea crear uno?****");
+            ui.imprimirLinea("1. Si");
+            ui.imprimirLinea("2. No");
+            ui.imprimir("Su opcion: ");
+            int opcion = ui.leerEntero();
+            if(opcion == 1){
+                genero = registrarGenero();
+            }
+        }
+
         int edad = calcularEdad(fechaNacimiento);
         String id = "arti0000" + nombre + fechaNacimiento;
 
@@ -711,6 +724,8 @@ public class Controlador {
         String fechaLanzamiento = ui.leerLinea();
         ui.imprimir("Directorio de la imagen para la portada: ");
         String imagen = ui.leerLinea();
+
+        //Compositor
         ui.imprimir("ID del compositor: ");
         String idCompositor = ui.leerLinea();
         Compositor compositor = gestor.buscarCompositor(idCompositor);
@@ -727,7 +742,6 @@ public class Controlador {
         }
 
         String id = "album000" + nombre + fechaCreacion;
-
         boolean resultado = gestor.crearAlbum(id, nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas, compositor);
 
         if(resultado){
@@ -756,6 +770,7 @@ public class Controlador {
         ui.imprimir("Directorio de la imagen para la portada: ");
         String imagen = ui.leerLinea();
 
+        //Compositor
         ui.imprimir("ID del compositor: ");
         String idCompositor = ui.leerLinea();
         Compositor compositor = gestor.buscarCompositor(idCompositor);
@@ -1005,6 +1020,14 @@ public class Controlador {
         }
     }
 
+    private void incluirCancionEnListaReproduccion() {
+
+    }
+
+    private void removerCancionDeListaReproduccion() {
+
+    }
+
     private void eliminarListaReproduccion() {
         ui.imprimirLinea("Eliminar lista de reproduccion");
         ui.imprimir("Ingrese el id de la lista de reproduccion que desea eliminar: ");
@@ -1021,18 +1044,31 @@ public class Controlador {
         }
     }
 
-    private void incluirCancionEnListaReproduccion() {
 
-    }
-
-    private void removerCancionDeListaReproduccion() {
-
-    }
-
-
+    /*
+    String id, String nombrePais, String descripcion){
+    public boolean modificarPais(String pId, String pNombre, String pDescripcion
+     */
     //Paises
-    private void registrarPais() {
+    private Pais registrarPais() {
+        ui.imprimirLinea("Registro de pais");
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Descripcion: ");
+        String descripcion = ui.leerLinea();
 
+        String id = "Pais000" + nombre + obtenerFechaActual();
+
+        boolean resultado = gestor.crearPais(id, nombre, descripcion);
+
+        if(resultado){
+            ui.imprimirLinea("Pais registrado correctamente! :D");
+            return gestor.buscarPais(id);
+        } else {
+            ui.imprimirLinea("Hubo un problema al intentar el registro del pais");
+        }
+
+        return null;
     }
 
     private void listarPaises() {
@@ -1043,15 +1079,45 @@ public class Controlador {
     }
 
     private void modificarPais() {
+        ui.imprimirLinea("Modificar pais");
+        ui.imprimir("Ingrese el ID del pais que desea modificar: ");
+        String id = ui.leerLinea();
 
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Descripcion: ");
+        String descripcion = ui.leerLinea();
+
+        gestor.modificarPais(id, nombre, descripcion);
     }
 
     private void buscarPais() {
+        ui.imprimirLinea("Buscar pais");
+        ui.imprimir("Ingrese el ID o nombre del pais que desea buscar: ");
+        String dato = ui.leerLinea();
 
+        Pais paisEncontrado = gestor.buscarPais(dato);
+        if(paisEncontrado != null){
+            ui.imprimirLinea("Encontrado: " + paisEncontrado.toString());
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
     private void eliminarPais() {
+        ui.imprimirLinea("Eliminar pais");
+        ui.imprimir("Ingrese el ID del pais que desea eliminar: ");
+        String id = ui.leerLinea();
 
+        Pais paisEncontrado = gestor.buscarPais(id);
+        if(paisEncontrado != null){
+            if(paisEncontrado.getId().equals(id)){
+                gestor.eliminarPais(paisEncontrado);
+                ui.imprimirLinea("Pais eliminado correctamente");
+            }
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
     //Para pruebas
@@ -1089,13 +1155,13 @@ public class Controlador {
         gestor.crearCompositor("comp0006", "Compositor6", "Inventado 6", "España", "24/06/1977", 47);
 
         //Canciones
-        gestor.crearCancion("can000001", "La cancion que escribi ayer", "cancionDeAyer.mp3", "Musica de la buena", gestor.buscarGenero("Cumbia"), gestor.buscarArtista("Artista1"), gestor.buscarCompositor("Compositor1"), "21/12/2008", null, 5000.00);
-        gestor.crearCancion("can000002", "Una buena", "recurso.mp3", "Musica de la regular", gestor.buscarGenero("Rock"), gestor.buscarArtista("Artista2"), gestor.buscarCompositor("Compositor2"), "21/12/2008", null, 8000.00);
-        gestor.crearCancion("can000003", "El pollito loco", "nombreArchivo.mp3", "Musica de la regular", gestor.buscarGenero("Rock"), gestor.buscarArtista("Artista2"), gestor.buscarCompositor("Compositor2"), "21/12/2008", null, 2000.00);
-        gestor.crearCancion("can000004", "Tigresa canta asi", "descarga(1).mp3", "Musica de la mala", gestor.buscarGenero("Regueton"), gestor.buscarArtista("Artista3"), gestor.buscarCompositor("Compositor2"), "21/12/2008", null, 500.00);
-        gestor.crearCancion("can000005", "Ya no se que escribir", "nombreRandom.mp3", "Musica bonita", gestor.buscarGenero("Metal"), gestor.buscarArtista("Artista4"), gestor.buscarCompositor("Compositor3"), "21/12/2008", null, 8000.00);
-        gestor.crearCancion("can000006", "Pura melodia sin letra", "melodia.mp3", "Musica musica", gestor.buscarGenero("Salsa"), gestor.buscarArtista("Artista1"), gestor.buscarCompositor("Compositor4"), "21/12/2008", null, 10000.00);
-        gestor.crearCancion("can000007", "Mas musica!", "musiquita.mp3", "Musica de la buena", gestor.buscarGenero("Electronica"), gestor.buscarArtista("Artista2"), gestor.buscarCompositor("Compositor1"), "21/12/2008", null, 1200.00);
+        gestor.guardarCancion(gestor.crearCancion("can000001", "La cancion que escribi ayer", "cancionDeAyer.mp3", "Musica de la buena", gestor.buscarGenero("Cumbia"), gestor.buscarArtista("Artista1"), gestor.buscarCompositor("Compositor1"), "21/12/2008", null, 5000.00));
+        gestor.guardarCancion(gestor.crearCancion("can000002", "Una buena", "recurso.mp3", "Musica de la regular", gestor.buscarGenero("Rock"), gestor.buscarArtista("Artista2"), gestor.buscarCompositor("Compositor2"), "21/12/2008", null, 8000.00));
+        gestor.guardarCancion(gestor.crearCancion("can000003", "El pollito loco", "nombreArchivo.mp3", "Musica de la regular", gestor.buscarGenero("Rock"), gestor.buscarArtista("Artista2"), gestor.buscarCompositor("Compositor2"), "21/12/2008", null, 2000.00));
+        gestor.guardarCancion(gestor.crearCancion("can000004", "Tigresa canta asi", "descarga(1).mp3", "Musica de la mala", gestor.buscarGenero("Regueton"), gestor.buscarArtista("Artista3"), gestor.buscarCompositor("Compositor2"), "21/12/2008", null, 500.00));
+        gestor.guardarCancion(gestor.crearCancion("can000005", "Ya no se que escribir", "nombreRandom.mp3", "Musica bonita", gestor.buscarGenero("Metal"), gestor.buscarArtista("Artista4"), gestor.buscarCompositor("Compositor3"), "21/12/2008", null, 8000.00));
+        gestor.guardarCancion(gestor.crearCancion("can000006", "Pura melodia sin letra", "melodia.mp3", "Musica musica", gestor.buscarGenero("Salsa"), gestor.buscarArtista("Artista1"), gestor.buscarCompositor("Compositor4"), "21/12/2008", null, 10000.00));
+        gestor.guardarCancion(gestor.crearCancion("can000007", "Mas musica!", "musiquita.mp3", "Musica de la buena", gestor.buscarGenero("Electronica"), gestor.buscarArtista("Artista2"), gestor.buscarCompositor("Compositor1"), "21/12/2008", null, 1200.00));
 
         //Paises
         gestor.crearPais("pais0001", "Costa Rica", "Pura Vida");

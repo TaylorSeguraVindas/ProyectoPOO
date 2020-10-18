@@ -9,6 +9,15 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/*/TODO
+-Enviar correo con OTP
+-Verificar correo
+-Verificar contraseña
+-Guardar, eliminar canciones en album
+-Guardar, eliminar artistas en album
+-Guardar, eliminar canciones y albunes en lista de reproduccion
+*/
+
 public class Controlador {
     //Constantes
     private final Gestor gestor = new Gestor();
@@ -17,7 +26,6 @@ public class Controlador {
 
     //Variables
     private Usuario usuarioIngresado;   //Referencia al usuario que está usando la aplicacion
-
 
     //Metodos
     public void iniciarPrograma() {
@@ -177,7 +185,7 @@ public class Controlador {
                 listarUsuarios();
                 break;
             case 3:
-                modificarUsuario();
+                modificarUsuario(true);
                 break;
             //Generos
             case 4:
@@ -301,14 +309,13 @@ public class Controlador {
         usuarioIngresado = gestor.iniciarSesion(correo, contrasenna);
         return usuarioIngresado != null;
     }
-
     private void cerrarSesion() {
         usuarioIngresado = null;
     }
 
 
-    //Usuarios
-    private void registrarUsuario(boolean registrandoAdmin) {
+    //Usuarios ++
+    private Usuario registrarUsuario(boolean registrandoAdmin) {
         ui.imprimirLinea("\nBienvenido al registro de usuarios");
 
         if (registrandoAdmin) {
@@ -337,6 +344,7 @@ public class Controlador {
 
             if (resultado) {
                 ui.imprimirLinea("Usuario registrado correctamente! :D");
+                return gestor.buscarUsuario(id);
             } else {
                 ui.imprimirLinea("Hubo un problema al intentar el registro del usuario :(");
             }
@@ -363,7 +371,7 @@ public class Controlador {
             int edad = calcularEdad(fechaNacimiento);
             if (edad < 18) {
                 ui.imprimirLinea("Lo sentimos, los usuarios deben tener al menos 18 años para poder registrarse en la aplicacion");
-                return;
+                return null;
             }
 
             ui.imprimir("Ingrese el nombre del pais donde vive: ");
@@ -376,10 +384,12 @@ public class Controlador {
 
             if (resultado) {
                 ui.imprimirLinea("Usuario registrado correctamente! :D");
+                return gestor.buscarUsuario(id);
             } else {
                 ui.imprimirLinea("Hubo un problema al intentar el registro del usuario :(");
             }
         }
+        return null;
     }
 
     private void listarUsuarios() {
@@ -389,16 +399,56 @@ public class Controlador {
         }
     }
 
-    private void modificarUsuario() {
+    private void modificarUsuario(boolean desdeAdmin) {
+        ui.imprimirLinea("Modificar usuario");
 
+        String correo;
+
+        if(desdeAdmin){
+            ui.imprimir("correo del usuario por modificar: ");
+            correo = ui.leerLinea();
+        } else {
+            correo = usuarioIngresado.getCorreo();
+        }
+
+        ui.imprimir("Nombre de usuario: ");
+        String nombreUsuario = ui.leerLinea();
+        ui.imprimir("Imagen de perfil: ");
+        String imagenPerfil = ui.leerLinea();
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Apellidos: ");
+        String apellidos = ui.leerLinea();
+
+        //La contraseña NO se modifica desde aqui.
+        gestor.modificarUsuario(correo, nombreUsuario, imagenPerfil, "", nombre, apellidos);
     }
 
     private void buscarUsuario() {
+        ui.imprimir("Ingrese el id, correo o nombre del usuario que desea buscar: ");
+        String dato = ui.leerLinea();
+        Usuario usuarioEncontrado = gestor.buscarUsuario(dato);
 
+        if(usuarioEncontrado != null){
+            ui.imprimirLinea("Se encontró: " + usuarioEncontrado.toString());
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
     private void eliminarUsuario() {
+        ui.imprimir("Ingrese el id del usuario que desea eliminar: ");
+        String id = ui.leerLinea();
+        Usuario usuarioEncontrado = gestor.buscarUsuario(id);
 
+        if(usuarioEncontrado != null){
+            if(usuarioEncontrado.getId().equals(id)){
+                gestor.eliminarUsuario(usuarioEncontrado);
+                ui.imprimirLinea("Usuario eliminado");
+            }
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
     private void guardarCancionEnBiblioteca() {
@@ -406,9 +456,25 @@ public class Controlador {
     }
 
 
-    //Generos
-    private void registrarGenero() {
+    //Generos ++
+    private Genero registrarGenero() {
+        ui.imprimirLinea("Registro de generos");
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Descripcion: ");
+        String descripcion = ui.leerLinea();
 
+        String id = "gen000" + nombre;
+
+        boolean resultado = gestor.crearGenero(id, nombre, descripcion);
+
+        if(resultado){
+            ui.imprimirLinea("Genero registrado correctamente! :D");
+            return gestor.buscarGenero(id);
+        } else {
+            ui.imprimirLinea("Hubo un problema al intentar el registro del genero");
+        }
+        return null;
     }
 
     private void listarGeneros() {
@@ -419,21 +485,75 @@ public class Controlador {
     }
 
     private void modificarGenero() {
+        ui.imprimirLinea("Modificar genero");
+        ui.imprimir("Ingrese el id del genero que desea modificar: ");
+        String id = ui.leerLinea();
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Descripcion: ");
+        String descripcion = ui.leerLinea();
 
+        gestor.modificarGenero(id, nombre, descripcion);
     }
 
     private void buscarGenero() {
+        ui.imprimirLinea("Buscar genero");
 
+        ui.imprimir("Ingrese el id o nombre del genero que desea buscar: ");
+        String dato = ui.leerLinea();
+
+        Genero generoEncontrado = gestor.buscarGenero(dato);
+
+        if(generoEncontrado != null){
+            ui.imprimirLinea("Encontrado: " + generoEncontrado.toString());
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
     private void eliminarGenero() {
+        ui.imprimirLinea("Buscar genero");
+
+        ui.imprimir("Ingrese el id del genero que desea eliminar: ");
+        String id = ui.leerLinea();
+
+        Genero generoEncontrado = gestor.buscarGenero(id);
+        if(generoEncontrado != null){
+            if(generoEncontrado.getId().equals(id)){
+                gestor.eliminarGenero(generoEncontrado);
+                ui.imprimirLinea("Genero eliminado");
+            }
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
 
     }
 
 
-    //Compositores
-    private void registrarCompositor() {
+    //Compositores ++
+    private Compositor registrarCompositor() {
+        ui.imprimirLinea("Registro de compositor");
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Apellidos: ");
+        String apellidos = ui.leerLinea();
+        ui.imprimir("Pais de nacimiento: ");
+        String pais = ui.leerLinea();
+        ui.imprimir("Fecha de nacimiento");
+        String fechaNacimiento = ui.leerLinea();
+        int edad = calcularEdad(fechaNacimiento);
+        String id = "comp0000" + nombre + fechaNacimiento;
 
+        boolean resultado = gestor.crearCompositor(id, nombre, apellidos, pais, fechaNacimiento, edad);
+
+        if(resultado){
+            ui.imprimirLinea("Compositor registrado correctamente! :D");
+            return gestor.buscarCompositor(id);
+        } else {
+            ui.imprimirLinea("Hubo un problema al intentar el registro del compositor :(");
+        }
+
+        return null;
     }
 
     private void listarCompositores() {
@@ -444,21 +564,83 @@ public class Controlador {
     }
 
     private void modificarCompositor() {
+        ui.imprimirLinea("Modificar compositor");
+        ui.imprimir("Ingrese el id del compositor que desea modificar: ");
+        String id = ui.leerLinea();
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Apellidos: ");
+        String apellidos = ui.leerLinea();
 
+        gestor.modificarCompositor(id, nombre, apellidos);
     }
 
     private void buscarCompositor() {
+        ui.imprimirLinea("Buscar compositor");
+        ui.imprimir("Ingrese el id o nombre del compositor que desea buscar: ");
+        String dato = ui.leerLinea();
 
+        Compositor compositorEncontrado = gestor.buscarCompositor(dato);
+
+        if(compositorEncontrado != null){
+            ui.imprimirLinea("Encontrado: " + compositorEncontrado.toString());
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
     private void eliminarCompositor() {
+        ui.imprimirLinea("Eliminar compositor");
+        ui.imprimir("Ingrese el id del compositor que desea eliminar: ");
+        String id = ui.leerLinea();
 
+        Compositor compositorEncontrado = gestor.buscarCompositor(id);
+
+        if(compositorEncontrado != null){
+            if(compositorEncontrado.getId().equals(id)){
+                gestor.eliminarCompositor(compositorEncontrado);
+                ui.imprimirLinea("Compositor eliminado");
+            }
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
 
-    //Artistas
-    private void registrarArtista() {
+    //Artistas ++
+    private Artista registrarArtista() {
+        ui.imprimirLinea("Registro de artista");
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Apellidos: ");
+        String apellidos = ui.leerLinea();
+        ui.imprimir("Nombre artistico: ");
+        String nombreArtistico = ui.leerLinea();
+        ui.imprimir("Fecha de nacimiento: ");
+        String fechaNacimiento = ui.leerLinea();
+        ui.imprimir("Fecha de defuncion: ");
+        String fechaDefuncion = ui.leerLinea();
+        ui.imprimir("Pais de nacimiento: ");
+        String paisNacimiento = ui.leerLinea();
+        ui.imprimir("Nombre genero: ");
+        String nombreGenero = ui.leerLinea();
 
+        Genero genero = gestor.buscarGenero(nombreGenero);
+        int edad = calcularEdad(fechaNacimiento);
+        String id = "arti0000" + nombre + fechaNacimiento;
+
+        ui.imprimir("Descripcion: ");
+        String descripcion = ui.leerLinea();
+
+        boolean resultado = gestor.crearArtista(id, nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
+        if(resultado){
+            ui.imprimirLinea("Artista registrado correctamente! :D");
+            return gestor.buscarArtista(id);
+        } else {
+            ui.imprimir("Hubo un problema al intentar el registro del artista :(");
+        }
+
+        return null;
     }
 
     private void listarArtistas() {
@@ -469,21 +651,93 @@ public class Controlador {
     }
 
     private void modificarArtista() {
+        ui.imprimirLinea("Modificar artista");
+        ui.imprimir("Ingrese el id del artista que desea modificar: ");
+        String id = ui.leerLinea();
 
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Apellidos: ");
+        String apellidos = ui.leerLinea();
+        ui.imprimir("Nombre artistico: ");
+        String nombreArtistico = ui.leerLinea();
+        ui.imprimir("Fecha defuncion: ");
+        String fechaDefuncion = ui.leerLinea();
+
+        gestor.modificarArtista(id, nombre, apellidos, nombreArtistico, fechaDefuncion);
     }
 
     private void buscarArtista() {
+        ui.imprimirLinea("Buscar artista");
+        ui.imprimir("Ingrese el id o nombre del artista que desea buscar: ");
+        String dato = ui.leerLinea();
 
+        Artista artistaEncontrado = gestor.buscarArtista(dato);
+        if(artistaEncontrado != null){
+            ui.imprimirLinea("Encontrado: " + artistaEncontrado.toString());
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
     private void eliminarArtista() {
+        ui.imprimirLinea("Eliminar artista");
+        ui.imprimir("Ingrese el id del artista que desea eliminar: ");
+        String id = ui.leerLinea();
 
+        Artista artistaEncontrado = gestor.buscarArtista(id);
+        if(artistaEncontrado != null){
+            if(artistaEncontrado.getId().equals(id)){
+                gestor.eliminarArtista(artistaEncontrado);
+                ui.imprimirLinea("Artista eliminado correctamente");
+            }
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
 
-    //Albunes
-    private void registrarAlbum() {
+    //Albunes +-
+    private Album registrarAlbum() {
+        ui.imprimirLinea("Registro de album");
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
 
+        String fechaCreacion = obtenerFechaActual();
+        ArrayList<Cancion> canciones = new ArrayList<Cancion>();
+        ArrayList<Artista> artistas = new ArrayList<Artista>();
+
+        ui.imprimir("Fecha de lanzamiento: ");
+        String fechaLanzamiento = ui.leerLinea();
+        ui.imprimir("Directorio de la imagen para la portada: ");
+        String imagen = ui.leerLinea();
+        ui.imprimir("ID del compositor: ");
+        String idCompositor = ui.leerLinea();
+        Compositor compositor = gestor.buscarCompositor(idCompositor);
+
+        if(compositor == null){
+            ui.imprimirLinea("****No se ha encontrado un compositor con ese ID, desea crear uno?****");
+            ui.imprimirLinea("1. Si");
+            ui.imprimirLinea("2. No");
+            ui.imprimir("Su opcion: ");
+            int opcion = ui.leerEntero();
+            if(opcion == 1){
+                compositor = registrarCompositor();
+            }
+        }
+
+        String id = "album000" + nombre + fechaCreacion;
+
+        boolean resultado = gestor.crearAlbum(id, nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas, compositor);
+
+        if(resultado){
+            ui.imprimirLinea("Album registrado correctamente! :D");
+            return gestor.buscarAlbum(id);
+        } else {
+            ui.imprimirLinea("Ha ocurrido un problema al intentar el registro del album :(");
+        }
+
+        return null;
     }
 
     private void listarAlbunes() {
@@ -494,11 +748,43 @@ public class Controlador {
     }
 
     private void modificarAlbum() {
+        ui.imprimirLinea("Modificar album");
+        ui.imprimir("Ingrese el id del album que desea modificar: ");
+        String id = ui.leerLinea();
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Directorio de la imagen para la portada: ");
+        String imagen = ui.leerLinea();
 
+        ui.imprimir("ID del compositor: ");
+        String idCompositor = ui.leerLinea();
+        Compositor compositor = gestor.buscarCompositor(idCompositor);
+
+        if(compositor == null){
+            ui.imprimirLinea("****No se ha encontrado un compositor con ese ID, desea crear uno?****");
+            ui.imprimirLinea("1. Si");
+            ui.imprimirLinea("2. No");
+            ui.imprimir("Su opcion: ");
+            int opcion = ui.leerEntero();
+            if(opcion == 1){
+                compositor = registrarCompositor();
+            }
+        }
+
+        gestor.modificarAlbum(id, nombre, imagen, compositor);
     }
 
     private void buscarAlbum() {
+        ui.imprimirLinea("Buscar album");
+        ui.imprimir("Ingrese el id o nombre del album que desea buscar: ");
+        String dato = ui.leerLinea();
 
+        Album albumEncontrado = gestor.buscarAlbum(dato);
+        if(albumEncontrado != null){
+            ui.imprimirLinea("Encontrado: " + albumEncontrado.toString());
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
     private void incluirCancionEnAlbum() {
@@ -510,13 +796,101 @@ public class Controlador {
     }
 
     private void eliminarAlbum() {
+        ui.imprimirLinea("Eliminar album");
+        ui.imprimir("Ingrese el id del album que desea eliminar: ");
+        String id = ui.leerLinea();
 
+        Album albumEncontrado = gestor.buscarAlbum(id);
+        if(albumEncontrado != null){
+            if(albumEncontrado.getId().equals(id)){
+                gestor.eliminarAlbum(albumEncontrado);
+                ui.imprimirLinea("Album eliminado correctamente");
+            }
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
 
-    //Canciones
+    //Canciones +-
     private void registrarCancion() {
+        ui.imprimirLinea("Registro de cancion");
 
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Directorio de la cancion: ");
+        String recurso = ui.leerLinea();
+        ui.imprimir("Nombre del album: ");
+        String nombreAlbum = ui.leerLinea();
+        ui.imprimir("Fecha de lanzamiento: ");
+        String fechaLanzamiento = ui.leerLinea();
+
+        ArrayList<Calificacion> calificaciones = new ArrayList<Calificacion>();
+        String id = "Cancion0000" + nombre + obtenerFechaActual();
+
+        //Genero
+        ui.imprimir("ID del genero: ");
+        String idGenero = ui.leerLinea();
+        Genero genero = gestor.buscarGenero(idGenero);
+
+        if(genero == null){
+            ui.imprimirLinea("****No se ha encontrado un genero con ese ID, desea crear uno?****");
+            ui.imprimirLinea("1. Si");
+            ui.imprimirLinea("2. No");
+            ui.imprimir("Su opcion: ");
+            int opcion = ui.leerEntero();
+            if(opcion == 1){
+                genero = registrarGenero();
+            }
+        }
+
+        //Artista
+        ui.imprimir("ID del artista: ");
+        String idArtista = ui.leerLinea();
+        Artista artista = gestor.buscarArtista(idArtista);
+
+        if(artista == null){
+            ui.imprimirLinea("****No se ha encontrado un artista con ese ID, desea crear uno?****");
+            ui.imprimirLinea("1. Si");
+            ui.imprimirLinea("2. No");
+            ui.imprimir("Su opcion: ");
+            int opcion = ui.leerEntero();
+            if(opcion == 1){
+                artista = registrarArtista();
+            }
+        }
+
+        //Compositor
+        ui.imprimir("ID del compositor: ");
+        String idCompositor = ui.leerLinea();
+        Compositor compositor = gestor.buscarCompositor(idCompositor);
+
+        if(compositor == null){
+            ui.imprimirLinea("****No se ha encontrado un compositor con ese ID, desea crear uno?****");
+            ui.imprimirLinea("1. Si");
+            ui.imprimirLinea("2. No");
+            ui.imprimir("Su opcion: ");
+            int opcion = ui.leerEntero();
+            if(opcion == 1){
+                compositor = registrarCompositor();
+            }
+        }
+
+        //Precio
+        double precio = 0.0f;
+        if(usuarioIngresado.esAdmin()){
+            ui.imprimir("Precio: ");
+            precio = ui.leerDouble();
+        }
+
+        Cancion cancionCreada = gestor.crearCancion(id, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+
+        //Si es admin la guarda en la biblioteca general, si es cliente la guarda en SU biblioteca
+        if(usuarioIngresado.esAdmin()){
+            gestor.guardarCancion(cancionCreada);
+        } else {
+            gestor.agregarCancionABibliotecaUsuario((Cliente) usuarioIngresado, cancionCreada);
+        }
     }
 
     private void listarCanciones() {
@@ -527,21 +901,76 @@ public class Controlador {
     }
 
     private void modificarCancion() {
+        ui.imprimirLinea("Modificar cancion");
+        ui.imprimir("Ingrese el ID de la cancion que desea modificar: ");
+        String id = ui.leerLinea();
 
+        ui.imprimir("Nombre del album: ");
+        String album = ui.leerLinea();
+        ui.imprimir("Precio: ");
+        double precio = ui.leerDouble();
+
+        gestor.modificarCancion(id, album, precio);
     }
 
     private void buscarCancion() {
+        ui.imprimirLinea("Buscar cancion");
+        ui.imprimir("Ingrese el id o nombre de la cancion que desea buscar: ");
+        String dato = ui.leerLinea();
+
+        Cancion cancionEncontrada = gestor.buscarCancion(dato);
+        if(cancionEncontrada != null){
+            ui.imprimirLinea("Encontrado: " + cancionEncontrada.toString());
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
+    }
+
+    private void buscarCancionEnBiblioteca(){
 
     }
 
     private void eliminarCancion() {
+        ui.imprimirLinea("Eliminar cancion");
+        ui.imprimir("Ingrese el id de la cancion que desea eliminar: ");
+        String id = ui.leerLinea();
 
+        Cancion cancionEncontrada = gestor.buscarCancion(id);
+        if(cancionEncontrada != null){
+            if(cancionEncontrada.getId().equals(id)){
+                gestor.eliminarCancion(cancionEncontrada);
+                ui.imprimirLinea("Cancion eliminada correctamente");
+            }
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
 
-    //Listas de reproduccion
-    private void registrarListaReproduccion() {
+    //Listas de reproduccion +-
+    private ListaReproduccion registrarListaReproduccion() {
+        ui.imprimirLinea("Registro de lista de reproduccion");
 
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Directorio de la imagen que se va a usar en la portada: ");
+        String imagen = ui.leerLinea();
+
+        String fechaCreacion = obtenerFechaActual();
+        ArrayList<Cancion> canciones = new ArrayList<Cancion>();
+        String idCreador = usuarioIngresado.getId();
+        String id = "ListRep000" + nombre + fechaCreacion;
+
+        boolean resultado = gestor.crearListaReproduccion(id, nombre, fechaCreacion, canciones, idCreador, imagen);
+
+        if(resultado){
+            ui.imprimirLinea("Lista de reproduccion registrada correctamente! :D");
+            return gestor.buscarListaReproduccion(id);
+        } else {
+            ui.imprimirLinea("Hubo un problema al intentar el registro de la lista de reproduccion :(");
+        }
+
+        return null;
     }
 
     private void listarListasDeReproduccion() {
@@ -552,15 +981,44 @@ public class Controlador {
     }
 
     private void modificarListaReproduccion() {
+        ui.imprimirLinea("Modificar lista de reproduccion");
+        ui.imprimir("Ingrese el id de la lista de reproduccion que desea modificar: ");
+        String id = ui.leerLinea();
+        ui.imprimir("Nombre: ");
+        String nombre = ui.leerLinea();
+        ui.imprimir("Directorio de la imagen que se va a usar en la portada: ");
+        String imagen = ui.leerLinea();
 
+        gestor.modificarListaReproduccion(id, nombre, imagen);
     }
 
     private void buscarListaReproduccion() {
+        ui.imprimirLinea("Buscar lista de reproduccion");
+        ui.imprimir("Ingrese el id o nombre de la lista de reproduccion que desea buscar: ");
+        String dato = ui.leerLinea();
 
+        ListaReproduccion listaEncontrada = gestor.buscarListaReproduccion(dato);
+        if(listaEncontrada != null){
+            ui.imprimirLinea("Encontrado: " + listaEncontrada.toString());
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
     private void eliminarListaReproduccion() {
+        ui.imprimirLinea("Eliminar lista de reproduccion");
+        ui.imprimir("Ingrese el id de la lista de reproduccion que desea eliminar: ");
+        String id = ui.leerLinea();
 
+        ListaReproduccion listaEncontrada = gestor.buscarListaReproduccion(id);
+        if(listaEncontrada != null){
+            if(listaEncontrada.getId().equals(id)){
+                gestor.eliminarListaReproduccion(listaEncontrada);
+                ui.imprimirLinea("Lista de reproduccion eliminada correctamente");
+            }
+        } else {
+            ui.imprimirLinea("No hay resultados");
+        }
     }
 
     private void incluirCancionEnListaReproduccion() {

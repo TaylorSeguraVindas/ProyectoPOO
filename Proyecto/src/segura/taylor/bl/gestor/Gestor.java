@@ -50,6 +50,7 @@ public class Gestor {
         return null;
     }
 
+    //TODO terminar esto bien
     public boolean agregarCancionABibliotecaUsuario(Cliente pCliente, Cancion pCancion){
         int indice = obtenerIndiceUsuario(pCliente);
 
@@ -74,6 +75,16 @@ public class Gestor {
         return true;
     }
 
+    public int cantidadAlbunes() {return albunes.size();}
+    public int cantidadArtistas() {return artistas.size();}
+    public int cantidadCanciones() {return canciones.size();}
+    public int cantidadCompositores() {return compositores.size();}
+    public int cantidadGeneros() {return generos.size();}
+    public int cantidadListasReproduccion() {return listasReproduccion.size();}
+    public int cantidadPaises() {return paises.size();}
+    public int cantidadUsuarios(){
+        return usuarios.size();
+    }
 
     //*******Manejo de usuarios*******
     //Admin
@@ -152,7 +163,6 @@ public class Gestor {
         return -1;
     }
 
-
     //*******Manejo de albunes********
     public boolean crearAlbum(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor){
         if(canciones == null){
@@ -172,11 +182,11 @@ public class Gestor {
 
         return false;
     }
-    public boolean modificarAlbum(String pId, String pNombre, String pImagen){
+    public boolean modificarAlbum(String pId, String pNombre, String pImagen, Compositor pCompositor){
         Album albumModifica = buscarAlbum(pId);
 
         if(albumModifica != null){
-            return albumModifica.modificar(pNombre, pImagen);
+            return albumModifica.modificar(pNombre, pImagen, pCompositor);
         }
 
         return false;
@@ -192,6 +202,7 @@ public class Gestor {
         return albunes;
     }
 
+    //TODO terminar esto bien
     public boolean agregarCancionEnAlbum(Cancion pCancion, Album pAlbum){
         int indice = obtenerIndiceAlbum(pAlbum);
 
@@ -292,6 +303,7 @@ public class Gestor {
         return listasReproduccion;
     }
 
+    //TODO terminar esto bien
     public boolean agregarCancionALista(Cancion pCancion, ListaReproduccion pLista) {
         int indice = obtenerIndiceListaReproduccion(pLista);
 

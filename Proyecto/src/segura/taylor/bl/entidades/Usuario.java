@@ -20,10 +20,6 @@ public class Usuario {
     protected String nombreUsuario;
 
     //Propiedades
-    public TipoUsuario getTipoUsuario() {
-        return tipoUsuario;
-    }
-
     public String getId() {
         return id;
     }
@@ -75,8 +71,8 @@ public class Usuario {
 
     //Constructores
     public Usuario(){}
-
     public Usuario(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario) {
+        this.id = id;
         this.correo = correo;
         this.contrasenna = contrasenna;
         this.nombre = nombre;
@@ -90,7 +86,6 @@ public class Usuario {
     public String toString() {
         return "Usuario{" +
                 "id='" + id + '\'' +
-                ", tipoUsuario=" + tipoUsuario +
                 ", correo='" + correo + '\'' +
                 ", contrasenna='" + contrasenna + '\'' +
                 ", nombre='" + nombre + '\'' +
@@ -127,5 +122,9 @@ public class Usuario {
         this.nombre = (pNombre != "") ? pNombre : this.nombre;
         this.apellidos = (pApellidos != "") ? pApellidos : this.apellidos;
         return true;
+    }
+
+    public boolean esAdmin(){
+        return tipoUsuario == TipoUsuario.Admin;
     }
 }

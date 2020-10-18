@@ -31,12 +31,18 @@ public class Gestor {
 
     //*******General**********
     public boolean existeAdmin(){
-        return (usuarios.get(0).getTipoUsuario() == Usuario.TipoUsuario.Admin);
+        if(usuarios.size() == 0){
+            return false;
+        }
+
+        return (usuarios.get(0).esAdmin());
     }
     public Usuario iniciarSesion(String pCorreo, String pContrasenna){
         for (Usuario objUsuario: usuarios) {
-            if(objUsuario.getCorreo().equals(pCorreo) && objUsuario.getContrasenna().equals(pContrasenna)){
-                return objUsuario;
+            if(objUsuario.getCorreo().equals(pCorreo)){
+                if(objUsuario.getContrasenna().equals(pContrasenna)){
+                    return objUsuario;
+                }
             }
         }
 
@@ -70,27 +76,40 @@ public class Gestor {
 
     //*******Manejo de usuarios*******
     //Admin
-    public boolean crearUsuario(String fechaCreacion, String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario){
+    public boolean crearUsuarioAdmin(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaCreacion){
         //Si ya existe un admin no se puede sobreescribir
         if(existeAdmin()) return false;
 
-        Admin admin = new Admin(id, fechaCreacion, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
+        Admin admin = new Admin(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaCreacion);
         usuarios.add(admin);
         return true;
     }
     //Cliente
-    public boolean crearUsuario(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String idPais, Biblioteca biblioteca){
+    public boolean crearUsuarioCliente(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String idPais, Biblioteca biblioteca){
         //Si no hay admin no se puede registrar usuarios.
         if(usuarios.size() == 0) return false;
 
-        //TODO condicion para no repetir usuarios.
+        if(biblioteca == null){
+            biblioteca = new Biblioteca();
+        }
 
         Cliente nuevoCliente = new Cliente(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, idPais, biblioteca);
-        usuarios.add(nuevoCliente);
-        return true;
+
+        //Evitar repeticion de datos.
+        if(buscarUsuario(correo) == null){
+            usuarios.add(nuevoCliente);
+            return true;
+        }
+
+        return false;
     }
-    public boolean modificarUsuario(){
-        //TODO modificar
+    public boolean modificarUsuario(String pCorreo, String pNombreUsuario, String pImagenPerfil, String pContrasenna, String pNombre, String pApellidos){
+        Usuario usuarioModifica = buscarUsuario(pCorreo);
+
+        if(usuarioModifica != null){
+            return usuarioModifica.modificar(pNombreUsuario, pImagenPerfil, pContrasenna, pNombre, pApellidos);
+        }
+
         return false;
     }
     public boolean eliminarUsuario(Usuario usuario) {
@@ -115,7 +134,7 @@ public class Gestor {
     }
     public Usuario buscarUsuario(String dato){
         for (Usuario objUsuario: usuarios) {
-            if(objUsuario.getId().equals(dato) || objUsuario.getNombre().equals(dato)){
+            if(objUsuario.getId().equals(dato) || objUsuario.getCorreo().equals(dato) || objUsuario.getNombre().equals(dato)){
                 return objUsuario;
             }
         }
@@ -137,15 +156,19 @@ public class Gestor {
     public boolean crearAlbum(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor){
         Album nuevoAlbum = new Album(id, nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas, compositor);
 
-        //TODO condicion para no repetir albunes.
-        albunes.add(nuevoAlbum);
-        return true;
-    }
-    public boolean modificarAlbum(Album pAlbum, String pNombre, String pImagen){
-        int indice = obtenerIndiceAlbum(pAlbum);
+        //Evitar repeticion de datos.
+        if(!existeAlbum(nuevoAlbum)){
+            albunes.add(nuevoAlbum);
+            return true;
+        }
 
-        if(indice != -1){
-            return albunes.get(indice).modificar(pNombre, pImagen);
+        return false;
+    }
+    public boolean modificarAlbum(String pId, String pNombre, String pImagen){
+        Album albumModifica = buscarAlbum(pId);
+
+        if(albumModifica != null){
+            return albumModifica.modificar(pNombre, pImagen);
         }
 
         return false;
@@ -228,19 +251,21 @@ public class Gestor {
 
     //*********Manejo de Listas de Reproduccion***************
     public boolean crearListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String idCreador, String imagen){
-        if(buscarListaReproduccion(id) == null){
-            ListaReproduccion nuevaLista = new ListaReproduccion(id, nombre, fechaCreacion, canciones, idCreador, 0.0, imagen);
+        ListaReproduccion nuevaLista = new ListaReproduccion(id, nombre, fechaCreacion, canciones, idCreador, 0.0, imagen);
+
+        //Evitar repeticion de datos.
+        if(!existeListaReproduccion(nuevaLista)){
             listasReproduccion.add(nuevaLista);
             return true;
         }
 
         return false;
     }
-    public boolean modificarListaReproduccion(ListaReproduccion pLista, String pNombre, String pImagen){
-        int indice = obtenerIndiceListaReproduccion(pLista);
+    public boolean modificarListaReproduccion(String pId, String pNombre, String pImagen){
+        ListaReproduccion listaModifica = buscarListaReproduccion(pId);
 
-        if(indice != -1){
-            return listasReproduccion.get(indice).modificar(pNombre, pImagen);
+        if(listaModifica != null){
+            return listaModifica.modificar(pNombre, pImagen);
         }
         return false;
     }
@@ -304,15 +329,19 @@ public class Gestor {
     public boolean crearArtista(String id, String nombre, String apellidos, String nombreArtistico, String fechaNacimiento, String fechaDefuncion, String paisNacimiento, Genero genero, int edad, String descripcion){
         Artista nuevoArtista = new Artista(id, nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
 
-        //TODO condicion para no repetir artistas
-        artistas.add(nuevoArtista);
-        return true;
-    }
-    public boolean modificarArtista(Artista pArtista, String pNombre, String pApellidos, String pNomArtistico, String pFechaDefuncion){
-        int indice = obtenerIndiceArtista(pArtista);
+        //Evitar repeticion de datos.
+        if(!existeArtista(nuevoArtista)){
+            artistas.add(nuevoArtista);
+            return true;
+        }
 
-        if(indice != -1){
-            return artistas.get(indice).modificar(pNombre, pApellidos, pNomArtistico, pFechaDefuncion);
+        return false;
+    }
+    public boolean modificarArtista(String pId, String pNombre, String pApellidos, String pNomArtistico, String pFechaDefuncion){
+        Artista artistaModifica = buscarArtista(pId);
+
+        if(artistaModifica != null){
+            return artistaModifica.modificar(pNombre, pApellidos, pNomArtistico, pFechaDefuncion);
         }
         return false;
     }
@@ -360,11 +389,11 @@ public class Gestor {
         Cancion nuevaCancion = new Cancion(id, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
         return nuevaCancion;
     }
-    public boolean modificarCancion(Cancion pCancion, String pNombreAlbum, double pPrecio){
-        int indice = obtenerIndiceCancion(pCancion);
+    public boolean modificarCancion(String pId, String pNombreAlbum, double pPrecio){
+        Cancion cancionModifica = buscarCancion(pId);
 
-        if(indice != 1){
-            return canciones.get(indice).modificar(pNombreAlbum, pPrecio);
+        if(cancionModifica != null){
+            return cancionModifica.modificar(pNombreAlbum, pPrecio);
         }
         return false;
     }
@@ -411,17 +440,21 @@ public class Gestor {
     public boolean crearCompositor(String id, String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad){
         Compositor nuevoCompositor = new Compositor(id, nombre, apellidos, paisNacimiento, fechaNacimiento, edad);
 
-        //TODO condicion para no repetir compositores
-        compositores.add(nuevoCompositor);
-        return true;
-    }
-    public boolean modificarCompositor(Compositor pCompositor, String pNombre, String pApellidos){
-        int indice = obtenerIndiceCompositor(pCompositor);
-
-        if(indice != -1){
-            compositores.get(indice).modificar(pNombre, pApellidos);
+        //Evitar repeticion de datos.
+        if(!existeCompositor(nuevoCompositor)){
+            compositores.add(nuevoCompositor);
             return true;
         }
+
+        return false;
+    }
+    public boolean modificarCompositor(String pId, String pNombre, String pApellidos){
+        Compositor compositorModifica = buscarCompositor(pId);
+
+        if(compositorModifica != null){
+            return compositorModifica.modificar(pNombre, pApellidos);
+        }
+
         return false;
     }
     public boolean eliminarCompositor(Compositor pCompositor){
@@ -467,16 +500,21 @@ public class Gestor {
     public boolean crearGenero(String id, String nombre, String descripcion){
         Genero nuevoGenero = new Genero(id, nombre, descripcion);
 
-        //TODO condicion para no repetir generos
-        generos.add(nuevoGenero);
-        return true;
-    }
-    public boolean modificarGenero(Genero pGenero, String pNombre, String pDesc){
-        int indice = obtenerIndiceGenero(pGenero);
-
-        if(indice != -1){
-            return generos.get(indice).modificar(pNombre, pDesc);
+        //Evitar repeticion de datos.
+        if(!existeGenero(nuevoGenero)){
+            generos.add(nuevoGenero);
+            return true;
         }
+
+        return false;
+    }
+    public boolean modificarGenero(String pId, String pNombre, String pDesc){
+        Genero generoModifica = buscarGenero(pId);
+
+        if(generoModifica != null){
+            return generoModifica.modificar(pNombre, pDesc);
+        }
+
         return false;
     }
     public boolean eliminarGenero(Genero pGenero){
@@ -523,16 +561,19 @@ public class Gestor {
     public boolean crearPais(String id, String nombrePais, String descripcion){
         Pais nuevoPais = new Pais(id, nombrePais, descripcion);
 
-        //TODO condicion para no repetir paises.
-        paises.add(nuevoPais);
-        return true;
-    }
-    public boolean modificarPais(Pais pPais, String pNombre, String pDescripcion){
-        int indice = obtenerIndicePais(pPais);
-
-        if(indice != -1){
-            paises.get(indice).modificar(pNombre, pDescripcion);
+        //Evitar repeticion de datos.
+        if(!existePais(nuevoPais)){
+            paises.add(nuevoPais);
             return true;
+        }
+
+        return false;
+    }
+    public boolean modificarPais(String pId, String pNombre, String pDescripcion){
+        Pais paisModifica = buscarPais(pId);
+
+        if(paisModifica != null){
+            return paisModifica.modificar(pNombre, pDescripcion);
         }
 
         return false;

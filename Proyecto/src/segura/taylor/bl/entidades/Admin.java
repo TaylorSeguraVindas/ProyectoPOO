@@ -21,6 +21,7 @@ public class Admin extends Usuario {
 
     public Admin(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaCreacion) {
         super(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
+        this.tipoUsuario = TipoUsuario.Admin;
         this.fechaCreacion = fechaCreacion;
     }
 

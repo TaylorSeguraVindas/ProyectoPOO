@@ -1,10 +1,9 @@
 package segura.taylor.bl.logica;
 
-import segura.taylor.bl.entidades.Usuario;
+import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.gestor.Gestor;
 import segura.taylor.bl.ui.UI;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -12,10 +11,11 @@ import java.util.ArrayList;
 
 public class Controlador {
     //Variables
-    private Gestor gestor = new Gestor();
-    private UI ui = new UI();
+    private final Gestor gestor = new Gestor();
+    private final UI ui = new UI();
 
     private Usuario usuarioIngresado;   //Referencia al usuario que está usando la aplicacion
+
 
     //Metodos
     public void iniciarPrograma(){
@@ -23,11 +23,6 @@ public class Controlador {
 
         do {
             if(gestor.existeAdmin()){
-                ArrayList<Usuario> usuarios = gestor.listarUsuarios();
-                for (Usuario objUsuario: usuarios) {
-                    ui.imprimirLinea(objUsuario.toString());
-                }
-
                 opcion1 = mostrarMenuInicioSesion();
                 procesarOpcion1(opcion1);
             } else {
@@ -64,7 +59,7 @@ public class Controlador {
     }
 
 
-    //****General****
+    //****Menus Generales****
     private int mostrarMenuInicioSesion(){
         ui.imprimirLinea("Bienvenido");
         ui.imprimirLinea("1. Iniciar sesion");
@@ -89,9 +84,83 @@ public class Controlador {
                 ui.imprimirLinea("Opcion invalida");
         }
     }
+    private void ingresarAlPrograma(){
+        boolean inicioSesion = false;
+
+        inicioSesion = iniciarSesion();
+
+        if(!inicioSesion){
+            ui.imprimir("No se pudo iniciar sesión, intentelo nuevamente.");
+            return;
+        }
+
+        //Logica del programa.
+        int opcion2 = 0;
+
+        do{
+            if (usuarioIngresado.esAdmin()) {
+                opcion2 = mostrarMenuAdmin();
+                procesarOpcionAdmin(opcion2);
+            } else {
+                opcion2 = mostrarMenuCliente();
+                procesarOpcionCliente(opcion2);
+            }
+        }while (usuarioIngresado != null);
+    }
 
 
-    //****Manejo de usuarios****
+    //****Menus Admin****
+    private int mostrarMenuAdmin(){
+        ui.imprimirLinea("Bienvenido Admin");
+        ui.imprimirLinea("1. Listar usuarios");
+        ui.imprimirLinea("2. Listar generos");
+        ui.imprimirLinea("3. Listar compositores");
+        ui.imprimirLinea("4. Listar artistas");
+        ui.imprimirLinea("5. Listar canciones");
+        ui.imprimirLinea("6. Listar listas de reproduccion");
+        ui.imprimirLinea("7. Listar paises");
+        ui.imprimirLinea("8.");
+        ui.imprimirLinea("9.");
+        ui.imprimirLinea("10.");
+        ui.imprimirLinea("11.");
+        ui.imprimirLinea("12.");
+        ui.imprimirLinea("13.");
+        ui.imprimirLinea("14.");
+        ui.imprimir("Su opcion: ");
+        return ui.leerEntero();
+    }
+    private void procesarOpcionAdmin(int opcion){
+
+    }
+
+
+    //****Menus Cliente****
+    private int mostrarMenuCliente(){
+        return 0;
+    }
+    private void procesarOpcionCliente(int opcion){
+
+    }
+
+
+    //****Control de sesiones****
+    private boolean iniciarSesion(){
+        ui.imprimirLinea("\n\nInicio de sesion");
+        ui.imprimir("Correo: ");
+        String correo = ui.leerLinea();
+
+        ui.imprimir("Contraseña: ");
+        String contrasenna = ui.leerLinea();
+
+        usuarioIngresado = gestor.iniciarSesion(correo, contrasenna);
+        return usuarioIngresado != null;
+    }
+    private void cerrarSesion(){
+        usuarioIngresado = null;
+    }
+
+
+    //Usuarios
     private void registrarUsuario(boolean registrandoAdmin){
         ui.imprimirLinea("\nBienvenido al registro de usuarios");
 
@@ -165,64 +234,167 @@ public class Controlador {
             }
         }
     }
-
-    private void ingresarAlPrograma(){
-        boolean inicioSesion = false;
-
-        do{
-            inicioSesion = iniciarSesion();
-            ui.imprimirLinea("Inicio sesion: " + inicioSesion);
-
-            if(!inicioSesion){
-                ui.imprimir("No se pudo iniciar sesión, intentelo nuevamente.");
-            }
-        } while(inicioSesion == false);
-
-
-        //Logica del programa.
-        int opcion2 = 0;
-
-        do{
-            if (usuarioIngresado.esAdmin()) {
-                opcion2 = mostrarMenuAdmin();
-                procesarOpcionAdmin(opcion2);
-            } else {
-                opcion2 = mostrarMenuCliente();
-                procesarOpcionCliente(opcion2);
-            }
-        }while (usuarioIngresado != null);
+    private void listarUsuarios(){
+        ArrayList<Usuario> usuarios = gestor.listarUsuarios();
+        for (Usuario objUsuario: usuarios) {
+            ui.imprimirLinea(objUsuario.toString());
+        }
     }
-
-    private int mostrarMenuAdmin(){
-        return 0;
-    }
-    private void procesarOpcionAdmin(int opcion){
+    private void modificarUsuario(){
 
     }
+    private void buscarUsuario(){
 
-    private int mostrarMenuCliente(){
-        return 0;
     }
-    private void procesarOpcionCliente(int opcion){
+    private void eliminarUsuario(){
 
     }
 
 
-    //****Manejo de sesiones****
-    private boolean iniciarSesion(){
-        ui.imprimirLinea("\n\nInicio de sesion");
-        ui.imprimir("Correo: ");
-        String correo = ui.leerLinea();
+    //Generos
+    private void registrarGenero(){
 
-        ui.imprimir("Contraseña: ");
-        String contrasenna = ui.leerLinea();
-
-        usuarioIngresado = gestor.iniciarSesion(correo, contrasenna);
-
-        ui.imprimirLinea("usuario: " + usuarioIngresado.toString());
-        return usuarioIngresado != null;
     }
-    private void cerrarSesion(){
-        usuarioIngresado = null;
+    private void listarGeneros(){
+        ArrayList<Genero> generos = gestor.listarGeneros();
+        for (Genero objGenero: generos) {
+            ui.imprimirLinea(objGenero.toString());
+        }
     }
+    private void modificarGenero(){
+
+    }
+    private void buscarGenero(){
+
+    }
+    private void eliminarGenero(){
+
+    }
+
+
+    //Compositores
+    private void registrarCompositor(){
+
+    }
+    private void listarCompositores(){
+        ArrayList<Compositor> compositores = gestor.listarCompositores();
+        for (Compositor objCompositor: compositores) {
+            ui.imprimirLinea(objCompositor.toString());
+        }
+    }
+    private void modificarCompositor(){
+
+    }
+    private void buscarCompositor(){
+
+    }
+    private void eliminarCompositor(){
+
+    }
+
+
+    //Artistas
+    private void registrarArtista(){
+
+    }
+    private void listarArtistas(){
+        ArrayList<Artista> artistas = gestor.listarArtistas();
+        for (Artista objArtista: artistas) {
+            ui.imprimirLinea(objArtista.toString());
+        }
+    }
+    private void modificarArtista(){
+
+    }
+    private void buscarArtista(){
+
+    }
+    private void eliminarArtista(){
+
+    }
+
+
+    //Albunes
+    private void registrarAlbum(){
+
+    }
+    private void listarAlbunes(){
+        ArrayList<Album> albunes = gestor.listarAlbunes();
+        for (Album objAlbum: albunes) {
+            ui.imprimirLinea(objAlbum.toString());
+        }
+    }
+    private void modificarAlbum(){
+
+    }
+    private void buscarAlbum(){
+
+    }
+    private void eliminarAlbum(){
+
+    }
+
+
+    //Canciones
+    private void subirCancion(){
+
+    }
+    private void listarCanciones(){
+        ArrayList<Cancion> canciones = gestor.listarCanciones();
+        for (Cancion objCancion: canciones) {
+            ui.imprimirLinea(objCancion.toString());
+        }
+    }
+    private void modificarCancion(){
+
+    }
+    private void buscarCancion(){
+
+    }
+    private void eliminarCancion(){
+
+    }
+
+
+    //Listas de reproduccion
+    private void registrarListaReproduccion(){
+
+    }
+    private void listarListasDeReproduccion(){
+        ArrayList<ListaReproduccion> listasReproduccion = gestor.listarListasReproduccion();
+        for (ListaReproduccion objListaReproduccion: listasReproduccion) {
+            ui.imprimirLinea(objListaReproduccion.toString());
+        }
+    }
+    private void modificarListaReproduccion(){
+
+    }
+    private void buscarListaReproduccion(){
+
+    }
+    private void eliminarListaReproduccion(){
+
+    }
+
+
+    //Paises
+    private void registrarPais(){
+
+    }
+    private void listarPaises(){
+        ArrayList<Pais> paises = gestor.listarPaises();
+        for (Pais objPais: paises) {
+            ui.imprimirLinea(objPais.toString());
+        }
+    }
+    private void modificarPais(){
+
+    }
+    private void buscarPais(){
+
+    }
+    private void eliminarPais(){
+
+    }
+
 }

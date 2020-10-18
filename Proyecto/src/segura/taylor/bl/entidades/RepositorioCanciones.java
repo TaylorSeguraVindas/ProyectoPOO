@@ -94,8 +94,12 @@ public class RepositorioCanciones {
         return false;
     }
 
-    public Cancion buscarCancion(String pId, String nombre){
-        //TODO buscar cancion por id o nombre
+    public Cancion buscarCancion(String dato){
+        for (Cancion objCancion: canciones) {
+            if(objCancion.getId().equals(dato) || objCancion.getNombre().equals(dato)){
+                return objCancion;
+            }
+        }
         return null;
     }
 

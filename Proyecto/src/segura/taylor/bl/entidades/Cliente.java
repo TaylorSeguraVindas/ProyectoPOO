@@ -6,7 +6,7 @@ public class Cliente extends Usuario{
     //Variables
     private String fechaNacimiento;
     private int edad;
-    private String idPais;
+    private String pais;
     private Biblioteca biblioteca;
 
     //Propiedades
@@ -24,11 +24,11 @@ public class Cliente extends Usuario{
         this.edad = edad;
     }
 
-    public String getIdPais() {
-        return idPais;
+    public String getPais() {
+        return pais;
     }
-    public void setIdPais(String idPais) {
-        this.idPais = idPais;
+    public void setPais(String pais) {
+        this.pais = pais;
     }
 
     public Biblioteca getBiblioteca() {
@@ -42,12 +42,12 @@ public class Cliente extends Usuario{
     public Cliente(){
         this.tipoUsuario = TipoUsuario.Normal;
     }
-    public Cliente(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String idPais, Biblioteca biblioteca) {
+    public Cliente(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String pais, Biblioteca biblioteca) {
         super(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
         this.tipoUsuario = TipoUsuario.Normal;
         this.fechaNacimiento = fechaNacimiento;
         this.edad = edad;
-        this.idPais = idPais;
+        this.pais = pais;
         this.biblioteca = biblioteca;
     }
 
@@ -57,7 +57,7 @@ public class Cliente extends Usuario{
         return "Cliente{" +
                 "fechaNacimiento='" + fechaNacimiento + '\'' +
                 ", edad=" + edad +
-                ", idPais='" + idPais + '\'' +
+                ", pais='" + pais + '\'' +
                 ", biblioteca=" + biblioteca +
                 ", id='" + id + '\'' +
                 ", tipoUsuario=" + tipoUsuario +
@@ -78,12 +78,12 @@ public class Cliente extends Usuario{
         Cliente cliente = (Cliente) o;
         return edad == cliente.edad &&
                 Objects.equals(fechaNacimiento, cliente.fechaNacimiento) &&
-                Objects.equals(idPais, cliente.idPais) &&
+                Objects.equals(pais, cliente.pais) &&
                 Objects.equals(biblioteca, cliente.biblioteca);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), fechaNacimiento, edad, idPais, biblioteca);
+        return Objects.hash(super.hashCode(), fechaNacimiento, edad, pais, biblioteca);
     }
 }

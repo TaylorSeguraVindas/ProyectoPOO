@@ -64,6 +64,14 @@ public class Biblioteca extends RepositorioCanciones {
         return false;
     }
 
+    public String buscarEnFavoritos(String dato){
+        for (String objCancion: idCancionesFavoritas) {
+            if(objCancion.equals(dato)){
+                return objCancion;
+            }
+        }
+        return null;
+    }
     public boolean existeEnFavoritos(String id){
         for (Cancion objCancion: canciones) {
             if(id.equals(objCancion.getId())){

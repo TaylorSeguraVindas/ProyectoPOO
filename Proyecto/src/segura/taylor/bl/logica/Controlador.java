@@ -76,10 +76,14 @@ public class Controlador {
         return periodo.getYears();
     }
 
+    private void esperarTecla(){
+        ui.imprimirLinea("\nPresione Enter para continuar...");
+        ui.leerLinea();
+    }
 
     //****Menus Generales****
     private int mostrarMenuInicioSesion() {
-        ui.imprimirLinea("Bienvenido");
+        ui.imprimirLinea("\n\n\tBienvenido");
         ui.imprimirLinea("1. Iniciar sesion");
         ui.imprimirLinea("2. Registrar usuario");
         ui.imprimirLinea("3. Salir");
@@ -131,7 +135,7 @@ public class Controlador {
 
     //****Menus Admin****
     private int mostrarMenuAdmin() {
-        ui.imprimirLinea("Bienvenido Admin");
+        ui.imprimirLinea("\n\n\tBienvenido Admin");
         ui.imprimirLinea("1. Buscar usuario");
         ui.imprimirLinea("2. Listar usuarios");
         ui.imprimirLinea("3. Modificar usuario");
@@ -290,6 +294,7 @@ public class Controlador {
 
     //****Menus Cliente****
     private int mostrarMenuCliente() {
+        ui.imprimirLinea("\n\n\tBienvenido");
         return 0;
     }
     private void procesarOpcionCliente(int opcion) {
@@ -299,7 +304,7 @@ public class Controlador {
 
     //****Control de sesiones****
     private boolean iniciarSesion() {
-        ui.imprimirLinea("\n\nInicio de sesion");
+        ui.imprimirLinea("\n\n\tInicio de sesion");
         ui.imprimir("Correo: ");
         String correo = ui.leerLinea();
 
@@ -316,7 +321,7 @@ public class Controlador {
 
     //Usuarios ++
     private Usuario registrarUsuario(boolean registrandoAdmin) {
-        ui.imprimirLinea("\nBienvenido al registro de usuarios");
+        ui.imprimirLinea("\n\n\tRegistro de usuarios");
 
         if (registrandoAdmin) {
             String fechaRegistro = obtenerFechaActual();
@@ -393,14 +398,17 @@ public class Controlador {
     }
 
     private void listarUsuarios() {
+        ui.imprimirLinea("\n\n\tLista de usuarios");
         ArrayList<Usuario> usuarios = gestor.listarUsuarios();
         for (Usuario objUsuario : usuarios) {
             ui.imprimirLinea(objUsuario.toString());
         }
+
+        esperarTecla();
     }
 
     private void modificarUsuario(boolean desdeAdmin) {
-        ui.imprimirLinea("Modificar usuario");
+        ui.imprimirLinea("\n\n\tModificar usuario");
 
         String correo;
 
@@ -422,9 +430,12 @@ public class Controlador {
 
         //La contraseña NO se modifica desde aqui.
         gestor.modificarUsuario(correo, nombreUsuario, imagenPerfil, "", nombre, apellidos);
+
+        esperarTecla();
     }
 
     private void buscarUsuario() {
+        ui.imprimirLinea("\n\n\tBuscar de usuarios");
         ui.imprimir("Ingrese el id, correo o nombre del usuario que desea buscar: ");
         String dato = ui.leerLinea();
         Usuario usuarioEncontrado = gestor.buscarUsuario(dato);
@@ -434,9 +445,12 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
     private void eliminarUsuario() {
+        ui.imprimirLinea("\n\n\tEliminar usuario");
         ui.imprimir("Ingrese el id del usuario que desea eliminar: ");
         String id = ui.leerLinea();
         Usuario usuarioEncontrado = gestor.buscarUsuario(id);
@@ -449,16 +463,45 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
-    private void guardarCancionEnBiblioteca() {
+    private void buscarCancionEnBiblioteca(){
+        ui.imprimirLinea("\n\n\tBuscar cancion en biblioteca");
+        ui.imprimir("Ingrese el ID o nombre de la cancion que desea buscar: ");
+        String dato = ui.leerLinea();
 
+        Cancion cancionEncontrada = gestor.buscarCancionEnBibliotecaUsuario(usuarioIngresado.getId(), dato);
+        if(cancionEncontrada != null){
+            ui.imprimirLinea("Encontrado: " + cancionEncontrada.toString());
+        } else {
+            ui.imprimirLinea("No hay resultados.");
+        }
+
+        esperarTecla();
     }
+    private void eliminarCancionDeBiblioteca() {
+        ui.imprimirLinea("\n\n\tEliminar cancion de biblioteca");
+        ui.imprimir("Ingrese el ID de la cancion que desea eliminar: ");
+        String id = ui.leerLinea();
 
+        Cancion cancionEncontrada = gestor.buscarCancionEnBibliotecaUsuario(usuarioIngresado.getId(), id);
+        if(cancionEncontrada != null){
+            if(cancionEncontrada.getId().equals(id)){
+                gestor.removerCancionDeBibliotecaUsuario(usuarioIngresado.getId(), cancionEncontrada);
+                ui.imprimirLinea("Cancion eliminada correctamente");
+            }
+        } else {
+            ui.imprimirLinea("No hay resultados.");
+        }
+
+        esperarTecla();
+    }
 
     //Generos ++
     private Genero registrarGenero() {
-        ui.imprimirLinea("Registro de generos");
+        ui.imprimirLinea("\n\n\tRegistro de generos");
         ui.imprimir("Nombre: ");
         String nombre = ui.leerLinea();
         ui.imprimir("Descripcion: ");
@@ -478,14 +521,17 @@ public class Controlador {
     }
 
     private void listarGeneros() {
+        ui.imprimirLinea("\n\n\tLista de generos");
         ArrayList<Genero> generos = gestor.listarGeneros();
         for (Genero objGenero : generos) {
             ui.imprimirLinea(objGenero.toString());
         }
+
+        esperarTecla();
     }
 
     private void modificarGenero() {
-        ui.imprimirLinea("Modificar genero");
+        ui.imprimirLinea("\n\n\tModificar genero");
         ui.imprimir("Ingrese el id del genero que desea modificar: ");
         String id = ui.leerLinea();
         ui.imprimir("Nombre: ");
@@ -494,10 +540,12 @@ public class Controlador {
         String descripcion = ui.leerLinea();
 
         gestor.modificarGenero(id, nombre, descripcion);
+
+        esperarTecla();
     }
 
     private void buscarGenero() {
-        ui.imprimirLinea("Buscar genero");
+        ui.imprimirLinea("\n\n\tBuscar genero");
 
         ui.imprimir("Ingrese el id o nombre del genero que desea buscar: ");
         String dato = ui.leerLinea();
@@ -509,10 +557,12 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
     private void eliminarGenero() {
-        ui.imprimirLinea("Buscar genero");
+        ui.imprimirLinea("\n\n\tEliminar genero");
 
         ui.imprimir("Ingrese el id del genero que desea eliminar: ");
         String id = ui.leerLinea();
@@ -527,19 +577,20 @@ public class Controlador {
             ui.imprimirLinea("No hay resultados");
         }
 
+        esperarTecla();
     }
 
 
     //Compositores ++
     private Compositor registrarCompositor() {
-        ui.imprimirLinea("Registro de compositor");
+        ui.imprimirLinea("\n\n\tRegistro de compositor");
         ui.imprimir("Nombre: ");
         String nombre = ui.leerLinea();
         ui.imprimir("Apellidos: ");
         String apellidos = ui.leerLinea();
         ui.imprimir("Pais de nacimiento: ");
         String pais = ui.leerLinea();
-        ui.imprimir("Fecha de nacimiento");
+        ui.imprimir("Fecha de nacimiento(dd/MM/yyyy): ");
         String fechaNacimiento = ui.leerLinea();
         int edad = calcularEdad(fechaNacimiento);
         String id = "comp0000" + nombre + fechaNacimiento;
@@ -557,14 +608,17 @@ public class Controlador {
     }
 
     private void listarCompositores() {
+        ui.imprimirLinea("\n\n\tLista de compositores");
         ArrayList<Compositor> compositores = gestor.listarCompositores();
         for (Compositor objCompositor : compositores) {
             ui.imprimirLinea(objCompositor.toString());
         }
+
+        esperarTecla();
     }
 
     private void modificarCompositor() {
-        ui.imprimirLinea("Modificar compositor");
+        ui.imprimirLinea("\n\n\tModificar compositor");
         ui.imprimir("Ingrese el id del compositor que desea modificar: ");
         String id = ui.leerLinea();
         ui.imprimir("Nombre: ");
@@ -573,10 +627,12 @@ public class Controlador {
         String apellidos = ui.leerLinea();
 
         gestor.modificarCompositor(id, nombre, apellidos);
+
+        esperarTecla();
     }
 
     private void buscarCompositor() {
-        ui.imprimirLinea("Buscar compositor");
+        ui.imprimirLinea("\n\n\tBuscar compositor");
         ui.imprimir("Ingrese el id o nombre del compositor que desea buscar: ");
         String dato = ui.leerLinea();
 
@@ -587,10 +643,12 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
     private void eliminarCompositor() {
-        ui.imprimirLinea("Eliminar compositor");
+        ui.imprimirLinea("\n\n\tEliminar compositor");
         ui.imprimir("Ingrese el id del compositor que desea eliminar: ");
         String id = ui.leerLinea();
 
@@ -604,21 +662,23 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
 
     //Artistas ++
     private Artista registrarArtista() {
-        ui.imprimirLinea("Registro de artista");
+        ui.imprimirLinea("\n\n\tRegistro de artista");
         ui.imprimir("Nombre: ");
         String nombre = ui.leerLinea();
         ui.imprimir("Apellidos: ");
         String apellidos = ui.leerLinea();
         ui.imprimir("Nombre artistico: ");
         String nombreArtistico = ui.leerLinea();
-        ui.imprimir("Fecha de nacimiento: ");
+        ui.imprimir("Fecha de nacimiento(dd/MM/yyyy): ");
         String fechaNacimiento = ui.leerLinea();
-        ui.imprimir("Fecha de defuncion: ");
+        ui.imprimir("Fecha de defuncion(dd/MM/yyyy): ");
         String fechaDefuncion = ui.leerLinea();
         ui.imprimir("Pais de nacimiento: ");
         String paisNacimiento = ui.leerLinea();
@@ -657,14 +717,17 @@ public class Controlador {
     }
 
     private void listarArtistas() {
+        ui.imprimirLinea("\n\n\tLista de artistas");
         ArrayList<Artista> artistas = gestor.listarArtistas();
         for (Artista objArtista : artistas) {
             ui.imprimirLinea(objArtista.toString());
         }
+
+        esperarTecla();
     }
 
     private void modificarArtista() {
-        ui.imprimirLinea("Modificar artista");
+        ui.imprimirLinea("\n\n\tModificar artista");
         ui.imprimir("Ingrese el id del artista que desea modificar: ");
         String id = ui.leerLinea();
 
@@ -674,14 +737,16 @@ public class Controlador {
         String apellidos = ui.leerLinea();
         ui.imprimir("Nombre artistico: ");
         String nombreArtistico = ui.leerLinea();
-        ui.imprimir("Fecha defuncion: ");
+        ui.imprimir("Fecha defuncion(dd/MM/yyyy): ");
         String fechaDefuncion = ui.leerLinea();
 
         gestor.modificarArtista(id, nombre, apellidos, nombreArtistico, fechaDefuncion);
+
+        esperarTecla();
     }
 
     private void buscarArtista() {
-        ui.imprimirLinea("Buscar artista");
+        ui.imprimirLinea("\n\n\tBuscar artista");
         ui.imprimir("Ingrese el id o nombre del artista que desea buscar: ");
         String dato = ui.leerLinea();
 
@@ -691,10 +756,12 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
     private void eliminarArtista() {
-        ui.imprimirLinea("Eliminar artista");
+        ui.imprimirLinea("\n\n\tEliminar artista");
         ui.imprimir("Ingrese el id del artista que desea eliminar: ");
         String id = ui.leerLinea();
 
@@ -707,12 +774,14 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
 
     //Albunes +-
     private Album registrarAlbum() {
-        ui.imprimirLinea("Registro de album");
+        ui.imprimirLinea("\n\n\tRegistro de album");
         ui.imprimir("Nombre: ");
         String nombre = ui.leerLinea();
 
@@ -720,7 +789,7 @@ public class Controlador {
         ArrayList<Cancion> canciones = new ArrayList<Cancion>();
         ArrayList<Artista> artistas = new ArrayList<Artista>();
 
-        ui.imprimir("Fecha de lanzamiento: ");
+        ui.imprimir("Fecha de lanzamiento(dd/MM/yyyy): ");
         String fechaLanzamiento = ui.leerLinea();
         ui.imprimir("Directorio de la imagen para la portada: ");
         String imagen = ui.leerLinea();
@@ -755,14 +824,17 @@ public class Controlador {
     }
 
     private void listarAlbunes() {
+        ui.imprimirLinea("\n\n\tLista de albunes");
         ArrayList<Album> albunes = gestor.listarAlbunes();
         for (Album objAlbum : albunes) {
             ui.imprimirLinea(objAlbum.toString());
         }
+
+        esperarTecla();
     }
 
     private void modificarAlbum() {
-        ui.imprimirLinea("Modificar album");
+        ui.imprimirLinea("\n\n\tModificar album");
         ui.imprimir("Ingrese el id del album que desea modificar: ");
         String id = ui.leerLinea();
         ui.imprimir("Nombre: ");
@@ -787,10 +859,12 @@ public class Controlador {
         }
 
         gestor.modificarAlbum(id, nombre, imagen, compositor);
+
+        esperarTecla();
     }
 
     private void buscarAlbum() {
-        ui.imprimirLinea("Buscar album");
+        ui.imprimirLinea("\n\n\tBuscar album");
         ui.imprimir("Ingrese el id o nombre del album que desea buscar: ");
         String dato = ui.leerLinea();
 
@@ -800,10 +874,42 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
     private void incluirCancionEnAlbum() {
+        ui.imprimirLinea("\n\n\tIncluir cancion en album");
 
+        ui.imprimir("Ingrese el ID o nombre de la cancion que desea ingresar: ");
+        String datoCancion = ui.leerLinea();
+
+        Cancion cancionEncontrada;
+
+        //El admin puede agregar cualquier cancion existente
+        //El usuario normal solo puede agregar las que tenga es su biblioteca
+        if(usuarioIngresado.esAdmin()){
+            cancionEncontrada = gestor.buscarCancion(datoCancion);
+        } else {
+            cancionEncontrada = gestor.buscarCancionEnBibliotecaUsuario(usuarioIngresado.getId(), datoCancion);
+        }
+
+        if(cancionEncontrada != null){
+            ui.imprimir("Ingrese el ID o nombre del album en el que desea incluir la cancion: ");
+            String idAlbum = ui.leerLinea();
+
+            boolean resultado = gestor.agregarCancionEnAlbum(idAlbum, cancionEncontrada);
+
+            if(resultado){
+                ui.imprimirLinea("Cancion agregada correctamente! :D");
+            } else {
+                ui.imprimirLinea("Hubo un problema al agregar la cancion :(");
+            }
+        } else {
+            ui.imprimirLinea("No se encontró ninguna canción :(");
+        }
+
+        esperarTecla();
     }
 
     private void removerCancionDeAlbum() {
@@ -811,7 +917,7 @@ public class Controlador {
     }
 
     private void eliminarAlbum() {
-        ui.imprimirLinea("Eliminar album");
+        ui.imprimirLinea("\n\n\tEliminar album");
         ui.imprimir("Ingrese el id del album que desea eliminar: ");
         String id = ui.leerLinea();
 
@@ -824,12 +930,14 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
 
     //Canciones +-
     private void registrarCancion() {
-        ui.imprimirLinea("Registro de cancion");
+        ui.imprimirLinea("\n\n\tRegistro de cancion");
 
         ui.imprimir("Nombre: ");
         String nombre = ui.leerLinea();
@@ -837,7 +945,7 @@ public class Controlador {
         String recurso = ui.leerLinea();
         ui.imprimir("Nombre del album: ");
         String nombreAlbum = ui.leerLinea();
-        ui.imprimir("Fecha de lanzamiento: ");
+        ui.imprimir("Fecha de lanzamiento(dd/MM/yyyy): ");
         String fechaLanzamiento = ui.leerLinea();
 
         ArrayList<Calificacion> calificaciones = new ArrayList<Calificacion>();
@@ -904,19 +1012,22 @@ public class Controlador {
         if(usuarioIngresado.esAdmin()){
             gestor.guardarCancion(cancionCreada);
         } else {
-            gestor.agregarCancionABibliotecaUsuario((Cliente) usuarioIngresado, cancionCreada);
+            gestor.agregarCancionABibliotecaUsuario(usuarioIngresado.getId(), cancionCreada);
         }
     }
 
     private void listarCanciones() {
+        ui.imprimirLinea("\n\n\tLista de canciones");
         ArrayList<Cancion> canciones = gestor.listarCanciones();
         for (Cancion objCancion : canciones) {
             ui.imprimirLinea(objCancion.toString());
         }
+
+        esperarTecla();
     }
 
     private void modificarCancion() {
-        ui.imprimirLinea("Modificar cancion");
+        ui.imprimirLinea("\n\n\tModificar cancion");
         ui.imprimir("Ingrese el ID de la cancion que desea modificar: ");
         String id = ui.leerLinea();
 
@@ -926,10 +1037,12 @@ public class Controlador {
         double precio = ui.leerDouble();
 
         gestor.modificarCancion(id, album, precio);
+
+        esperarTecla();
     }
 
     private void buscarCancion() {
-        ui.imprimirLinea("Buscar cancion");
+        ui.imprimirLinea("\n\n\tBuscar cancion");
         ui.imprimir("Ingrese el id o nombre de la cancion que desea buscar: ");
         String dato = ui.leerLinea();
 
@@ -939,14 +1052,12 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
-    }
 
-    private void buscarCancionEnBiblioteca(){
-
+        esperarTecla();
     }
 
     private void eliminarCancion() {
-        ui.imprimirLinea("Eliminar cancion");
+        ui.imprimirLinea("\n\n\tEliminar cancion");
         ui.imprimir("Ingrese el id de la cancion que desea eliminar: ");
         String id = ui.leerLinea();
 
@@ -959,12 +1070,14 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
 
     //Listas de reproduccion +-
     private ListaReproduccion registrarListaReproduccion() {
-        ui.imprimirLinea("Registro de lista de reproduccion");
+        ui.imprimirLinea("\n\n\tRegistro de lista de reproduccion");
 
         ui.imprimir("Nombre: ");
         String nombre = ui.leerLinea();
@@ -989,14 +1102,17 @@ public class Controlador {
     }
 
     private void listarListasDeReproduccion() {
+        ui.imprimirLinea("\n\n\tLista de listas de reproduccion");
         ArrayList<ListaReproduccion> listasReproduccion = gestor.listarListasReproduccion();
         for (ListaReproduccion objListaReproduccion : listasReproduccion) {
             ui.imprimirLinea(objListaReproduccion.toString());
         }
+
+        esperarTecla();
     }
 
     private void modificarListaReproduccion() {
-        ui.imprimirLinea("Modificar lista de reproduccion");
+        ui.imprimirLinea("\n\n\tModificar lista de reproduccion");
         ui.imprimir("Ingrese el id de la lista de reproduccion que desea modificar: ");
         String id = ui.leerLinea();
         ui.imprimir("Nombre: ");
@@ -1005,10 +1121,12 @@ public class Controlador {
         String imagen = ui.leerLinea();
 
         gestor.modificarListaReproduccion(id, nombre, imagen);
+
+        esperarTecla();
     }
 
     private void buscarListaReproduccion() {
-        ui.imprimirLinea("Buscar lista de reproduccion");
+        ui.imprimirLinea("\n\n\tBuscar lista de reproduccion");
         ui.imprimir("Ingrese el id o nombre de la lista de reproduccion que desea buscar: ");
         String dato = ui.leerLinea();
 
@@ -1018,6 +1136,8 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
     private void incluirCancionEnListaReproduccion() {
@@ -1029,7 +1149,7 @@ public class Controlador {
     }
 
     private void eliminarListaReproduccion() {
-        ui.imprimirLinea("Eliminar lista de reproduccion");
+        ui.imprimirLinea("\n\n\tEliminar lista de reproduccion");
         ui.imprimir("Ingrese el id de la lista de reproduccion que desea eliminar: ");
         String id = ui.leerLinea();
 
@@ -1042,16 +1162,14 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
 
-    /*
-    String id, String nombrePais, String descripcion){
-    public boolean modificarPais(String pId, String pNombre, String pDescripcion
-     */
     //Paises
     private Pais registrarPais() {
-        ui.imprimirLinea("Registro de pais");
+        ui.imprimirLinea("\n\n\tRegistro de pais");
         ui.imprimir("Nombre: ");
         String nombre = ui.leerLinea();
         ui.imprimir("Descripcion: ");
@@ -1072,14 +1190,17 @@ public class Controlador {
     }
 
     private void listarPaises() {
+        ui.imprimirLinea("\n\n\tLista de paises");
         ArrayList<Pais> paises = gestor.listarPaises();
         for (Pais objPais : paises) {
             ui.imprimirLinea(objPais.toString());
         }
+
+        esperarTecla();
     }
 
     private void modificarPais() {
-        ui.imprimirLinea("Modificar pais");
+        ui.imprimirLinea("\n\n\tModificar pais");
         ui.imprimir("Ingrese el ID del pais que desea modificar: ");
         String id = ui.leerLinea();
 
@@ -1089,10 +1210,12 @@ public class Controlador {
         String descripcion = ui.leerLinea();
 
         gestor.modificarPais(id, nombre, descripcion);
+
+        esperarTecla();
     }
 
     private void buscarPais() {
-        ui.imprimirLinea("Buscar pais");
+        ui.imprimirLinea("\n\n\tBuscar pais");
         ui.imprimir("Ingrese el ID o nombre del pais que desea buscar: ");
         String dato = ui.leerLinea();
 
@@ -1102,10 +1225,12 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
     private void eliminarPais() {
-        ui.imprimirLinea("Eliminar pais");
+        ui.imprimirLinea("\n\n\tEliminar pais");
         ui.imprimir("Ingrese el ID del pais que desea eliminar: ");
         String id = ui.leerLinea();
 
@@ -1118,6 +1243,8 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
+
+        esperarTecla();
     }
 
     //Para pruebas

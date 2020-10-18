@@ -50,31 +50,6 @@ public class Gestor {
         return null;
     }
 
-    //TODO terminar esto bien
-    public boolean agregarCancionABibliotecaUsuario(Cliente pCliente, Cancion pCancion){
-        int indice = obtenerIndiceUsuario(pCliente);
-
-        if(indice != -1){
-            Cliente clienteModificar = (Cliente) usuarios.get(indice);
-            return clienteModificar.getBiblioteca().agregarCancion(pCancion);
-        }
-        return false;
-    }
-    public boolean agregarCancionAFavoritosUsuario(Cliente pCliente, Cancion pCancion){
-        int indice = obtenerIndiceUsuario(pCliente);
-
-        if(indice != -1){
-            Cliente clienteModificar = (Cliente) usuarios.get(indice);
-            return clienteModificar.getBiblioteca().agregarAFavoritos(pCancion.getId());
-        }
-        return false;
-    }
-    public boolean guardarCancion(Cancion pCancion){
-        //TODO condicion para no repetir canciones.
-        canciones.add(pCancion);
-        return true;
-    }
-
     public int cantidadAlbunes() {return albunes.size();}
     public int cantidadArtistas() {return artistas.size();}
     public int cantidadCanciones() {return canciones.size();}
@@ -97,7 +72,7 @@ public class Gestor {
         return true;
     }
     //Cliente
-    public boolean crearUsuarioCliente(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String idPais, Biblioteca biblioteca){
+    public boolean crearUsuarioCliente(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String pais, Biblioteca biblioteca){
         //Si no hay admin no se puede registrar usuarios.
         if(usuarios.size() == 0) return false;
 
@@ -105,7 +80,7 @@ public class Gestor {
             biblioteca = new Biblioteca();
         }
 
-        Cliente nuevoCliente = new Cliente(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, idPais, biblioteca);
+        Cliente nuevoCliente = new Cliente(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, pais, biblioteca);
 
         //Evitar repeticion de datos.
         if(buscarUsuario(correo) == null){
@@ -202,41 +177,38 @@ public class Gestor {
         return albunes;
     }
 
-    //TODO terminar esto bien
-    public boolean agregarCancionEnAlbum(Cancion pCancion, Album pAlbum){
-        int indice = obtenerIndiceAlbum(pAlbum);
+    //Para agregar o eliminar canciones y artistas
+    public boolean agregarCancionEnAlbum(String pIdAlbum, Cancion pCancion){
+        Album albumModifica = buscarAlbum(pIdAlbum);
 
-        if(indice != -1){
-            return albunes.get(indice).agregarCancion(pCancion);
+        if(albumModifica != null){
+            return albumModifica.agregarCancion(pCancion);
         }
-
         return false;
     }
-    public boolean removerCancionEnAlbum(Cancion pCancion, Album pAlbum){
-        int indice = obtenerIndiceAlbum(pAlbum);
+    public boolean removerCancionEnAlbum(String pDatoAlbum, String pDatoCancion){
+        Album albumModifica = buscarAlbum(pDatoAlbum);
 
-        if(indice != -1){
-            return albunes.get(indice).removerCancion(pCancion);
+        if(albumModifica != null){
+            Cancion cancionEncontrada = albumModifica.buscarCancion(pDatoCancion);
+            return albumModifica.removerCancion(cancionEncontrada);
         }
-
         return false;
     }
-    public boolean agregarArtistaEnAlbum(Artista pArtista, Album pAlbum){
-        int indice = obtenerIndiceAlbum(pAlbum);
+    public boolean agregarArtistaEnAlbum(String pIdAlbum, Artista pArtista){
+        Album albumModifica = buscarAlbum(pIdAlbum);
 
-        if(indice != -1){
-            return albunes.get(indice).agregarArtista(pArtista);
+        if(albumModifica != null){
+            return albumModifica.agregarArtista(pArtista);
         }
-
         return false;
     }
-    public boolean removerArtistaEnAlbum(Artista pArtista, Album pAlbum){
-        int indice = obtenerIndiceAlbum(pAlbum);
+    public boolean removerArtistaEnAlbum(String pIdAlbum, Artista pArtista){
+        Album albumModifica = buscarAlbum(pIdAlbum);
 
-        if(indice != -1){
-            return albunes.get(indice).removerArtista(pArtista);
+        if(albumModifica != null){
+            return albumModifica.removerArtista(pArtista);
         }
-
         return false;
     }
 
@@ -303,20 +275,20 @@ public class Gestor {
         return listasReproduccion;
     }
 
-    //TODO terminar esto bien
-    public boolean agregarCancionALista(Cancion pCancion, ListaReproduccion pLista) {
-        int indice = obtenerIndiceListaReproduccion(pLista);
+    //Para agregar o eliminar canciones
+    public boolean agregarCancionALista(String pId, Cancion pCancion) {
+        ListaReproduccion listaModifica = buscarListaReproduccion(pId);
 
-        if(indice != -1){
-            return listasReproduccion.get(indice).agregarCancion(pCancion);
+        if(listaModifica != null){
+            return listaModifica.agregarCancion(pCancion);
         }
         return false;
     }
-    public boolean removerCancionALista(Cancion pCancion, ListaReproduccion pLista) {
-        int indice = obtenerIndiceListaReproduccion(pLista);
+    public boolean removerCancionALista(String pId, Cancion pCancion) {
+        ListaReproduccion listaModifica = buscarListaReproduccion(pId);
 
-        if(indice != -1){
-            return listasReproduccion.get(indice).removerCancion(pCancion);
+        if(listaModifica != null){
+            return listaModifica.removerCancion(pCancion);
         }
         return false;
     }
@@ -436,6 +408,12 @@ public class Gestor {
         return canciones;
     }
 
+    //Canciones de biblioteca general.
+    public boolean guardarCancion(Cancion pCancion){
+        //TODO condicion para no repetir canciones.
+        canciones.add(pCancion);
+        return true;
+    }
     public Cancion buscarCancion(String dato){
         for (Cancion objCancion: canciones) {
             if(objCancion.getId().equals(dato) || objCancion.getNombre().equals(dato)){
@@ -463,7 +441,66 @@ public class Gestor {
         return false;
     }
 
-    
+    //Canciones de cliente
+    public boolean agregarCancionABibliotecaUsuario(String pIdCliente, Cancion pCancion){
+        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+
+        if(clienteModifica != null){
+            return clienteModifica.getBiblioteca().agregarCancion(pCancion);
+        }
+        return false;
+    }
+    public ArrayList<Cancion> listarCancionesDeBibliotecaUsuario(String pIdCliente){
+        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+
+        if(clienteModifica != null){
+            return clienteModifica.getBiblioteca().getCanciones();
+        }
+        return null;
+    }
+    public Cancion buscarCancionEnBibliotecaUsuario(String pIdCliente, String dato){
+        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+
+        if(clienteModifica != null){
+            return clienteModifica.getBiblioteca().buscarCancion(dato);
+        }
+        return null;
+    }
+    public boolean removerCancionDeBibliotecaUsuario(String pIdCliente, Cancion pCancion){
+        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+
+        if(clienteModifica != null){
+            return clienteModifica.getBiblioteca().removerCancion(pCancion);
+        }
+        return false;
+    }
+
+    public boolean agregarCancionAFavoritosUsuario(String pIdCliente, Cancion pCancion){
+        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+
+        if(clienteModifica != null){
+            return clienteModifica.getBiblioteca().agregarAFavoritos(pCancion.getId());
+        }
+        return false;
+    }
+    public String buscarCancionEnFavoritos(String pIdCliente, String pIdCancion){
+        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+
+        if(clienteModifica != null){
+            return clienteModifica.getBiblioteca().buscarEnFavoritos(pIdCancion);
+        }
+        return null;
+    }
+    public boolean removerCancionDeFavoritosUsuario(String pIdCliente, Cancion pCancion){
+        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+
+        if(clienteModifica != null){
+            return clienteModifica.getBiblioteca().removerDeFavoritos(pCancion.getId());
+        }
+        return false;
+    }
+
+
     //**************Manejo de compositores********************
     public boolean crearCompositor(String id, String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad){
         Compositor nuevoCompositor = new Compositor(id, nombre, apellidos, paisNacimiento, fechaNacimiento, edad);

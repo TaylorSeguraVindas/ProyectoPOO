@@ -1092,7 +1092,7 @@ public class Controlador {
         ui.imprimirLinea("3. Agregar Artistas en el album");
         ui.imprimirLinea("4. Remover canciones del album");
         ui.imprimirLinea("5. Modificar datos del album");
-
+        ui.imprimir("Su opcion: ");
         int opcion = ui.leerEntero();
         switch (opcion){
             case 1:
@@ -1335,6 +1335,7 @@ public class Controlador {
         ui.imprimirLinea("1. Agregar canciones en la lista");
         ui.imprimirLinea("2. Remover canciones de la lista");
         ui.imprimirLinea("3. Modificar datos de la lista");
+        ui.imprimir("Su opcion: ");
         int opcion = ui.leerEntero();
         switch (opcion){
             case 1:

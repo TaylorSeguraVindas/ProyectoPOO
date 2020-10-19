@@ -57,8 +57,6 @@ public class Cliente extends Usuario{
         return "Cliente{" +
                 "fechaNacimiento='" + fechaNacimiento + '\'' +
                 ", edad=" + edad +
-                ", pais='" + pais + '\'' +
-                ", biblioteca=" + biblioteca +
                 ", id='" + id + '\'' +
                 ", tipoUsuario=" + tipoUsuario +
                 ", correo='" + correo + '\'' +
@@ -67,6 +65,8 @@ public class Cliente extends Usuario{
                 ", apellidos='" + apellidos + '\'' +
                 ", imagenPerfil='" + imagenPerfil + '\'' +
                 ", nombreUsuario='" + nombreUsuario + '\'' +
+                ", pais='" + pais + '\'' +
+                ", biblioteca=" + biblioteca +
                 '}';
     }
 

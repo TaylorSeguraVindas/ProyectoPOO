@@ -114,4 +114,13 @@ public class Album extends RepositorioCanciones{
         }
         return false;
     }
+
+    public Artista buscarArtista(String datoArtista){
+        for (Artista objArtista: artistas) {
+            if(objArtista.getId().equals(datoArtista) || objArtista.getNombre().equals(datoArtista)){
+                return objArtista;
+            }
+        }
+        return null;
+    }
 }

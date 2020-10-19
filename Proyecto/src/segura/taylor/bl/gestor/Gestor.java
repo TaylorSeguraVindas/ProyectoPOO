@@ -30,6 +30,7 @@ public class Gestor {
 
     //Metodos
 
+
     //*******General**********
     public boolean existeAdmin(){
         if(usuarios.size() == 0){
@@ -60,6 +61,7 @@ public class Gestor {
     public int cantidadUsuarios(){
         return usuarios.size();
     }
+
 
     //*******Manejo de usuarios*******
     //Admin
@@ -138,6 +140,7 @@ public class Gestor {
         return -1;
     }
 
+
     //*******Manejo de albunes********
     public boolean crearAlbum(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor){
         if(canciones == null){
@@ -186,7 +189,7 @@ public class Gestor {
         }
         return false;
     }
-    public boolean removerCancionEnAlbum(String pDatoAlbum, String pDatoCancion){
+    public boolean removerCancionDeAlbum(String pDatoAlbum, String pDatoCancion){
         Album albumModifica = buscarAlbum(pDatoAlbum);
 
         if(albumModifica != null){
@@ -203,11 +206,12 @@ public class Gestor {
         }
         return false;
     }
-    public boolean removerArtistaEnAlbum(String pIdAlbum, Artista pArtista){
-        Album albumModifica = buscarAlbum(pIdAlbum);
+    public boolean removerArtistaDeAlbum(String pDatoAlbum, String pDatoArtista){
+        Album albumModifica = buscarAlbum(pDatoAlbum);
 
         if(albumModifica != null){
-            return albumModifica.removerArtista(pArtista);
+            Artista artistaEncontrado = albumModifica.buscarArtista(pDatoArtista);
+            return albumModifica.removerArtista(artistaEncontrado);
         }
         return false;
     }
@@ -284,11 +288,12 @@ public class Gestor {
         }
         return false;
     }
-    public boolean removerCancionALista(String pId, Cancion pCancion) {
+    public boolean removerCancionDeLista(String pId, String datoCancion) {
         ListaReproduccion listaModifica = buscarListaReproduccion(pId);
 
         if(listaModifica != null){
-            return listaModifica.removerCancion(pCancion);
+            Cancion cancionEncontrada = listaModifica.buscarCancion(datoCancion);
+            return listaModifica.removerCancion(cancionEncontrada);
         }
         return false;
     }
@@ -491,11 +496,11 @@ public class Gestor {
         }
         return null;
     }
-    public boolean removerCancionDeFavoritosUsuario(String pIdCliente, Cancion pCancion){
+    public boolean removerCancionDeFavoritosUsuario(String pIdCliente, String datoCancion){
         Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
 
         if(clienteModifica != null){
-            return clienteModifica.getBiblioteca().removerDeFavoritos(pCancion.getId());
+            return clienteModifica.getBiblioteca().removerDeFavoritos(datoCancion);
         }
         return false;
     }

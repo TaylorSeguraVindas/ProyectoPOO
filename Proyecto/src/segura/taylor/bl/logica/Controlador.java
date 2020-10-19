@@ -9,18 +9,19 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-/*/TODO
+/*TODO
 -Enviar correo con OTP
 -Verificar correo
 -Verificar contraseña
 -Permisos para editar y eliminar listas de reproduccion
+-Agregar albunes dentro de listas de reproduccion
 */
 
 public class Controlador {
     //Constantes
     private final Gestor gestor = new Gestor();
     private final UI ui = new UI();
-    private final boolean incluirDatosDePrueba = true; //Usar para pruebas
+    private final boolean incluirDatosDePrueba = true; //Usar para pruebas, si está en true se van a llenar las listas con unos datos de prueba
 
     //Variables
     private Usuario usuarioIngresado;   //Referencia al usuario que está usando la aplicacion
@@ -1453,7 +1454,7 @@ public class Controlador {
     }
 
 
-    //Paises
+    //Paises ++
     private Pais registrarPais() {
         ui.imprimirLinea("\n\n\tRegistro de pais");
         ui.imprimir("Nombre: ");

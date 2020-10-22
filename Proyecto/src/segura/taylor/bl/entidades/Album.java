@@ -85,9 +85,9 @@ public class Album extends RepositorioCanciones{
     }
 
     public boolean modificar(String pNombre, String pImagen, Compositor pCompositor){
-        this.nombre = (pNombre != "") ? pNombre : this.nombre;
-        this.imagen = (pImagen != "") ? pImagen : this.imagen;
-        this.compositor = (pCompositor != null) ? pCompositor : this.compositor;
+        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
+        this.imagen = (!pImagen.equals("")) ? pImagen : this.imagen;
+        this.compositor = (!pCompositor.equals("")) ? pCompositor : this.compositor;
         return true;
     }
     public boolean agregarArtista(Artista artista){

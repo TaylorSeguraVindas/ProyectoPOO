@@ -64,8 +64,8 @@ public class Genero {
     }
 
     public boolean modificar(String pNombre, String pDesc){
-        this.nombre = pNombre;
-        this.descripcion = pDesc;
+        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
+        this.descripcion = (!pDesc.equals("")) ? pDesc : this.descripcion;
         return true;
     }
 }

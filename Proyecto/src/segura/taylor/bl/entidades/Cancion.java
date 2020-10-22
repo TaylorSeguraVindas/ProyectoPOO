@@ -145,7 +145,7 @@ public class Cancion {
     }
 
     public boolean modificar(String pNombreAlbum, double pPrecio){
-        this.nombreAlbum = (pNombreAlbum != "") ? pNombreAlbum : this.nombreAlbum;
+        this.nombreAlbum = (!pNombreAlbum.equals("")) ? pNombreAlbum : this.nombreAlbum;
         this.precio = (pPrecio != precio) ? pPrecio : this.precio;
         return true;
     }

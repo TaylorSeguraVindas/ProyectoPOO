@@ -116,11 +116,11 @@ public class Usuario {
     }
 
     public boolean modificar(String pNombreUsuario, String pImagenPerfil, String pContrasenna, String pNombre, String pApellidos){
-        this.nombreUsuario = (pNombreUsuario != "") ? pNombreUsuario : this.nombreUsuario;
-        this.imagenPerfil = (pImagenPerfil != "") ? pImagenPerfil : imagenPerfil;
-        this.contrasenna = (pContrasenna != "") ? pContrasenna : this.contrasenna;
-        this.nombre = (pNombre != "") ? pNombre : this.nombre;
-        this.apellidos = (pApellidos != "") ? pApellidos : this.apellidos;
+        this.nombreUsuario = (!pNombreUsuario.equals("")) ? pNombreUsuario : this.nombreUsuario;
+        this.imagenPerfil = (!pImagenPerfil.equals("")) ? pImagenPerfil : imagenPerfil;
+        this.contrasenna = (!pContrasenna.equals("")) ? pContrasenna : this.contrasenna;
+        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
+        this.apellidos = (!pApellidos.equals("")) ? pApellidos : this.apellidos;
         return true;
     }
 

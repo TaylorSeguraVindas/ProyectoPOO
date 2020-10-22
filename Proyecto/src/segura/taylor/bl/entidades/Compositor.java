@@ -97,8 +97,8 @@ public class Compositor {
     }
 
     public boolean modificar(String pNombre, String pApellidos){
-        this.nombre = (pNombre != "") ? pNombre : this.nombre;
-        this.apellidos = (pApellidos != "") ? pApellidos : this.nombre;
+        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
+        this.apellidos = (!pApellidos.equals("")) ? pApellidos : this.nombre;
         return true;
     }
 }

@@ -64,8 +64,8 @@ public class Pais {
     }
 
     public boolean modificar(String pNombre, String pDescripcion){
-        this.nombre = (pNombre != "") ? pNombre : this.nombre;
-        this.descripcion = (pDescripcion != "") ? pDescripcion : this.descripcion;
+        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
+        this.descripcion = (!pDescripcion.equals("")) ? pDescripcion : this.descripcion;
         return true;
     }
 }

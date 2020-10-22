@@ -21,7 +21,7 @@ public class Controlador {
     //Constantes
     private final Gestor gestor = new Gestor();
     private final UI ui = new UI();
-    private final boolean incluirDatosDePrueba = false; //Usar para pruebas, si está en true se van a llenar las listas con unos datos de prueba
+    private final boolean incluirDatosDePrueba = true; //Usar para pruebas, si está en true se van a llenar las listas con unos datos de prueba
 
     //Variables
     private Usuario usuarioIngresado;   //Referencia al usuario que está usando la aplicacion

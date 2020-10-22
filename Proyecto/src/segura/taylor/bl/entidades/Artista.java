@@ -143,10 +143,10 @@ public class Artista {
     }
 
     public boolean modificar(String pNombre, String pApellidos, String pNomArtistico, String pFechaDefuncion){
-        this.nombre = (pNombre != "") ? pNombre : this.nombre;
-        this.apellidos = (pApellidos != "") ? pApellidos : this.apellidos;
-        this.nombreArtistico = (pNomArtistico != "") ? pNomArtistico : this.nombreArtistico;
-        this.fechaDefuncion = (pFechaDefuncion != "") ? pFechaDefuncion : this.fechaDefuncion;
+        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
+        this.apellidos = (!pApellidos.equals("")) ? pApellidos : this.apellidos;
+        this.nombreArtistico = (!pNomArtistico.equals("")) ? pNomArtistico : this.nombreArtistico;
+        this.fechaDefuncion = (!pFechaDefuncion.equals("")) ? pFechaDefuncion : this.fechaDefuncion;
         return true;
     }
 }

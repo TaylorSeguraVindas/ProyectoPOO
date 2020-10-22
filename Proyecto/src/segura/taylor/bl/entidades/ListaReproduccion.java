@@ -79,8 +79,8 @@ public class ListaReproduccion extends RepositorioCanciones {
     }
 
     public boolean modificar(String pNombre, String pImagen){
-        this.nombre = (pNombre != "") ? pNombre : this.nombre;
-        this.imagen = (pImagen != "") ? pImagen : this.imagen;
+        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
+        this.imagen = (!pImagen.equals("")) ? pImagen : this.imagen;
         return true;
     }
 }

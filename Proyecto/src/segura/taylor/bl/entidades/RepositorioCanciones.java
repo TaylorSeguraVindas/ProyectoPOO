@@ -5,16 +5,18 @@ import java.util.Objects;
 
 public class RepositorioCanciones {
     //Variables
-    protected String id;
+    public static int idRepoCanciones = 0;
+
+    protected int id;
     protected String nombre;
     protected String fechaCreacion;
     protected ArrayList<Cancion> canciones;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -43,8 +45,8 @@ public class RepositorioCanciones {
     public RepositorioCanciones(){
         canciones = new ArrayList<>();
     }
-    public RepositorioCanciones(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones) {
-        this.id = id;
+    public RepositorioCanciones(String nombre, String fechaCreacion, ArrayList<Cancion> canciones) {
+        this.id = idRepoCanciones++;
         this.nombre = nombre;
         this.fechaCreacion = fechaCreacion;
         this.canciones = canciones;
@@ -94,9 +96,9 @@ public class RepositorioCanciones {
         return false;
     }
 
-    public Cancion buscarCancion(String dato){
+    public Cancion buscarCancion(int pIdCancion){
         for (Cancion objCancion: canciones) {
-            if(objCancion.getId().equals(dato) || objCancion.getNombre().equals(dato)){
+            if(objCancion.getId() == pIdCancion){
                 return objCancion;
             }
         }

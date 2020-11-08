@@ -4,15 +4,16 @@ import java.util.Objects;
 
 public class Genero {
     //Variables
-    private String id;
+    public static int idGeneros = 0;
+    private int id;
     private String nombre;
     private String descripcion;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -32,8 +33,8 @@ public class Genero {
 
     //Constructores
     public Genero(){}
-    public Genero(String id, String nombre, String descripcion) {
-        this.id = id;
+    public Genero(String nombre, String descripcion) {
+        this.id = idGeneros++;
         this.nombre = nombre;
         this.descripcion = descripcion;
     }

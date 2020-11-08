@@ -44,8 +44,8 @@ public class Album extends RepositorioCanciones{
         artistas = new ArrayList<Artista>();
     }
 
-    public Album(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor) {
-        super(id, nombre, fechaCreacion, canciones);
+    public Album(String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor) {
+        super(nombre, fechaCreacion, canciones);
         this.fechaLanzamiento = fechaLanzamiento;
         this.imagen = imagen;
         this.artistas = artistas;

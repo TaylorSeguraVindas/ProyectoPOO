@@ -5,7 +5,9 @@ import java.util.Objects;
 
 public class Cancion {
     //Variables
-    private String id;
+    public static int idCanciones = 0;
+
+    private int id;
     private String nombre;
     private String recurso;
     private String nombreAlbum;
@@ -17,10 +19,10 @@ public class Cancion {
     private double precio;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -92,8 +94,8 @@ public class Cancion {
         calificaciones = new ArrayList<Calificacion>();
     }
 
-    public Cancion(String id, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
-        this.id = id;
+    public Cancion(String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
+        this.id = idCanciones++;
         this.nombre = nombre;
         this.recurso = recurso;
         this.nombreAlbum = nombreAlbum;

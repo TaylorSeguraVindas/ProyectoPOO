@@ -4,7 +4,9 @@ import java.util.Objects;
 
 public class Artista {
     //Variables
-    private String id;
+    public static int idArtistas = 0;
+
+    private int id;
     private String nombre;
     private String apellidos;
     private String nombreArtistico;
@@ -16,10 +18,10 @@ public class Artista {
     private String descripcion;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -88,8 +90,8 @@ public class Artista {
 
     //Constructores
     public Artista(){}
-    public Artista(String id, String nombre, String apellidos, String nombreArtistico, String fechaNacimiento, String fechaDefuncion, String paisNacimiento, Genero genero, int edad, String descripcion) {
-        this.id = id;
+    public Artista(String nombre, String apellidos, String nombreArtistico, String fechaNacimiento, String fechaDefuncion, String paisNacimiento, Genero genero, int edad, String descripcion) {
+        this.id = idArtistas++;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.nombreArtistico = nombreArtistico;

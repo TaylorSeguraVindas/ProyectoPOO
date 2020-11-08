@@ -1,4 +1,4 @@
-package segura.taylor.bl.logica;
+package segura.taylor.controlador;
 
 public class ControladorCanciones {
 }

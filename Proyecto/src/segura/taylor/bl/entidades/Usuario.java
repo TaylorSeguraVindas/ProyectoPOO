@@ -10,7 +10,9 @@ public class Usuario {
     }
 
     //Variables
-    protected String id;
+    public static int idUsuarios = 0;
+
+    protected int id;
     protected TipoUsuario tipoUsuario;
     protected String correo;
     protected String contrasenna;
@@ -20,10 +22,10 @@ public class Usuario {
     protected String nombreUsuario;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -71,8 +73,8 @@ public class Usuario {
 
     //Constructores
     public Usuario(){}
-    public Usuario(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario) {
-        this.id = id;
+    public Usuario(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario) {
+        this.id = idUsuarios++;
         this.correo = correo;
         this.contrasenna = contrasenna;
         this.nombre = nombre;
@@ -125,6 +127,6 @@ public class Usuario {
     }
 
     public boolean esAdmin(){
-        return tipoUsuario == TipoUsuario.Admin;
+        return tipoUsuario == TipoUsuario.Admin && id == 0;
     }
 }

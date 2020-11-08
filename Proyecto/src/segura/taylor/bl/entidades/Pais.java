@@ -4,15 +4,17 @@ import java.util.Objects;
 
 public class Pais {
     //Variables
-    private String id;
+    public static int idPaises = 0;
+
+    private int id;
     private String nombre;
     private String descripcion;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -32,8 +34,8 @@ public class Pais {
 
     //Constructores
     public Pais(){}
-    public Pais(String id, String nombrePais, String descripcion) {
-        this.id = id;
+    public Pais(String nombrePais, String descripcion) {
+        this.id = idPaises++;
         this.nombre = nombrePais;
         this.descripcion = descripcion;
     }

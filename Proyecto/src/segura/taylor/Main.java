@@ -1,6 +1,6 @@
 package segura.taylor;
 
-import segura.taylor.bl.logica.Controlador;
+import segura.taylor.controlador.Controlador;
 
 public class Main {
 

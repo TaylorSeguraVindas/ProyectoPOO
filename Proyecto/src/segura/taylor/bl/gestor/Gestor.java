@@ -65,16 +65,16 @@ public class Gestor {
 
     //*******Manejo de usuarios*******
     //Admin
-    public boolean crearUsuarioAdmin(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaCreacion){
+    public boolean crearUsuarioAdmin(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaCreacion){
         //Si ya existe un admin no se puede sobreescribir
         if(existeAdmin()) return false;
 
-        Admin admin = new Admin(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaCreacion);
+        Admin admin = new Admin(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaCreacion);
         usuarios.add(admin);
         return true;
     }
     //Cliente
-    public boolean crearUsuarioCliente(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String pais, Biblioteca biblioteca){
+    public boolean crearUsuarioCliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String pais, Biblioteca biblioteca){
         //Si no hay admin no se puede registrar usuarios.
         if(usuarios.size() == 0) return false;
 
@@ -82,10 +82,10 @@ public class Gestor {
             biblioteca = new Biblioteca();
         }
 
-        Cliente nuevoCliente = new Cliente(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, pais, biblioteca);
+        Cliente nuevoCliente = new Cliente(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, pais, biblioteca);
 
         //Evitar repeticion de datos.
-        if(buscarUsuario(correo) == null){
+        if(buscarUsuarioPorInfo(correo) == null){
             usuarios.add(nuevoCliente);
             return true;
         }
@@ -93,7 +93,7 @@ public class Gestor {
         return false;
     }
     public boolean modificarUsuario(String pCorreo, String pNombreUsuario, String pImagenPerfil, String pContrasenna, String pNombre, String pApellidos){
-        Usuario usuarioModifica = buscarUsuario(pCorreo);
+        Usuario usuarioModifica = buscarUsuarioPorInfo(pCorreo);
 
         if(usuarioModifica != null){
             return usuarioModifica.modificar(pNombreUsuario, pImagenPerfil, pContrasenna, pNombre, pApellidos);
@@ -121,14 +121,23 @@ public class Gestor {
 
         return false;
     }
-    public Usuario buscarUsuario(String dato){
+    public Usuario buscarUsuarioPorId(int pId){
         for (Usuario objUsuario: usuarios) {
-            if(objUsuario.getId().equals(dato) || objUsuario.getCorreo().equals(dato) || objUsuario.getNombre().equals(dato)){
+            if(objUsuario.getId() == pId){
                 return objUsuario;
             }
         }
         return null;
     }
+    public Usuario buscarUsuarioPorInfo(String dato){
+        for (Usuario objUsuario: usuarios) {
+            if(objUsuario.getCorreo().equals(dato) || objUsuario.getNombre().equals(dato)){
+                return objUsuario;
+            }
+        }
+        return null;
+    }
+
     public int obtenerIndiceUsuario(Usuario pUsuario){
         int indice = 0;
         for (Usuario objUsuario: usuarios) {
@@ -142,7 +151,7 @@ public class Gestor {
 
 
     //*******Manejo de albunes********
-    public boolean crearAlbum(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor){
+    public boolean crearAlbum(String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor){
         if(canciones == null){
             canciones = new ArrayList<Cancion>();
         }
@@ -150,7 +159,7 @@ public class Gestor {
             artistas = new ArrayList<Artista>();
         }
 
-        Album nuevoAlbum = new Album(id, nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas, compositor);
+        Album nuevoAlbum = new Album(nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas, compositor);
 
         //Evitar repeticion de datos.
         if(!existeAlbum(nuevoAlbum)){
@@ -160,8 +169,8 @@ public class Gestor {
 
         return false;
     }
-    public boolean modificarAlbum(String pId, String pNombre, String pImagen, Compositor pCompositor){
-        Album albumModifica = buscarAlbum(pId);
+    public boolean modificarAlbum(int pId, String pNombre, String pImagen, Compositor pCompositor){
+        Album albumModifica = buscarAlbumPorId(pId);
 
         if(albumModifica != null){
             return albumModifica.modificar(pNombre, pImagen, pCompositor);
@@ -181,33 +190,33 @@ public class Gestor {
     }
 
     //Para agregar o eliminar canciones y artistas
-    public boolean agregarCancionEnAlbum(String pIdAlbum, Cancion pCancion){
-        Album albumModifica = buscarAlbum(pIdAlbum);
+    public boolean agregarCancionEnAlbum(int pIdAlbum, Cancion pCancion){
+        Album albumModifica = buscarAlbumPorId(pIdAlbum);
 
         if(albumModifica != null){
             return albumModifica.agregarCancion(pCancion);
         }
         return false;
     }
-    public boolean removerCancionDeAlbum(String pDatoAlbum, String pDatoCancion){
-        Album albumModifica = buscarAlbum(pDatoAlbum);
+    public boolean removerCancionDeAlbum(int pIdAlbum, int pIdCancion){
+        Album albumModifica = buscarAlbumPorId(pIdAlbum);
 
         if(albumModifica != null){
-            Cancion cancionEncontrada = albumModifica.buscarCancion(pDatoCancion);
+            Cancion cancionEncontrada = albumModifica.buscarCancion(pIdCancion);
             return albumModifica.removerCancion(cancionEncontrada);
         }
         return false;
     }
-    public boolean agregarArtistaEnAlbum(String pIdAlbum, Artista pArtista){
-        Album albumModifica = buscarAlbum(pIdAlbum);
+    public boolean agregarArtistaEnAlbum(int pIdAlbum, Artista pArtista){
+        Album albumModifica = buscarAlbumPorId(pIdAlbum);
 
         if(albumModifica != null){
             return albumModifica.agregarArtista(pArtista);
         }
         return false;
     }
-    public boolean removerArtistaDeAlbum(String pDatoAlbum, String pDatoArtista){
-        Album albumModifica = buscarAlbum(pDatoAlbum);
+    public boolean removerArtistaDeAlbum(int pIdAlbum, String pDatoArtista){
+        Album albumModifica = buscarAlbumPorId(pIdAlbum);
 
         if(albumModifica != null){
             Artista artistaEncontrado = albumModifica.buscarArtista(pDatoArtista);
@@ -216,9 +225,17 @@ public class Gestor {
         return false;
     }
 
-    public Album buscarAlbum(String dato){
+    public Album buscarAlbumPorId(int pId){
         for (Album objAlbum: albunes) {
-            if(objAlbum.getId().equals(dato) || objAlbum.getNombre().equals(dato)){
+            if(objAlbum.getId() == pId){
+                return objAlbum;
+            }
+        }
+        return null;
+    }
+    public Album buscarAlbumPorNombre(String pNombre){
+        for (Album objAlbum: albunes) {
+            if(objAlbum.getNombre().equals(pNombre)){
                 return objAlbum;
             }
         }
@@ -245,12 +262,12 @@ public class Gestor {
 
 
     //*********Manejo de Listas de Reproduccion***************
-    public boolean crearListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String idCreador, String imagen){
+    public boolean crearListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, int idCreador, String imagen){
         if(canciones == null){
             canciones = new ArrayList<Cancion>();
         }
 
-        ListaReproduccion nuevaLista = new ListaReproduccion(id, nombre, fechaCreacion, canciones, idCreador, 0.0, imagen);
+        ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, idCreador, 0.0, imagen);
 
         //Evitar repeticion de datos.
         if(!existeListaReproduccion(nuevaLista)){
@@ -260,8 +277,8 @@ public class Gestor {
 
         return false;
     }
-    public boolean modificarListaReproduccion(String pId, String pNombre, String pImagen){
-        ListaReproduccion listaModifica = buscarListaReproduccion(pId);
+    public boolean modificarListaReproduccion(int pIdLista, String pNombre, String pImagen){
+        ListaReproduccion listaModifica = buscarListaReproduccionPorId(pIdLista);
 
         if(listaModifica != null){
             return listaModifica.modificar(pNombre, pImagen);
@@ -280,32 +297,41 @@ public class Gestor {
     }
 
     //Para agregar o eliminar canciones
-    public boolean agregarCancionALista(String pId, Cancion pCancion) {
-        ListaReproduccion listaModifica = buscarListaReproduccion(pId);
+    public boolean agregarCancionALista(int pIdLista, Cancion pCancion) {
+        ListaReproduccion listaModifica = buscarListaReproduccionPorId(pIdLista);
 
         if(listaModifica != null){
             return listaModifica.agregarCancion(pCancion);
         }
         return false;
     }
-    public boolean removerCancionDeLista(String pId, String datoCancion) {
-        ListaReproduccion listaModifica = buscarListaReproduccion(pId);
+    public boolean removerCancionDeLista(int pIdLista, int pIdCancion) {
+        ListaReproduccion listaModifica = buscarListaReproduccionPorId(pIdLista);
 
         if(listaModifica != null){
-            Cancion cancionEncontrada = listaModifica.buscarCancion(datoCancion);
+            Cancion cancionEncontrada = listaModifica.buscarCancion(pIdCancion);
             return listaModifica.removerCancion(cancionEncontrada);
         }
         return false;
     }
 
-    public ListaReproduccion buscarListaReproduccion(String dato){
+    public ListaReproduccion buscarListaReproduccionPorId(int pIdLista){
         for (ListaReproduccion objListaReproduccion: listasReproduccion) {
-            if(objListaReproduccion.getId().equals(dato) || objListaReproduccion.getNombre().equals(dato)){
+            if(objListaReproduccion.getId() == pIdLista){
                 return objListaReproduccion;
             }
         }
         return null;
     }
+    public ListaReproduccion buscarListaReproduccionNombre(String dato){
+        for (ListaReproduccion objListaReproduccion: listasReproduccion) {
+            if(objListaReproduccion.getNombre().equals(dato)){
+                return objListaReproduccion;
+            }
+        }
+        return null;
+    }
+
     public int obtenerIndiceListaReproduccion(ListaReproduccion pListaReproduccion){
         int indice = 0;
         for (ListaReproduccion objListaReproduccion: listasReproduccion) {
@@ -327,8 +353,8 @@ public class Gestor {
 
 
     //*****************Manejo de artistas*******************
-    public boolean crearArtista(String id, String nombre, String apellidos, String nombreArtistico, String fechaNacimiento, String fechaDefuncion, String paisNacimiento, Genero genero, int edad, String descripcion){
-        Artista nuevoArtista = new Artista(id, nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
+    public boolean crearArtista(String nombre, String apellidos, String nombreArtistico, String fechaNacimiento, String fechaDefuncion, String paisNacimiento, Genero genero, int edad, String descripcion){
+        Artista nuevoArtista = new Artista(nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
 
         //Evitar repeticion de datos.
         if(!existeArtista(nuevoArtista)){
@@ -338,8 +364,8 @@ public class Gestor {
 
         return false;
     }
-    public boolean modificarArtista(String pId, String pNombre, String pApellidos, String pNomArtistico, String pFechaDefuncion){
-        Artista artistaModifica = buscarArtista(pId);
+    public boolean modificarArtista(int pIdArtista, String pNombre, String pApellidos, String pNomArtistico, String pFechaDefuncion){
+        Artista artistaModifica = buscarArtistaPorId(pIdArtista);
 
         if(artistaModifica != null){
             return artistaModifica.modificar(pNombre, pApellidos, pNomArtistico, pFechaDefuncion);
@@ -357,9 +383,9 @@ public class Gestor {
         return artistas;
     }
 
-    public Artista buscarArtista(String dato){
+    public Artista buscarArtistaPorId(int pId){
         for (Artista objArtista: artistas) {
-            if(objArtista.getId().equals(dato) || objArtista.getNombre().equals(dato)){
+            if(objArtista.getId() == pId){
                 return objArtista;
             }
         }
@@ -386,16 +412,16 @@ public class Gestor {
 
 
     //*******************Manejo de canciones******************
-    public Cancion crearCancion(String id, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio){
+    public Cancion crearCancion(String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio){
         if(calificaciones == null){
             calificaciones = new ArrayList<Calificacion>();
         }
 
-        Cancion nuevaCancion = new Cancion(id, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        Cancion nuevaCancion = new Cancion(nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
         return nuevaCancion;
     }
-    public boolean modificarCancion(String pId, String pNombreAlbum, double pPrecio){
-        Cancion cancionModifica = buscarCancion(pId);
+    public boolean modificarCancion(int pIdCancion, String pNombreAlbum, double pPrecio){
+        Cancion cancionModifica = buscarCancionPorId(pIdCancion);
 
         if(cancionModifica != null){
             return cancionModifica.modificar(pNombreAlbum, pPrecio);
@@ -419,9 +445,9 @@ public class Gestor {
         canciones.add(pCancion);
         return true;
     }
-    public Cancion buscarCancion(String dato){
+    public Cancion buscarCancionPorId(int pIdCancion){
         for (Cancion objCancion: canciones) {
-            if(objCancion.getId().equals(dato) || objCancion.getNombre().equals(dato)){
+            if(objCancion.getId() == pIdCancion){
                 return objCancion;
             }
         }
@@ -447,32 +473,32 @@ public class Gestor {
     }
 
     //Canciones de cliente
-    public boolean agregarCancionABibliotecaUsuario(String pIdCliente, Cancion pCancion){
-        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+    public boolean agregarCancionABibliotecaUsuario(int pIdCliente, Cancion pCancion){
+        Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
 
         if(clienteModifica != null){
             return clienteModifica.getBiblioteca().agregarCancion(pCancion);
         }
         return false;
     }
-    public ArrayList<Cancion> listarCancionesDeBibliotecaUsuario(String pIdCliente){
-        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+    public ArrayList<Cancion> listarCancionesDeBibliotecaUsuario(int pIdCliente){
+        Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
 
         if(clienteModifica != null){
             return clienteModifica.getBiblioteca().getCanciones();
         }
         return null;
     }
-    public Cancion buscarCancionEnBibliotecaUsuario(String pIdCliente, String dato){
-        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+    public Cancion buscarCancionEnBibliotecaUsuario(int pIdCliente, int pIdCancion){
+        Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
 
         if(clienteModifica != null){
-            return clienteModifica.getBiblioteca().buscarCancion(dato);
+            return clienteModifica.getBiblioteca().buscarCancion(pIdCancion);
         }
         return null;
     }
-    public boolean removerCancionDeBibliotecaUsuario(String pIdCliente, Cancion pCancion){
-        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+    public boolean removerCancionDeBibliotecaUsuario(int pIdCliente, Cancion pCancion){
+        Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
 
         if(clienteModifica != null){
             return clienteModifica.getBiblioteca().removerCancion(pCancion);
@@ -480,35 +506,35 @@ public class Gestor {
         return false;
     }
 
-    public boolean agregarCancionAFavoritosUsuario(String pIdCliente, Cancion pCancion){
-        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+    public boolean agregarCancionAFavoritosUsuario(int pIdCliente, Cancion pCancion){
+        Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
 
         if(clienteModifica != null){
             return clienteModifica.getBiblioteca().agregarAFavoritos(pCancion.getId());
         }
         return false;
     }
-    public String buscarCancionEnFavoritos(String pIdCliente, String pIdCancion){
-        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+    public int buscarCancionEnFavoritos(int pIdCliente, int pIdCancion){
+        Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
 
         if(clienteModifica != null){
             return clienteModifica.getBiblioteca().buscarEnFavoritos(pIdCancion);
         }
-        return null;
+        return -1;
     }
-    public boolean removerCancionDeFavoritosUsuario(String pIdCliente, String datoCancion){
-        Cliente clienteModifica = (Cliente) buscarUsuario(pIdCliente);
+    public boolean removerCancionDeFavoritosUsuario(int pIdCliente, int pIdCancion){
+        Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
 
         if(clienteModifica != null){
-            return clienteModifica.getBiblioteca().removerDeFavoritos(datoCancion);
+            return clienteModifica.getBiblioteca().removerDeFavoritos(pIdCancion);
         }
         return false;
     }
 
 
     //**************Manejo de compositores********************
-    public boolean crearCompositor(String id, String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad){
-        Compositor nuevoCompositor = new Compositor(id, nombre, apellidos, paisNacimiento, fechaNacimiento, edad);
+    public boolean crearCompositor(String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad){
+        Compositor nuevoCompositor = new Compositor(nombre, apellidos, paisNacimiento, fechaNacimiento, edad);
 
         //Evitar repeticion de datos.
         if(!existeCompositor(nuevoCompositor)){
@@ -518,8 +544,8 @@ public class Gestor {
 
         return false;
     }
-    public boolean modificarCompositor(String pId, String pNombre, String pApellidos){
-        Compositor compositorModifica = buscarCompositor(pId);
+    public boolean modificarCompositor(int pIdCompositor, String pNombre, String pApellidos){
+        Compositor compositorModifica = buscarCompositorPorId(pIdCompositor);
 
         if(compositorModifica != null){
             return compositorModifica.modificar(pNombre, pApellidos);
@@ -538,9 +564,9 @@ public class Gestor {
         return compositores;
     }
 
-    public Compositor buscarCompositor(String dato){
+    public Compositor buscarCompositorPorId(int idCompositor){
         for (Compositor objCompositor: compositores) {
-            if(objCompositor.getId().equals(dato) || objCompositor.getNombre().equals(dato)){
+            if(objCompositor.getId() == idCompositor){
                 return objCompositor;
             }
         }
@@ -567,8 +593,8 @@ public class Gestor {
 
 
     //******************Manejo de Generos******************
-    public boolean crearGenero(String id, String nombre, String descripcion){
-        Genero nuevoGenero = new Genero(id, nombre, descripcion);
+    public boolean crearGenero(String nombre, String descripcion){
+        Genero nuevoGenero = new Genero(nombre, descripcion);
 
         //Evitar repeticion de datos.
         if(!existeGenero(nuevoGenero)){
@@ -578,8 +604,8 @@ public class Gestor {
 
         return false;
     }
-    public boolean modificarGenero(String pId, String pNombre, String pDesc){
-        Genero generoModifica = buscarGenero(pId);
+    public boolean modificarGenero(int pIdGenero, String pNombre, String pDesc){
+        Genero generoModifica = buscarGeneroPorId(pIdGenero);
 
         if(generoModifica != null){
             return generoModifica.modificar(pNombre, pDesc);
@@ -599,9 +625,9 @@ public class Gestor {
         return generos;
     }
 
-    public Genero buscarGenero(String dato){
+    public Genero buscarGeneroPorId(int pIdGenero){
         for (Genero objGenero: generos) {
-            if(objGenero.getId().equals(dato) || objGenero.getNombre().equals(dato)){
+            if(objGenero.getId() == pIdGenero){
                 return objGenero;
             }
         }
@@ -628,8 +654,8 @@ public class Gestor {
 
 
     //*****************Manejo de Paises********************
-    public boolean crearPais(String id, String nombrePais, String descripcion){
-        Pais nuevoPais = new Pais(id, nombrePais, descripcion);
+    public boolean crearPais(String nombrePais, String descripcion){
+        Pais nuevoPais = new Pais(nombrePais, descripcion);
 
         //Evitar repeticion de datos.
         if(!existePais(nuevoPais)){
@@ -639,8 +665,8 @@ public class Gestor {
 
         return false;
     }
-    public boolean modificarPais(String pId, String pNombre, String pDescripcion){
-        Pais paisModifica = buscarPais(pId);
+    public boolean modificarPais(int pIdPais, String pNombre, String pDescripcion){
+        Pais paisModifica = buscarPaisPorId(pIdPais);
 
         if(paisModifica != null){
             return paisModifica.modificar(pNombre, pDescripcion);
@@ -660,9 +686,9 @@ public class Gestor {
         return paises;
     }
 
-    public Pais buscarPais(String dato){
+    public Pais buscarPaisPorId(int pIdPais){
         for (Pais objPais: paises) {
-            if(objPais.getId().equals(dato) || objPais.getNombre().equals(dato)){
+            if(objPais.getId() == pIdPais){
                 return objPais;
             }
         }

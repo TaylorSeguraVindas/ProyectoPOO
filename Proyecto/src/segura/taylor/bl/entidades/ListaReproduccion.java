@@ -5,15 +5,15 @@ import java.util.Objects;
 
 public class ListaReproduccion extends RepositorioCanciones {
     //Variables
-    private String idCreador;
+    private int idCreador;
     private double calificacion;
     private String imagen;
 
     //Propiedades
-    public String getIdCreador() {
+    public int getIdCreador() {
         return idCreador;
     }
-    public void setIdCreador(String idCreador) {
+    public void setIdCreador(int idCreador) {
         this.idCreador = idCreador;
     }
 
@@ -33,8 +33,8 @@ public class ListaReproduccion extends RepositorioCanciones {
 
     //Constructores
     public ListaReproduccion(){}
-    public ListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String idCreador, double calificacion, String imagen) {
-        super(id, nombre, fechaCreacion, canciones);
+    public ListaReproduccion(String nombre, String fechaCreacion, ArrayList<Cancion> canciones, int idCreador, double calificacion, String imagen) {
+        super(nombre, fechaCreacion, canciones);
         this.idCreador = idCreador;
         this.calificacion = calificacion;
         this.imagen = imagen;

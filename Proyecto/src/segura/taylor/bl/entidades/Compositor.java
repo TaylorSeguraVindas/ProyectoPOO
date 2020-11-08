@@ -4,7 +4,9 @@ import java.util.Objects;
 
 public class Compositor {
     //Variables
-    private String id;
+    public static int idCompositores = 0;
+
+    private int id;
     private String nombre;
     private String apellidos;
     private String paisNacimiento;
@@ -12,10 +14,10 @@ public class Compositor {
     private int edad;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -56,8 +58,8 @@ public class Compositor {
 
     //Constructores
     public Compositor(){}
-    public Compositor(String id, String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad) {
-        this.id = id;
+    public Compositor(String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad) {
+        this.id = idCompositores++;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.paisNacimiento = paisNacimiento;

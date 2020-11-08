@@ -1,4 +1,4 @@
-package segura.taylor.bl.ui;
+package segura.taylor.ui;
 
 import java.io.PrintStream;
 import java.util.Scanner;

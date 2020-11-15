@@ -8,8 +8,10 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 /*TODO
+-Listas inmodificables
 -Enviar correo con OTP
 -Verificar correo
 -Verificar contraseña
@@ -481,7 +483,7 @@ public class Controlador {
     }
     private void listarUsuarios() {
         ui.imprimirLinea("\n\n\tLista de usuarios");
-        ArrayList<Usuario> usuarios = gestor.listarUsuarios();
+        List<Usuario> usuarios = gestor.listarUsuarios();
         for (Usuario objUsuario : usuarios) {
             ui.imprimirLinea(objUsuario.toString());
         }
@@ -576,7 +578,7 @@ public class Controlador {
     }
     private void listarCancionesEnBiblioteca(){
         ui.imprimirLinea("\n\n\tLista de canciones");
-        ArrayList<Cancion> canciones = gestor.listarCancionesDeBibliotecaUsuario(usuarioIngresado.getId());
+        List<Cancion> canciones = gestor.listarCancionesDeBibliotecaUsuario(usuarioIngresado.getId());
         for (Cancion objCancion : canciones) {
             ui.imprimirLinea(objCancion.toString());
         }
@@ -634,7 +636,7 @@ public class Controlador {
     }
     private void listarGeneros() {
         ui.imprimirLinea("\n\n\tLista de generos");
-        ArrayList<Genero> generos = gestor.listarGeneros();
+        List<Genero> generos = gestor.listarGeneros();
         for (Genero objGenero : generos) {
             ui.imprimirLinea(objGenero.toString());
         }
@@ -714,7 +716,7 @@ public class Controlador {
     }
     private void listarCompositores() {
         ui.imprimirLinea("\n\n\tLista de compositores");
-        ArrayList<Compositor> compositores = gestor.listarCompositores();
+        List<Compositor> compositores = gestor.listarCompositores();
         for (Compositor objCompositor : compositores) {
             ui.imprimirLinea(objCompositor.toString());
         }
@@ -816,7 +818,7 @@ public class Controlador {
     }
     private void listarArtistas() {
         ui.imprimirLinea("\n\n\tLista de artistas");
-        ArrayList<Artista> artistas = gestor.listarArtistas();
+        List<Artista> artistas = gestor.listarArtistas();
         for (Artista objArtista : artistas) {
             ui.imprimirLinea(objArtista.toString());
         }
@@ -956,7 +958,7 @@ public class Controlador {
     }
     private void listarCanciones() {
         ui.imprimirLinea("\n\n\tLista de canciones");
-        ArrayList<Cancion> canciones = gestor.listarCanciones();
+        List<Cancion> canciones = gestor.listarCanciones();
         for (Cancion objCancion : canciones) {
             ui.imprimirLinea(objCancion.toString());
         }
@@ -1052,7 +1054,7 @@ public class Controlador {
     }
     private void listarAlbunes() {
         ui.imprimirLinea("\n\n\tLista de albunes");
-        ArrayList<Album> albunes = gestor.listarAlbunes();
+        List<Album> albunes = gestor.listarAlbunes();
         for (Album objAlbum : albunes) {
             ui.imprimirLinea(objAlbum.toString());
         }
@@ -1294,7 +1296,7 @@ public class Controlador {
     }
     private void listarListasDeReproduccion() {
         ui.imprimirLinea("\n\n\tLista de listas de reproduccion");
-        ArrayList<ListaReproduccion> listasReproduccion = gestor.listarListasReproduccion();
+        List<ListaReproduccion> listasReproduccion = gestor.listarListasReproduccion();
         for (ListaReproduccion objListaReproduccion : listasReproduccion) {
             ui.imprimirLinea(objListaReproduccion.toString());
         }
@@ -1448,7 +1450,7 @@ public class Controlador {
     }
     private void listarPaises() {
         ui.imprimirLinea("\n\n\tLista de paises");
-        ArrayList<Pais> paises = gestor.listarPaises();
+        List<Pais> paises = gestor.listarPaises();
         for (Pais objPais : paises) {
             ui.imprimirLinea(objPais.toString());
         }

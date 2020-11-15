@@ -1,6 +1,8 @@
 package segura.taylor.bl.entidades;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class RepositorioCanciones {
@@ -34,8 +36,8 @@ public class RepositorioCanciones {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public ArrayList<Cancion> getCanciones() {
-        return canciones;
+    public List<Cancion> getCanciones() {
+        return Collections.unmodifiableList(this.canciones);
     }
     public void setCanciones(ArrayList<Cancion> canciones) {
         this.canciones = canciones;

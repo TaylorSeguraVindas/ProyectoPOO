@@ -1,7 +1,10 @@
 package segura.taylor.bl.gestor;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.sun.javafx.UnmodifiableArrayList;
 import segura.taylor.bl.entidades.*;
 
 public class Gestor {
@@ -108,8 +111,8 @@ public class Gestor {
         }
         return false;
     }
-    public ArrayList<Usuario> listarUsuarios(){
-        return usuarios;
+    public List<Usuario> listarUsuarios(){
+        return Collections.unmodifiableList(this.usuarios);
     }
 
     public boolean existeUsuario(Usuario pUsuario){
@@ -185,8 +188,8 @@ public class Gestor {
         }
         return false;
     }
-    public ArrayList<Album> listarAlbunes(){
-        return albunes;
+    public List<Album> listarAlbunes(){
+        return Collections.unmodifiableList(this.albunes);
     }
 
     //Para agregar o eliminar canciones y artistas
@@ -292,8 +295,8 @@ public class Gestor {
         }
         return false;
     }
-    public ArrayList<ListaReproduccion> listarListasReproduccion(){
-        return listasReproduccion;
+    public List<ListaReproduccion> listarListasReproduccion(){
+        return Collections.unmodifiableList(this.listasReproduccion);
     }
 
     //Para agregar o eliminar canciones
@@ -379,8 +382,8 @@ public class Gestor {
         }
         return false;
     }
-    public ArrayList<Artista> listarArtistas(){
-        return artistas;
+    public List<Artista> listarArtistas(){
+        return Collections.unmodifiableList(this.artistas);
     }
 
     public Artista buscarArtistaPorId(int pId){
@@ -435,8 +438,8 @@ public class Gestor {
         }
         return false;
     }
-    public ArrayList<Cancion> listarCanciones(){
-        return canciones;
+    public List<Cancion> listarCanciones(){
+        return Collections.unmodifiableList(this.canciones);
     }
 
     //Canciones de biblioteca general.
@@ -481,7 +484,7 @@ public class Gestor {
         }
         return false;
     }
-    public ArrayList<Cancion> listarCancionesDeBibliotecaUsuario(int pIdCliente){
+    public List<Cancion> listarCancionesDeBibliotecaUsuario(int pIdCliente){
         Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
 
         if(clienteModifica != null){
@@ -560,8 +563,8 @@ public class Gestor {
         }
         return false;
     }
-    public ArrayList<Compositor> listarCompositores(){
-        return compositores;
+    public List<Compositor> listarCompositores(){
+        return Collections.unmodifiableList(this.compositores);
     }
 
     public Compositor buscarCompositorPorId(int idCompositor){
@@ -621,8 +624,8 @@ public class Gestor {
 
         return false;
     }
-    public ArrayList<Genero> listarGeneros(){
-        return generos;
+    public List<Genero> listarGeneros(){
+        return Collections.unmodifiableList(this.generos);
     }
 
     public Genero buscarGeneroPorId(int pIdGenero){
@@ -682,8 +685,8 @@ public class Gestor {
 
         return false;
     }
-    public ArrayList<Pais> listarPaises(){
-        return paises;
+    public List<Pais> listarPaises(){
+        return Collections.unmodifiableList(this.paises);
     }
 
     public Pais buscarPaisPorId(int pIdPais){

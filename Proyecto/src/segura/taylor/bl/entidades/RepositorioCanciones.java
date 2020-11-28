@@ -1,15 +1,15 @@
 package segura.taylor.bl.entidades;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import segura.taylor.bl.enums.TipoRepositorioCanciones;
 
-public class RepositorioCanciones {
+import java.util.*;
+
+public abstract class RepositorioCanciones {
     //Variables
     public static int idRepoCanciones = 0;
 
     protected int id;
+    protected TipoRepositorioCanciones tipoRepo;
     protected String nombre;
     protected String fechaCreacion;
     protected ArrayList<Cancion> canciones;
@@ -21,6 +21,8 @@ public class RepositorioCanciones {
     public void setId(int id) {
         this.id = id;
     }
+
+    public TipoRepositorioCanciones getTipoRepo() {return this.tipoRepo; }
 
     public String getNombre() {
         return nombre;
@@ -84,27 +86,27 @@ public class RepositorioCanciones {
 
     public boolean agregarCancion(Cancion pCancion){
         if(!tieneCancion(pCancion)){
-            canciones.add(pCancion);
-            return true;
+            return canciones.add(pCancion);
         }
         return false;
     }
 
-    public boolean removerCancion(Cancion pCancion){
-        if(tieneCancion(pCancion)){
-            canciones.remove(pCancion);
-            return true;
+    public boolean removerCancion(int pIdCancion){
+        Optional<Cancion> cancionEncontrada = buscarCancion(pIdCancion);
+
+        if(cancionEncontrada.isPresent()){
+            return canciones.remove(cancionEncontrada.get());
         }
         return false;
     }
 
-    public Cancion buscarCancion(int pIdCancion){
+    public Optional<Cancion> buscarCancion(int pIdCancion){
         for (Cancion objCancion: canciones) {
             if(objCancion.getId() == pIdCancion){
-                return objCancion;
+                return Optional.of(objCancion);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     public boolean tieneCancion(Cancion pCancion){

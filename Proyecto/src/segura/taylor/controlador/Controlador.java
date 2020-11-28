@@ -517,6 +517,7 @@ public class Controlador {
         esperarTecla();
     }
     private void buscarUsuario() {
+        /*
         ui.imprimirLinea("\n\n\tBuscar de usuarios");
         ui.imprimir("Ingrese el correo o nombre del usuario que desea buscar: ");
         String dato = ui.leerLinea();
@@ -527,7 +528,7 @@ public class Controlador {
         } else {
             ui.imprimirLinea("No hay resultados");
         }
-
+        */
         esperarTecla();
     }
     private void eliminarUsuario() {

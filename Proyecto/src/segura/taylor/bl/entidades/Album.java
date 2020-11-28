@@ -1,7 +1,10 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoRepositorioCanciones;
+
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Album extends RepositorioCanciones{
     //Variables
@@ -41,11 +44,13 @@ public class Album extends RepositorioCanciones{
 
     //Constructores
     public Album() {
-        artistas = new ArrayList<Artista>();
+        this.tipoRepo = TipoRepositorioCanciones.ALBUM;
+        this.artistas = new ArrayList<Artista>();
     }
 
     public Album(String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor) {
         super(nombre, fechaCreacion, canciones);
+        this.tipoRepo = TipoRepositorioCanciones.ALBUM;
         this.fechaLanzamiento = fechaLanzamiento;
         this.imagen = imagen;
         this.artistas = artistas;
@@ -115,12 +120,12 @@ public class Album extends RepositorioCanciones{
         return false;
     }
 
-    public Artista buscarArtista(String datoArtista){
+    public Optional<Artista> buscarArtista(int datoArtista){
         for (Artista objArtista: artistas) {
-            if(objArtista.getId().equals(datoArtista) || objArtista.getNombre().equals(datoArtista)){
-                return objArtista;
+            if(objArtista.getId() == datoArtista){
+                return Optional.of(objArtista);
             }
         }
-        return null;
+        return Optional.empty();
     }
 }

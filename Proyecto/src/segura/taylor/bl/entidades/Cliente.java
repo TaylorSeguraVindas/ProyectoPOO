@@ -1,5 +1,7 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoUsuario;
+
 import java.util.Objects;
 
 public class Cliente extends Usuario{
@@ -40,11 +42,11 @@ public class Cliente extends Usuario{
 
     //Constructores
     public Cliente(){
-        this.tipoUsuario = TipoUsuario.Normal;
+        this.tipoUsuario = TipoUsuario.CLIENTE;
     }
     public Cliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String pais, Biblioteca biblioteca) {
         super(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
-        this.tipoUsuario = TipoUsuario.Normal;
+        this.tipoUsuario = TipoUsuario.CLIENTE;
         this.fechaNacimiento = fechaNacimiento;
         this.edad = edad;
         this.pais = pais;

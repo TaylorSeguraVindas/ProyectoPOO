@@ -1,5 +1,7 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoUsuario;
+
 import java.util.Objects;
 
 public class Admin extends Usuario {
@@ -16,12 +18,12 @@ public class Admin extends Usuario {
 
     //Constructores
     public Admin(){
-        this.tipoUsuario = TipoUsuario.Admin;
+        this.tipoUsuario = TipoUsuario.ADMIN;
     }
 
     public Admin(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaCreacion) {
         super(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
-        this.tipoUsuario = TipoUsuario.Admin;
+        this.tipoUsuario = TipoUsuario.ADMIN;
         this.fechaCreacion = fechaCreacion;
     }
 

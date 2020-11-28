@@ -1,14 +1,10 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoUsuario;
+
 import java.util.Objects;
 
-public class Usuario {
-    //Enums
-    public enum TipoUsuario{
-        Admin,
-        Normal
-    }
-
+public abstract class Usuario {
     //Variables
     public static int idUsuarios = 0;
 
@@ -127,6 +123,6 @@ public class Usuario {
     }
 
     public boolean esAdmin(){
-        return tipoUsuario == TipoUsuario.Admin && id == 0;
+        return tipoUsuario == TipoUsuario.ADMIN && id == 0;
     }
 }

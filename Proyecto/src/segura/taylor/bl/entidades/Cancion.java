@@ -1,5 +1,7 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoCancion;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -7,6 +9,7 @@ public class Cancion {
     //Variables
     public static int idCanciones = 0;
 
+    private TipoCancion tipoCancion;
     private int id;
     private String nombre;
     private String recurso;
@@ -19,6 +22,13 @@ public class Cancion {
     private double precio;
 
     //Propiedades
+    public TipoCancion getTipoCancion() {
+        return tipoCancion;
+    }
+    public void setTipoCancion(TipoCancion tipoCancion) {
+        this.tipoCancion = tipoCancion;
+    }
+
     public int getId() {
         return id;
     }
@@ -94,8 +104,9 @@ public class Cancion {
         calificaciones = new ArrayList<Calificacion>();
     }
 
-    public Cancion(String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
+    public Cancion(TipoCancion tipoCancion, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
         this.id = idCanciones++;
+        this.tipoCancion = tipoCancion;
         this.nombre = nombre;
         this.recurso = recurso;
         this.nombreAlbum = nombreAlbum;
@@ -112,6 +123,7 @@ public class Cancion {
     public String toString() {
         return "Cancion{" +
                 "id='" + id + '\'' +
+                ", tipoCancion='" + tipoCancion + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", recurso='" + recurso + '\'' +
                 ", nombreAlbum='" + nombreAlbum + '\'' +
@@ -129,8 +141,9 @@ public class Cancion {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cancion cancion = (Cancion) o;
-        return Double.compare(cancion.precio, precio) == 0 &&
-                Objects.equals(id, cancion.id) &&
+        return id == cancion.id &&
+                Double.compare(cancion.precio, precio) == 0 &&
+                tipoCancion == cancion.tipoCancion &&
                 Objects.equals(nombre, cancion.nombre) &&
                 Objects.equals(recurso, cancion.recurso) &&
                 Objects.equals(nombreAlbum, cancion.nombreAlbum) &&
@@ -143,7 +156,7 @@ public class Cancion {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        return Objects.hash(tipoCancion, id, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
     }
 
     public boolean modificar(String pNombreAlbum, double pPrecio){

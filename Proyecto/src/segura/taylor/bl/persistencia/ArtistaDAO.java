@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ArtistaDAO {
-    private ArrayList<Artista> artistas;
+    private ArrayList<Artista> artistas = new ArrayList<>();
 
     public boolean save(Artista nuevoArtista) throws Exception {
         if(!findByID(nuevoArtista.getId()).isPresent()) {

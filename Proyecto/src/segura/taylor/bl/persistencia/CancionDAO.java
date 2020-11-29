@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CancionDAO {
-    private ArrayList<Cancion> canciones;
+    private ArrayList<Cancion> canciones = new ArrayList<>();
 
     public boolean save(Cancion nuevoCancion) throws Exception {
         if(!findByID(nuevoCancion.getId()).isPresent()) {

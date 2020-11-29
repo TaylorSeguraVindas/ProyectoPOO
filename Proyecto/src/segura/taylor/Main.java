@@ -2,7 +2,7 @@ package segura.taylor;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import segura.taylor.controlador.Controlador;
+import segura.taylor.controlador.ControladorGeneral;
 
 public class Main extends Application {
 
@@ -12,7 +12,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Controlador controlador = new Controlador();
-        controlador.iniciarPrograma(primaryStage);
+        ControladorGeneral controladorGeneral = new ControladorGeneral();
+        controladorGeneral.iniciarPrograma(primaryStage);
     }
 }

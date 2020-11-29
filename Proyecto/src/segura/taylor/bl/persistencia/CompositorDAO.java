@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CompositorDAO {
-    private ArrayList<Compositor> compositores;
+    private ArrayList<Compositor> compositores = new ArrayList<>();
 
     public boolean save(Compositor nuevoCompositor) throws Exception {
         if(!findByID(nuevoCompositor.getId()).isPresent()) {

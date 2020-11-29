@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class GeneroDAO {
-    private ArrayList<Genero> generos;
+    private ArrayList<Genero> generos = new ArrayList<>();
 
     public boolean save(Genero nuevoGenero) throws Exception {
         if(!findByID(nuevoGenero.getId()).isPresent()) {

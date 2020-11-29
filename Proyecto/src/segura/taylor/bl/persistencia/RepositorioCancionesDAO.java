@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class RepositorioCancionesDAO {
-    private ArrayList<RepositorioCanciones> repoCanciones;
+    private ArrayList<RepositorioCanciones> repoCanciones = new ArrayList<>();
 
     public boolean save(RepositorioCanciones nuevoRepositorioCanciones) throws Exception {
         if(!findByID(nuevoRepositorioCanciones.getId()).isPresent()) {

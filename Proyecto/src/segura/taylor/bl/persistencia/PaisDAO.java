@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PaisDAO {
-    private ArrayList<Pais> paises;
+    private ArrayList<Pais> paises = new ArrayList<>();
 
     public boolean save(Pais nuevoPais) throws Exception {
         if(!findByID(nuevoPais.getId()).isPresent()) {

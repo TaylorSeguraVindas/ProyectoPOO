@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class YesNoDialog {
@@ -12,6 +13,8 @@ public class YesNoDialog {
 
     public boolean mostrar(String titulo, String mensaje) {
         Stage window = new Stage();
+        //This locks previous window interacivity until this one is closed.
+        window.initModality(Modality.APPLICATION_MODAL);
 
         VBox contenedorPrincipal = new VBox();
         contenedorPrincipal.setSpacing(10);

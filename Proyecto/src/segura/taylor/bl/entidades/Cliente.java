@@ -2,20 +2,21 @@ package segura.taylor.bl.entidades;
 
 import segura.taylor.bl.enums.TipoUsuario;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Cliente extends Usuario{
     //Variables
-    private String fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private int edad;
-    private String pais;
+    private Pais pais;
     private Biblioteca biblioteca;
 
     //Propiedades
-    public String getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
-    public void setFechaNacimiento(String fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -26,10 +27,10 @@ public class Cliente extends Usuario{
         this.edad = edad;
     }
 
-    public String getPais() {
+    public Pais getPais() {
         return pais;
     }
-    public void setPais(String pais) {
+    public void setPais(Pais pais) {
         this.pais = pais;
     }
 
@@ -44,7 +45,7 @@ public class Cliente extends Usuario{
     public Cliente(){
         this.tipoUsuario = TipoUsuario.CLIENTE;
     }
-    public Cliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String pais, Biblioteca biblioteca) {
+    public Cliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaNacimiento, int edad, Pais pais, Biblioteca biblioteca) {
         super(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
         this.tipoUsuario = TipoUsuario.CLIENTE;
         this.fechaNacimiento = fechaNacimiento;

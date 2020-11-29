@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class UsuarioDAO {
-    private ArrayList<Usuario> usuarios;
+    private ArrayList<Usuario> usuarios = new ArrayList<>();
 
     public boolean save(Usuario nuevoUsuario) throws Exception {
         if(!findByID(nuevoUsuario.getId()).isPresent()) {

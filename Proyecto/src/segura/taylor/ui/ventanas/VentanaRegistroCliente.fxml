@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="440.0" prefWidth="580.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.ControladorRegistroCliente">
+<VBox prefHeight="440.0" prefWidth="580.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.usuarios.ControladorRegistroCliente">
    <children>
-      <VBox alignment="CENTER" prefHeight="51.0" prefWidth="546.0" VBox.vgrow="ALWAYS">
+      <VBox alignment="CENTER" prefHeight="51.0" prefWidth="546.0">
          <children>
             <Label text="Registro de usuario" textAlignment="CENTER">
                <font>
@@ -24,21 +24,23 @@
                   <VBox prefHeight="251.0" prefWidth="272.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Label text="Correo electrónico" />
-                        <TextField promptText="Correo" />
+                        <TextField fx:id="txtCorreo" promptText="Correo" />
                         <Label layoutX="10.0" layoutY="10.0" text="Contrasenna" />
-                        <TextField layoutX="10.0" layoutY="10.0" promptText="Contrasenna" />
+                        <TextField fx:id="txtContrasenna" layoutX="10.0" layoutY="10.0" promptText="Contrasenna" />
                         <Label layoutX="10.0" layoutY="52.0" text="Nombre" />
-                        <TextField layoutX="10.0" layoutY="35.0" promptText="Nombre" />
+                        <TextField fx:id="txtNombre" layoutX="10.0" layoutY="35.0" promptText="Nombre" />
                         <Label layoutX="10.0" layoutY="94.0" text="Apellidos" />
-                        <TextField layoutX="10.0" layoutY="60.0" promptText="Apellidos" />
+                        <TextField fx:id="txtApellidos" layoutX="10.0" layoutY="60.0" promptText="Apellidos" />
+                        <Label layoutX="10.0" layoutY="136.0" text="Pais" />
+                        <ComboBox fx:id="txtPais" prefHeight="25.0" prefWidth="270.0" />
                      </children>
                   </VBox>
                   <VBox prefHeight="278.0" prefWidth="267.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Label text="Nombre de usuario" />
-                        <TextField promptText="Nombre de usuario" />
+                        <TextField fx:id="txtNombreUsuario" promptText="Nombre de usuario" />
                         <Label layoutX="10.0" layoutY="10.0" text="Fecha de nacimiento" />
-                        <DatePicker prefHeight="25.0" prefWidth="299.0" promptText="Fecha de nacimiento" VBox.vgrow="ALWAYS" />
+                        <DatePicker fx:id="txtFechaNacimiento" prefHeight="25.0" prefWidth="299.0" promptText="Fecha de nacimiento" VBox.vgrow="ALWAYS" />
                         <VBox alignment="CENTER">
                            <children>
                               <Label text="Foto de perfil" />

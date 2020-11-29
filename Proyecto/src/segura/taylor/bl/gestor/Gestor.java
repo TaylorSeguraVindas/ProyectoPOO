@@ -1,5 +1,6 @@
 package segura.taylor.bl.gestor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,16 +45,17 @@ public class Gestor {
 
         return (usuarioDAO.findAll().get(0).esAdmin());
     }
-    public Usuario iniciarSesion(String pCorreo, String pContrasenna){
+    public boolean iniciarSesion(String pCorreo, String pContrasenna){
         for (Usuario objUsuario: usuarioDAO.findAll()) {
             if(objUsuario.getCorreo().equals(pCorreo)){
                 if(objUsuario.getContrasenna().equals(pContrasenna)){
-                    return objUsuario;
+                    usuarioIngresado = objUsuario;
+                    return true;
                 }
             }
         }
 
-        return null;
+        return false;
     }
 
     //*******Manejo de usuarios*******
@@ -67,15 +69,15 @@ public class Gestor {
         return usuarioDAO.save(admin);
     }
     //Cliente
-    public boolean crearUsuarioCliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String pais, Biblioteca biblioteca) throws Exception {
+    public boolean crearUsuarioCliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaNacimiento, int edad, int idPais, Biblioteca biblioteca) throws Exception {
         //Si no hay admin no se puede registrar usuarios.
-        if(usuarioDAO.findAll().size() == 0) return false;
+        //if(usuarioDAO.findAll().size() == 0) return false;
 
         if(biblioteca == null){
             biblioteca = new Biblioteca();
         }
-
-        Cliente nuevoCliente = new Cliente(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, pais, biblioteca);
+        //Pais pais = buscarPaisPorId(idPais).get();
+        Cliente nuevoCliente = new Cliente(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, null, biblioteca);
 
         return usuarioDAO.save(nuevoCliente);
     }

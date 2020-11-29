@@ -1,5 +1,6 @@
 package segura.taylor.bl.entidades;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Artista {
@@ -10,9 +11,9 @@ public class Artista {
     private String nombre;
     private String apellidos;
     private String nombreArtistico;
-    private String fechaNacimiento;
-    private String fechaDefuncion;
-    private String paisNacimiento;
+    private LocalDate fechaNacimiento;
+    private LocalDate fechaDefuncion;
+    private Pais paisNacimiento;
     private Genero genero;
     private int edad;
     private String descripcion;
@@ -46,24 +47,24 @@ public class Artista {
         this.nombreArtistico = nombreArtistico;
     }
 
-    public String getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
-    public void setFechaNacimiento(String fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public String getFechaDefuncion() {
+    public LocalDate getFechaDefuncion() {
         return fechaDefuncion;
     }
-    public void setFechaDefuncion(String fechaDefuncion) {
+    public void setFechaDefuncion(LocalDate fechaDefuncion) {
         this.fechaDefuncion = fechaDefuncion;
     }
 
-    public String getPaisNacimiento() {
+    public Pais getPaisNacimiento() {
         return paisNacimiento;
     }
-    public void setPaisNacimiento(String paisNacimiento) {
+    public void setPaisNacimiento(Pais paisNacimiento) {
         this.paisNacimiento = paisNacimiento;
     }
 
@@ -90,7 +91,7 @@ public class Artista {
 
     //Constructores
     public Artista(){}
-    public Artista(String nombre, String apellidos, String nombreArtistico, String fechaNacimiento, String fechaDefuncion, String paisNacimiento, Genero genero, int edad, String descripcion) {
+    public Artista(String nombre, String apellidos, String nombreArtistico, LocalDate fechaNacimiento, LocalDate fechaDefuncion, Pais paisNacimiento, Genero genero, int edad, String descripcion) {
         this.id = idArtistas++;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -144,11 +145,11 @@ public class Artista {
         return Objects.hash(id, nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
     }
 
-    public boolean modificar(String pNombre, String pApellidos, String pNomArtistico, String pFechaDefuncion){
+    public boolean modificar(String pNombre, String pApellidos, String pNomArtistico, LocalDate pFechaDefuncion){
         this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
         this.apellidos = (!pApellidos.equals("")) ? pApellidos : this.apellidos;
         this.nombreArtistico = (!pNomArtistico.equals("")) ? pNomArtistico : this.nombreArtistico;
-        this.fechaDefuncion = (!pFechaDefuncion.equals("")) ? pFechaDefuncion : this.fechaDefuncion;
+        this.fechaDefuncion = pFechaDefuncion;
         return true;
     }
 }

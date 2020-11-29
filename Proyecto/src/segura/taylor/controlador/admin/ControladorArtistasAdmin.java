@@ -2,10 +2,18 @@ package segura.taylor.controlador.admin;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import segura.taylor.bl.entidades.Artista;
 import segura.taylor.controlador.ControladorGeneral;
 
@@ -82,5 +90,36 @@ public class ControladorArtistasAdmin {
         }
 
         return artistasFinal;
+    }
+
+    public void agregarArtista() {
+        try {
+            Stage ventanaRegistroArtista = new Stage();
+            //This locks previous window interacivity until this one is closed.
+            ventanaRegistroArtista.initModality(Modality.APPLICATION_MODAL);
+            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroArtista.fxml"));
+
+            Scene escena = new Scene(root, 580, 440);
+
+            Button btnCerrar = (Button) root.lookup("#btnCerrar");
+            btnCerrar.setOnAction(e -> { ventanaRegistroArtista.close(); });
+            
+            ventanaRegistroArtista.setScene(escena);
+            ventanaRegistroArtista.setTitle("Registro de artista");
+            ventanaRegistroArtista.setResizable(false);
+            ventanaRegistroArtista.showAndWait();
+
+            mostrarDatos(); //Actualizar tabla
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void modificarArtista() {
+
+    }
+
+    public void eliminarArtista() {
+
     }
 }

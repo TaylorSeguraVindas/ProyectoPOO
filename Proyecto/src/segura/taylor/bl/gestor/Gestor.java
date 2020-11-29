@@ -283,11 +283,11 @@ public class Gestor {
 
 
     //*****************Manejo de artistas*******************
-    public boolean crearArtista(String nombre, String apellidos, String nombreArtistico, String fechaNacimiento, String fechaDefuncion, String paisNacimiento, Genero genero, int edad, String descripcion) throws Exception {
+    public boolean crearArtista(String nombre, String apellidos, String nombreArtistico, LocalDate fechaNacimiento, LocalDate fechaDefuncion, Pais paisNacimiento, Genero genero, int edad, String descripcion) throws Exception {
         Artista nuevoArtista = new Artista(nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
         return artistaDAO.save(nuevoArtista);
     }
-    public boolean modificarArtista(int pIdArtista, String pNombre, String pApellidos, String pNomArtistico, String pFechaDefuncion) throws Exception {
+    public boolean modificarArtista(int pIdArtista, String pNombre, String pApellidos, String pNomArtistico, LocalDate pFechaDefuncion) throws Exception {
         Optional<Artista> artistaEncontrado = artistaDAO.findByID(pIdArtista);
 
         if(artistaEncontrado.isPresent()) {

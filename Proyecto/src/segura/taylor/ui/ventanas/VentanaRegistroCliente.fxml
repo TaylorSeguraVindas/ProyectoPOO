@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="440.0" prefWidth="580.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.ControladorRegistroCliente">
+   <children>
+      <VBox alignment="CENTER" prefHeight="51.0" prefWidth="546.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label text="Registro de usuario" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <VBox VBox.vgrow="ALWAYS">
+         <children>
+            <HBox prefHeight="276.0" prefWidth="546.0" spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox prefHeight="251.0" prefWidth="272.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Correo electrónico" />
+                        <TextField promptText="Correo" />
+                        <Label layoutX="10.0" layoutY="10.0" text="Contrasenna" />
+                        <TextField layoutX="10.0" layoutY="10.0" promptText="Contrasenna" />
+                        <Label layoutX="10.0" layoutY="52.0" text="Nombre" />
+                        <TextField layoutX="10.0" layoutY="35.0" promptText="Nombre" />
+                        <Label layoutX="10.0" layoutY="94.0" text="Apellidos" />
+                        <TextField layoutX="10.0" layoutY="60.0" promptText="Apellidos" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="278.0" prefWidth="267.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Nombre de usuario" />
+                        <TextField promptText="Nombre de usuario" />
+                        <Label layoutX="10.0" layoutY="10.0" text="Fecha de nacimiento" />
+                        <DatePicker prefHeight="25.0" prefWidth="299.0" promptText="Fecha de nacimiento" VBox.vgrow="ALWAYS" />
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Label text="Foto de perfil" />
+                              <ImageView fitHeight="129.0" fitWidth="157.0" pickOnBounds="true" preserveRatio="true" />
+                              <Button mnemonicParsing="false" text="Seleccionar" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <VBox alignment="CENTER" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#registrarUsuario" prefHeight="35.0" prefWidth="144.0" text="Registrarse" />
+                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#volverAInicioDeSesion" prefHeight="34.0" prefWidth="144.0" text="Volver a inicio de sesión" />
+               </children>
+            </VBox>
+         </children></VBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+   </padding>
+</VBox>

@@ -4,10 +4,12 @@ import segura.taylor.bl.enums.TipoRepositorioCanciones;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Biblioteca extends RepositorioCanciones {
     //Variables
     ArrayList<Integer> idCancionesFavoritas;
+    ArrayList<ListaReproduccion> listasDeReproduccion;
 
     //Propiedades
     public ArrayList<Integer> getIdCancionesFavoritas() {
@@ -17,14 +19,23 @@ public class Biblioteca extends RepositorioCanciones {
         this.idCancionesFavoritas = idCancionesFavoritas;
     }
 
+    public ArrayList<ListaReproduccion> getListasDeReproduccion() {
+        return listasDeReproduccion;
+    }
+    public void setListasDeReproduccion(ArrayList<ListaReproduccion> listasDeReproduccion) {
+        this.listasDeReproduccion = listasDeReproduccion;
+    }
+
     //Contructores
     public Biblioteca() {
         this.tipoRepo = TipoRepositorioCanciones.BIBLIOTECA;
     }
-    public Biblioteca(String nombre, String fechaCreacion, ArrayList<Cancion> canciones, ArrayList<Integer> idCancionesFavoritas) {
+
+    public Biblioteca(String nombre, String fechaCreacion, ArrayList<Cancion> canciones, ArrayList<Integer> idCancionesFavoritas, ArrayList<ListaReproduccion> listasDeReproduccion) {
         super(nombre, fechaCreacion, canciones);
         this.tipoRepo = TipoRepositorioCanciones.BIBLIOTECA;
         this.idCancionesFavoritas = idCancionesFavoritas;
+        this.listasDeReproduccion = listasDeReproduccion;
     }
 
     //Metodos
@@ -84,5 +95,26 @@ public class Biblioteca extends RepositorioCanciones {
             }
         }
         return false;
+    }
+
+    public boolean agregarListaReproduccion(ListaReproduccion nuevaLista) {
+        return listasDeReproduccion.add(nuevaLista);
+    }
+    public boolean removerListaReproduccion(int pIdLista) {
+        Optional<ListaReproduccion> listaEncontrada = buscarListaReproduccion(pIdLista);
+
+        if(listaEncontrada.isPresent()) {
+            return listasDeReproduccion.remove(listaEncontrada.get());
+        }
+
+        return false;
+    }
+    public Optional<ListaReproduccion> buscarListaReproduccion(int pIdLista) {
+        for (ListaReproduccion lista : listasDeReproduccion) {
+            if(pIdLista == lista.getId()) {
+                return Optional.of(lista);
+            }
+        }
+        return Optional.empty();
     }
 }

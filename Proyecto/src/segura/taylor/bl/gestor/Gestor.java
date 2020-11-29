@@ -13,6 +13,8 @@ import javax.swing.text.html.Option;
 
 public class Gestor {
     //Variables
+    public static Usuario usuarioIngresado;
+
     private ArtistaDAO artistaDAO;
     private CancionDAO cancionDAO;
     private CompositorDAO compostorDAO;
@@ -203,12 +205,12 @@ public class Gestor {
 
 
     //*********Manejo de Listas de Reproduccion***************
-    public boolean crearListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, int idCreador, String imagen) throws Exception {
+    public boolean crearListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, Usuario creador, String imagen) throws Exception {
         if(canciones == null){
             canciones = new ArrayList<Cancion>();
         }
 
-        ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, idCreador, 0.0, imagen);
+        ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, creador, 0.0, imagen);
         return repoCancionesDAO.save(nuevaLista);
     }
     public boolean modificarListaReproduccion(int pIdLista, String pNombre, String pImagen) throws Exception {
@@ -295,12 +297,12 @@ public class Gestor {
 
 
     //*******************Manejo de canciones******************
-    public boolean crearCancion(TipoCancion tipoCancion, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) throws Exception {
+    public boolean crearCancion(TipoCancion tipoCancion, Usuario creador, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) throws Exception {
         if(calificaciones == null){
             calificaciones = new ArrayList<>();
         }
 
-        Cancion nuevaCancion = new Cancion(tipoCancion, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        Cancion nuevaCancion = new Cancion(tipoCancion, creador, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
         return cancionDAO.save(nuevaCancion);
     }
     public boolean modificarCancion(int pIdCancion, String pNombreAlbum, double pPrecio) throws Exception {

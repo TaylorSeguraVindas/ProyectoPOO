@@ -11,6 +11,7 @@ public class Cancion {
 
     private TipoCancion tipoCancion;
     private int id;
+    private Usuario creador;
     private String nombre;
     private String recurso;
     private String nombreAlbum;
@@ -34,6 +35,13 @@ public class Cancion {
     }
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Usuario getCreador() {
+        return creador;
+    }
+    public void setCreador(Usuario creador) {
+        this.creador = creador;
     }
 
     public String getNombre() {
@@ -104,8 +112,9 @@ public class Cancion {
         calificaciones = new ArrayList<Calificacion>();
     }
 
-    public Cancion(TipoCancion tipoCancion, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
+    public Cancion(TipoCancion tipoCancion, Usuario creador, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
         this.id = idCanciones++;
+        this.creador = creador;
         this.tipoCancion = tipoCancion;
         this.nombre = nombre;
         this.recurso = recurso;
@@ -123,6 +132,7 @@ public class Cancion {
     public String toString() {
         return "Cancion{" +
                 "id='" + id + '\'' +
+                ", creador='" + creador + '\'' +
                 ", tipoCancion='" + tipoCancion + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", recurso='" + recurso + '\'' +
@@ -144,6 +154,7 @@ public class Cancion {
         return id == cancion.id &&
                 Double.compare(cancion.precio, precio) == 0 &&
                 tipoCancion == cancion.tipoCancion &&
+                Objects.equals(creador, cancion.creador) &&
                 Objects.equals(nombre, cancion.nombre) &&
                 Objects.equals(recurso, cancion.recurso) &&
                 Objects.equals(nombreAlbum, cancion.nombreAlbum) &&
@@ -156,7 +167,7 @@ public class Cancion {
 
     @Override
     public int hashCode() {
-        return Objects.hash(tipoCancion, id, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        return Objects.hash(tipoCancion, id, creador, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
     }
 
     public boolean modificar(String pNombreAlbum, double pPrecio){

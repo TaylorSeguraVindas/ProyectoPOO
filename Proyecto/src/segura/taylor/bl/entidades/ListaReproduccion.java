@@ -7,16 +7,16 @@ import java.util.Objects;
 
 public class ListaReproduccion extends RepositorioCanciones {
     //Variables
-    private int idCreador;
+    private Usuario creador;
     private double calificacion;
     private String imagen;
 
     //Propiedades
-    public int getIdCreador() {
-        return idCreador;
+    public Usuario getCreador() {
+        return creador;
     }
-    public void setIdCreador(int idCreador) {
-        this.idCreador = idCreador;
+    public void setCreador(Usuario Creador) {
+        this.creador = Creador;
     }
 
     public double getCalificacion() {
@@ -37,10 +37,10 @@ public class ListaReproduccion extends RepositorioCanciones {
     public ListaReproduccion(){
         this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
     }
-    public ListaReproduccion(String nombre, String fechaCreacion, ArrayList<Cancion> canciones, int idCreador, double calificacion, String imagen) {
+    public ListaReproduccion(String nombre, String fechaCreacion, ArrayList<Cancion> canciones, Usuario creador, double calificacion, String imagen) {
         super(nombre, fechaCreacion, canciones);
         this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
-        this.idCreador = idCreador;
+        this.creador = creador;
         this.calificacion = calificacion;
         this.imagen = imagen;
     }
@@ -50,7 +50,7 @@ public class ListaReproduccion extends RepositorioCanciones {
     @Override
     public String toString() {
         return "ListaReproduccion{" +
-                "idCreador='" + idCreador + '\'' +
+                "Creador='" + creador + '\'' +
                 ", calificacion=" + calificacion +
                 ", imagen='" + imagen + '\'' +
                 ", id='" + id + '\'' +
@@ -67,13 +67,13 @@ public class ListaReproduccion extends RepositorioCanciones {
         if (!super.equals(o)) return false;
         ListaReproduccion that = (ListaReproduccion) o;
         return Double.compare(that.calificacion, calificacion) == 0 &&
-                Objects.equals(idCreador, that.idCreador) &&
+                Objects.equals(creador, that.creador) &&
                 Objects.equals(imagen, that.imagen);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), idCreador, calificacion, imagen);
+        return Objects.hash(super.hashCode(), creador, calificacion, imagen);
     }
 
     public Cancion cargarCancion(int posicion){

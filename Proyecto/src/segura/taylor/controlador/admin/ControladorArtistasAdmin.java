@@ -6,19 +6,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import segura.taylor.bl.entidades.Artista;
+import segura.taylor.bl.entidades.Genero;
+import segura.taylor.bl.entidades.Pais;
 import segura.taylor.controlador.ControladorGeneral;
+import segura.taylor.controlador.artista.ControladorRegistroArtista;
 import segura.taylor.ui.dialogos.AlertDialog;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
+import javax.xml.soap.Text;
 import java.util.List;
 
 public class ControladorArtistasAdmin {
@@ -99,12 +100,13 @@ public class ControladorArtistasAdmin {
             Stage ventanaRegistroArtista = new Stage();
             //This locks previous window interacivity until this one is closed.
             ventanaRegistroArtista.initModality(Modality.APPLICATION_MODAL);
+
+            //Referencias para el controlador
+            ControladorRegistroArtista.ventana = ventanaRegistroArtista;
+            ControladorRegistroArtista.modificando = false;
+
             VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroArtista.fxml"));
-
             Scene escena = new Scene(root, 580, 440);
-
-            Button btnCerrar = (Button) root.lookup("#btnCerrar");
-            btnCerrar.setOnAction(e -> { ventanaRegistroArtista.close(); });
 
             ventanaRegistroArtista.setScene(escena);
             ventanaRegistroArtista.setTitle("Registro de artista");
@@ -118,7 +120,72 @@ public class ControladorArtistasAdmin {
     }
 
     public void modificarArtista() {
+        try {
+            //Referencias para el controlador
+            Artista artistaSeleccionado = (Artista) tblArtistas.getSelectionModel().getSelectedItem();
 
+            if (artistaSeleccionado == null) {
+                AlertDialog alertDialog = new AlertDialog();
+                alertDialog.mostrar("Error", "No hay ningún artista seleccionado");
+                return;
+            }
+
+            Stage ventanaRegistroArtista = new Stage();
+            //This locks previous window interacivity until this one is closed.
+            ventanaRegistroArtista.initModality(Modality.APPLICATION_MODAL);
+
+            ControladorRegistroArtista.ventana = ventanaRegistroArtista;
+            ControladorRegistroArtista.idArtistaSeleccionado = artistaSeleccionado.getId();
+            ControladorRegistroArtista.modificando = true;
+
+            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroArtista.fxml"));
+
+            //Referencia a los campos
+            TextField txtNombre = (TextField) root.lookup("#txtNombre");
+            TextField txtApellidos = (TextField) root.lookup("#txtApellidos");
+            TextField txtNombreArtistico = (TextField) root.lookup("#txtNombreArtistico");
+            ComboBox txtGenero = (ComboBox) root.lookup("#txtGenero");
+            ComboBox txtPais = (ComboBox) root.lookup("#txtPais");
+            DatePicker txtFechaNacimiento = (DatePicker) root.lookup("#txtFechaNacimiento");
+            DatePicker txtFechaDefuncion = (DatePicker) root.lookup("#txtFechaDefuncion");
+            TextArea txtDescripcion = (TextArea) root.lookup("#txtDescripcion");
+
+            //Actualizar campos
+            txtNombre.setText(artistaSeleccionado.getNombre());
+            txtApellidos.setText(artistaSeleccionado.getApellidos());
+            txtNombreArtistico.setText(artistaSeleccionado.getNombreArtistico());
+
+            Genero generoArtista = artistaSeleccionado.getGenero();
+            if(generoArtista != null) {
+                txtGenero.setValue(generoArtista.getNombre());
+            }
+
+            Pais paisArtista = artistaSeleccionado.getPaisNacimiento();
+            if(paisArtista != null) {
+                txtPais.setValue(paisArtista.getNombre());
+            }
+
+            txtFechaNacimiento.setValue(artistaSeleccionado.getFechaNacimiento());
+            txtFechaDefuncion.setValue(artistaSeleccionado.getFechaDefuncion());
+            txtDescripcion.setText(artistaSeleccionado.getDescripcion());
+
+            //Desactivar campos inmodificables
+            txtGenero.setDisable(true);
+            txtPais.setDisable(true);
+            txtFechaNacimiento.setDisable(true);
+
+            Scene escena = new Scene(root, 580, 440);
+
+            ventanaRegistroArtista.setScene(escena);
+            ventanaRegistroArtista.setTitle("Registro de artista");
+            ventanaRegistroArtista.setResizable(false);
+            ventanaRegistroArtista.showAndWait();
+
+            mostrarDatos(); //Actualizar tabla
+            mostrarDatos(); //Actualizar tabla
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void eliminarArtista() {

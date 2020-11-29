@@ -145,11 +145,12 @@ public class Artista {
         return Objects.hash(id, nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
     }
 
-    public boolean modificar(String pNombre, String pApellidos, String pNomArtistico, LocalDate pFechaDefuncion){
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.apellidos = (!pApellidos.equals("")) ? pApellidos : this.apellidos;
-        this.nombreArtistico = (!pNomArtistico.equals("")) ? pNomArtistico : this.nombreArtistico;
+    public boolean modificar(String pNombre, String pApellidos, String pNomArtistico, LocalDate pFechaDefuncion, String pDescripcion){
+        this.nombre = pNombre;
+        this.apellidos = pApellidos;
+        this.nombreArtistico = pNomArtistico;
         this.fechaDefuncion = pFechaDefuncion;
+        this.descripcion = pDescripcion;
         return true;
     }
 }

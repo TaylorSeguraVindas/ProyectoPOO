@@ -55,7 +55,7 @@ public class ControladorArtistasAdmin {
         //FechaDefuncion
         TableColumn<Artista, String> columnaFechaDefuncion = new TableColumn("Fecha Defuncion");
         columnaFechaDefuncion.setMinWidth(100);
-        columnaFechaDefuncion.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        columnaFechaDefuncion.setCellValueFactory(new PropertyValueFactory<>("fechaDefuncion"));
 
         //Edad
         TableColumn<Artista, String> columnaEdad = new TableColumn("Edad");
@@ -78,6 +78,7 @@ public class ControladorArtistasAdmin {
         columnaDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
 
         tblArtistas.getColumns().addAll(columnaNombre, columnaApellidos, columnaNombreArtistico, columnaFechaNacimiento,columnaFechaDefuncion, columnaEdad, columnaGenero, columnaPais, columnaDescripcion);
+
     }
     private void mostrarDatos() {
         tblArtistas.setItems(obtenerArtistas());
@@ -181,7 +182,6 @@ public class ControladorArtistasAdmin {
             ventanaRegistroArtista.setResizable(false);
             ventanaRegistroArtista.showAndWait();
 
-            mostrarDatos(); //Actualizar tabla
             mostrarDatos(); //Actualizar tabla
         } catch (Exception e) {
             e.printStackTrace();

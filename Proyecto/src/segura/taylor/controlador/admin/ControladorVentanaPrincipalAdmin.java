@@ -34,7 +34,9 @@ public class ControladorVentanaPrincipalAdmin {
         try {
             VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/admin/ArtistasAdmin.fxml"));
             contenedorPrincipal.getChildren().add(root);
+            //Expandir
             root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
         } catch (Exception e) {
             e.printStackTrace();
         }

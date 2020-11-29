@@ -121,6 +121,8 @@ public class ControladorGeneral {
                 root = FXMLLoader.load(getClass().getResource("../ui/ventanas/cliente/VentanaPrincipalCliente.fxml"));
             }
             ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 320), true);
+            window.setMinWidth(920);
+            window.setMinHeight(520);
         } catch (Exception e) {
             e.printStackTrace();
         }

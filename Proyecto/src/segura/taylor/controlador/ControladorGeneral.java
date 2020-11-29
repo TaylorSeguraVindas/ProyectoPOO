@@ -76,27 +76,51 @@ public class ControladorGeneral {
         }
     }
 
-    private void cambiarVentana(String titulo, Scene escena) {
+    private void cambiarVentana(String titulo, Scene escena, boolean maximizar) {
         ControladorGeneral.instancia.window.setTitle(titulo);
         ControladorGeneral.instancia.window.setScene(escena);
         ControladorGeneral.instancia.window.centerOnScreen();
+        ControladorGeneral.instancia.window.setMaximized(maximizar);
         ControladorGeneral.instancia.window.show();
     }
 
     public void menuIniciarSesion() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("../ui/ventanas/VentanaLogin.fxml"));
-            ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 320));
+            ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 320), false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     public void menuRegistroCliente() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("../ui/ventanas/VentanaRegistroCliente.fxml"));
-            ControladorGeneral.instancia.cambiarVentana("Registro de usuario", new Scene(root, 580, 440));
+            Parent root;
+
+            if(gestor.existeAdmin()) {
+                root = FXMLLoader.load(getClass().getResource("../ui/ventanas/VentanaRegistroCliente.fxml"));
+            } else {
+                root = FXMLLoader.load(getClass().getResource("../ui/ventanas/VentanaRegistroAdmin.fxml"));
+                AlertDialog alertDialog = new AlertDialog();
+                alertDialog.mostrar("Aviso", "No se ha detectado un usuario admin, se va a crear uno");
+            }
+
+            ControladorGeneral.instancia.cambiarVentana("Registro de usuario", new Scene(root, 580, 440), false);
             ControladorGeneral.instancia.window.centerOnScreen();
             ControladorGeneral.instancia.window.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void menuPrincipal(boolean admin) {
+        try {
+            Parent root;
+
+            if(admin) {
+                root = FXMLLoader.load(getClass().getResource("../ui/ventanas/admin/VentanaPrincipalAdmin.fxml"));
+            } else {
+                root = FXMLLoader.load(getClass().getResource("../ui/ventanas/cliente/VentanaPrincipalCliente.fxml"));
+            }
+            ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 320), true);
         } catch (Exception e) {
             e.printStackTrace();
         }

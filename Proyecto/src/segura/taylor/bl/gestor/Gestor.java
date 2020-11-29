@@ -14,7 +14,7 @@ import javax.swing.text.html.Option;
 
 public class Gestor {
     //Variables
-    public static Usuario usuarioIngresado;
+    private Usuario usuarioIngresado;
 
     private ArtistaDAO artistaDAO;
     private CancionDAO cancionDAO;
@@ -33,9 +33,21 @@ public class Gestor {
         paisDAO = new PaisDAO();
         repoCancionesDAO = new RepositorioCancionesDAO();
         usuarioDAO = new UsuarioDAO();
+
+        try {
+            usuarioDAO.save(new Admin("Admin@admin.com", "Admin1234", "Taylor", "Segura", "", "Teco", LocalDate.now()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //Metodos
+    public boolean usuarioIngresadoEsAdmin() {
+        return usuarioIngresado.esAdmin();
+    }
+    public int getIdUsuarioIngresado() {
+        return usuarioIngresado.getId();
+    }
 
     //*******General**********
     public boolean existeAdmin(){
@@ -60,7 +72,7 @@ public class Gestor {
 
     //*******Manejo de usuarios*******
     //Admin
-    public boolean crearUsuarioAdmin(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaCreacion) throws Exception {
+    public boolean crearUsuarioAdmin(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaCreacion) throws Exception {
         //Si ya existe un admin no se puede sobreescribir
         if(existeAdmin()) return false;
 

@@ -2,17 +2,18 @@ package segura.taylor.bl.entidades;
 
 import segura.taylor.bl.enums.TipoUsuario;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Admin extends Usuario {
     //Variables
-    private String fechaCreacion;
+    private LocalDate fechaCreacion;
 
     //Propiedades
-    public String getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
-    public void setFechaCreacion(String fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
@@ -21,7 +22,7 @@ public class Admin extends Usuario {
         this.tipoUsuario = TipoUsuario.ADMIN;
     }
 
-    public Admin(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaCreacion) {
+    public Admin(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaCreacion) {
         super(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
         this.tipoUsuario = TipoUsuario.ADMIN;
         this.fechaCreacion = fechaCreacion;

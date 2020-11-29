@@ -38,6 +38,7 @@ public class ControladorRegistroArtista {
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Artista registrado correctamente");
+                limpiarCampos();
             } else {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Error", "No se pudo registrar el artista");
@@ -45,5 +46,15 @@ public class ControladorRegistroArtista {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private void limpiarCampos() {
+        txtNombre.setText("");
+        txtApellidos.setText("");
+        txtNombreArtistico.setText("");
+        txtGenero.setValue("");
+        txtPais.setValue("");
+        txtFechaNacimiento.setValue(null);
+        txtFechaDefuncion.setValue(null);
+        txtDescripcion.setText("");
     }
 }

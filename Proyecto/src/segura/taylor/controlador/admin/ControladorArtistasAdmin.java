@@ -16,6 +16,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import segura.taylor.bl.entidades.Artista;
 import segura.taylor.controlador.ControladorGeneral;
+import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.util.List;
 
@@ -103,7 +105,7 @@ public class ControladorArtistasAdmin {
 
             Button btnCerrar = (Button) root.lookup("#btnCerrar");
             btnCerrar.setOnAction(e -> { ventanaRegistroArtista.close(); });
-            
+
             ventanaRegistroArtista.setScene(escena);
             ventanaRegistroArtista.setTitle("Registro de artista");
             ventanaRegistroArtista.setResizable(false);
@@ -120,6 +122,25 @@ public class ControladorArtistasAdmin {
     }
 
     public void eliminarArtista() {
+        YesNoDialog yesNoDialog = new YesNoDialog();
+        boolean resultado = yesNoDialog.mostrar("Aviso", "Realmente quiere eliminar al artista seleccionado?");
 
+        if (resultado) {
+            Artista artistaSeleccionado = (Artista) tblArtistas.getSelectionModel().getSelectedItem();
+            int idArtista = artistaSeleccionado.getId();
+            try {
+                resultado = ControladorGeneral.instancia.getGestor().eliminarArtista(idArtista);
+                if (resultado) {
+                    AlertDialog alertDialog = new AlertDialog();
+                    alertDialog.mostrar("Exito", "Artista eliminado correctamente");
+                    mostrarDatos();
+                } else {
+                    AlertDialog alertDialog = new AlertDialog();
+                    alertDialog.mostrar("Error", "No se pudo eliminar el artista");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

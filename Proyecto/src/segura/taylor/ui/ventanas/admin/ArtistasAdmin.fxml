@@ -21,7 +21,7 @@
                <children>
                   <Button fx:id="btnAgregarArtista" mnemonicParsing="false" onAction="#agregarArtista" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
                   <Button fx:id="btnModificarArtista" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
-                  <Button fx:id="btnEliminarArtista" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
+                  <Button fx:id="btnEliminarArtista" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarArtista" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
                </children>
             </HBox>
             <TableView fx:id="tblArtistas" prefHeight="291.0" prefWidth="600.0" VBox.vgrow="ALWAYS" />

@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="segura.taylor.ui.ventanas.admin.ArtistasAdmin"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<VBox fx:id="ventanaPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="879.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.admin.ControladorArtistasAdmin">
+   <children>
+      <VBox alignment="CENTER" prefHeight="54.0" prefWidth="600.0">
+         <children>
+            <Label text="Artistas">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox alignment="TOP_RIGHT" prefHeight="40.0" prefWidth="813.0" spacing="10.0">
+               <children>
+                  <Button fx:id="btnAgregarArtista" mnemonicParsing="false" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
+                  <Button fx:id="btnModificarArtista" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
+                  <Button fx:id="btnEliminarArtista" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
+               </children>
+            </HBox>
+            <TableView fx:id="tblArtistas" prefHeight="291.0" prefWidth="600.0" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </children>
+</VBox>

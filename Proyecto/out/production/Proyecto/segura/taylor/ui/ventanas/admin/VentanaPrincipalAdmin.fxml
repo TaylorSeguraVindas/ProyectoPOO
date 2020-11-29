@@ -4,13 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="520.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.admin.ControladorVentanaPrincipalAdmin">
+<VBox minHeight="520.0" prefHeight="520.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.admin.ControladorVentanaPrincipalAdmin">
     <children>
         <HBox prefHeight="357.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
             <children>
-                <VBox prefHeight="444.0" prefWidth="180.0">
+                <VBox prefHeight="444.0" prefWidth="169.0">
                     <children>
-                        <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+                        <VBox prefHeight="444.0" prefWidth="287.0" spacing="10.0" VBox.vgrow="ALWAYS">
                             <children>
                                 <Button fx:id="btnMostrarInicio" mnemonicParsing="false" onAction="#mostrarInicio" prefHeight="25.0" prefWidth="182.0" text="Inicio" />
                                 <Button fx:id="btnMostrarTienda" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#mostrarTienda" prefHeight="25.0" prefWidth="182.0" text="Tienda" />
@@ -37,11 +37,11 @@
                                 <Insets bottom="10.0" top="10.0" />
                             </padding>
                         </HBox>
-                        <VBox fx:id="contenedorPrincipal" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
+                        <VBox fx:id="contenedorPrincipal" alignment="TOP_CENTER" minHeight="400.0" minWidth="720.0" prefHeight="400.0" prefWidth="720.0" style="-fx-background-color: ECECEC;" VBox.vgrow="ALWAYS" />
                     </children>
                 </VBox>
             </children></HBox>
-        <HBox prefHeight="51.0" prefWidth="920.0">
+        <HBox minHeight="76.0" minWidth="600.0" prefHeight="51.0" prefWidth="920.0">
             <children>
                 <VBox prefHeight="53.0" prefWidth="152.0">
                     <children>

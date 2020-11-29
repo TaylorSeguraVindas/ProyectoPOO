@@ -13,15 +13,12 @@ public class ControladorVentanaPrincipalAdmin {
 
     public void mostrarInicio() {
         limpiarPantalla();
-        System.out.println("Hey hey 1");
         try {
             Parent root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/admin/InicioAdmin.fxml"));
             contenedorPrincipal.getChildren().add(root);
-            System.out.println("Hey hey 2");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void mostrarTienda() {
@@ -34,6 +31,13 @@ public class ControladorVentanaPrincipalAdmin {
 
     public void mostrarArtistas() {
         limpiarPantalla();
+        try {
+            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/admin/ArtistasAdmin.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void mostrarCompositores() {

@@ -45,6 +45,9 @@ public class Gestor {
     public boolean usuarioIngresadoEsAdmin() {
         return usuarioIngresado.esAdmin();
     }
+    public boolean usuarioIngresadoEsCreador() {
+        return usuarioIngresado.esCreador();
+    }
     public int getIdUsuarioIngresado() {
         return usuarioIngresado.getId();
     }
@@ -311,20 +314,20 @@ public class Gestor {
 
 
     //*******************Manejo de canciones******************
-    public boolean crearCancion(TipoCancion tipoCancion, Usuario creador, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) throws Exception {
-        if(calificaciones == null){
-            calificaciones = new ArrayList<>();
-        }
+    public boolean crearCancion(TipoCancion tipoCancion, int idCreador, String nombre, String recurso, double duracion, Album album, Genero genero, Artista artista, Compositor compositor, LocalDate fechaLanzamiento, double precio) throws Exception {
+        ArrayList<Calificacion> calificaciones = new ArrayList<>();
 
-        Cancion nuevaCancion = new Cancion(tipoCancion, creador, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        Usuario creador = buscarUsuarioPorId(idCreador);
+
+        Cancion nuevaCancion = new Cancion(tipoCancion, creador, nombre, recurso, duracion, album, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
         return cancionDAO.save(nuevaCancion);
     }
-    public boolean modificarCancion(int pIdCancion, String pNombreAlbum, double pPrecio) throws Exception {
+    public boolean modificarCancion(int pIdCancion, String pNombre, double pPrecio) throws Exception {
         Optional<Cancion> cancionEncontrada = cancionDAO.findByID(pIdCancion);
 
         if(cancionEncontrada.isPresent()) {
             Cancion cancionModifica = cancionEncontrada.get();
-            cancionModifica.modificar(pNombreAlbum, pPrecio);
+            cancionModifica.modificar(pNombre, pPrecio);
             return cancionDAO.update(cancionModifica);
         }
         return false;

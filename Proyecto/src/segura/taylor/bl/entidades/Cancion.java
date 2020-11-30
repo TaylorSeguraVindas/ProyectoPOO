@@ -2,6 +2,7 @@ package segura.taylor.bl.entidades;
 
 import segura.taylor.bl.enums.TipoCancion;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -14,11 +15,12 @@ public class Cancion {
     private Usuario creador;
     private String nombre;
     private String recurso;
-    private String nombreAlbum;
+    private double duracion;
+    private Album album;
     private Genero genero;
     private Artista artista;
     private Compositor compositor;
-    private String fechaLanzamiento;
+    private LocalDate fechaLanzamiento;
     private ArrayList<Calificacion> calificaciones;
     private double precio;
 
@@ -58,11 +60,25 @@ public class Cancion {
         this.recurso = recurso;
     }
 
-    public String getNombreAlbum() {
-        return nombreAlbum;
+    public double getDuracion() {
+        return duracion;
     }
-    public void setNombreAlbum(String nombreAlbum) {
-        this.nombreAlbum = nombreAlbum;
+    public void setDuracion(double duracion) {
+        this.duracion = duracion;
+    }
+
+    public Album getAlbum() {
+        return album;
+    }
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
+
+    public Album getNombreAlbum() {
+        return album;
+    }
+    public void setNombreAlbum(Album album) {
+        this.album = album;
     }
 
     public Genero getGenero() {
@@ -86,10 +102,10 @@ public class Cancion {
         this.compositor = compositor;
     }
 
-    public String getFechaLanzamiento() {
+    public LocalDate getFechaLanzamiento() {
         return fechaLanzamiento;
     }
-    public void setFechaLanzamiento(String fechaLanzamiento) {
+    public void setFechaLanzamiento(LocalDate fechaLanzamiento) {
         this.fechaLanzamiento = fechaLanzamiento;
     }
 
@@ -112,13 +128,14 @@ public class Cancion {
         calificaciones = new ArrayList<Calificacion>();
     }
 
-    public Cancion(TipoCancion tipoCancion, Usuario creador, String nombre, String recurso, String nombreAlbum, Genero genero, Artista artista, Compositor compositor, String fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
+    public Cancion(TipoCancion tipoCancion, Usuario creador, String nombre, String recurso, double duracion, Album album, Genero genero, Artista artista, Compositor compositor, LocalDate fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
         this.id = idCanciones++;
         this.creador = creador;
         this.tipoCancion = tipoCancion;
         this.nombre = nombre;
         this.recurso = recurso;
-        this.nombreAlbum = nombreAlbum;
+        this.duracion = duracion;
+        this.album = album;
         this.genero = genero;
         this.artista = artista;
         this.compositor = compositor;
@@ -136,7 +153,8 @@ public class Cancion {
                 ", tipoCancion='" + tipoCancion + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", recurso='" + recurso + '\'' +
-                ", nombreAlbum='" + nombreAlbum + '\'' +
+                ", duracion='" + recurso + '\'' +
+                ", album='" + album + '\'' +
                 ", genero=" + genero +
                 ", artista=" + artista +
                 ", compositor=" + compositor +
@@ -157,7 +175,8 @@ public class Cancion {
                 Objects.equals(creador, cancion.creador) &&
                 Objects.equals(nombre, cancion.nombre) &&
                 Objects.equals(recurso, cancion.recurso) &&
-                Objects.equals(nombreAlbum, cancion.nombreAlbum) &&
+                Objects.equals(duracion, cancion.duracion) &&
+                Objects.equals(album, cancion.album) &&
                 Objects.equals(genero, cancion.genero) &&
                 Objects.equals(artista, cancion.artista) &&
                 Objects.equals(compositor, cancion.compositor) &&
@@ -167,12 +186,12 @@ public class Cancion {
 
     @Override
     public int hashCode() {
-        return Objects.hash(tipoCancion, id, creador, nombre, recurso, nombreAlbum, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        return Objects.hash(tipoCancion, id, creador, nombre, recurso, duracion, album, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
     }
 
-    public boolean modificar(String pNombreAlbum, double pPrecio){
-        this.nombreAlbum = (!pNombreAlbum.equals("")) ? pNombreAlbum : this.nombreAlbum;
-        this.precio = (pPrecio != precio) ? pPrecio : this.precio;
+    public boolean modificar(String nombre, double pPrecio){
+        this.nombre = nombre;
+        this.precio = pPrecio;
         return true;
     }
 

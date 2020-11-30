@@ -125,4 +125,8 @@ public abstract class Usuario {
     public boolean esAdmin(){
         return tipoUsuario == TipoUsuario.ADMIN && id == 0;
     }
+
+    public boolean esCreador() {
+        return tipoUsuario == TipoUsuario.CREADOR;
+    }
 }

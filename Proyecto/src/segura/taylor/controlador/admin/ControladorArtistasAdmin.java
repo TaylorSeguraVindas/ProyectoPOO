@@ -81,6 +81,7 @@ public class ControladorArtistasAdmin {
 
     }
     private void mostrarDatos() {
+        tblArtistas.getItems().clear();
         tblArtistas.setItems(obtenerArtistas());
     }
 
@@ -178,7 +179,7 @@ public class ControladorArtistasAdmin {
             Scene escena = new Scene(root, 580, 440);
 
             ventanaRegistroArtista.setScene(escena);
-            ventanaRegistroArtista.setTitle("Registro de artista");
+            ventanaRegistroArtista.setTitle("Modificación de artista");
             ventanaRegistroArtista.setResizable(false);
             ventanaRegistroArtista.showAndWait();
 
@@ -194,6 +195,13 @@ public class ControladorArtistasAdmin {
 
         if (resultado) {
             Artista artistaSeleccionado = (Artista) tblArtistas.getSelectionModel().getSelectedItem();
+
+            if (artistaSeleccionado == null) {
+                AlertDialog alertDialog = new AlertDialog();
+                alertDialog.mostrar("Error", "No hay ningún artista seleccionado");
+                return;
+            }
+
             int idArtista = artistaSeleccionado.getId();
             try {
                 resultado = ControladorGeneral.instancia.getGestor().eliminarArtista(idArtista);

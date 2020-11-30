@@ -1,5 +1,6 @@
 package segura.taylor.bl.entidades;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Compositor {
@@ -9,8 +10,8 @@ public class Compositor {
     private int id;
     private String nombre;
     private String apellidos;
-    private String paisNacimiento;
-    private String fechaNacimiento;
+    private Pais paisNacimiento;
+    private LocalDate fechaNacimiento;
     private int edad;
 
     //Propiedades
@@ -35,17 +36,17 @@ public class Compositor {
         this.apellidos = apellidos;
     }
 
-    public String getPaisNacimiento() {
+    public Pais getPaisNacimiento() {
         return paisNacimiento;
     }
-    public void setPaisNacimiento(String paisNacimiento) {
+    public void setPaisNacimiento(Pais paisNacimiento) {
         this.paisNacimiento = paisNacimiento;
     }
 
-    public String getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
-    public void setFechaNacimiento(String fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -58,7 +59,7 @@ public class Compositor {
 
     //Constructores
     public Compositor(){}
-    public Compositor(String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad) {
+    public Compositor(String nombre, String apellidos, Pais paisNacimiento, LocalDate fechaNacimiento, int edad) {
         this.id = idCompositores++;
         this.nombre = nombre;
         this.apellidos = apellidos;

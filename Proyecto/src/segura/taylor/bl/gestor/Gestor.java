@@ -437,7 +437,7 @@ public class Gestor {
 
 
     //**************Manejo de compositores********************
-    public boolean crearCompositor(String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad) throws Exception {
+    public boolean crearCompositor(String nombre, String apellidos, Pais paisNacimiento, LocalDate fechaNacimiento, int edad) throws Exception {
         Compositor nuevoCompositor = new Compositor(nombre, apellidos, paisNacimiento, fechaNacimiento, edad);
         return compostorDAO.save(nuevoCompositor);
     }

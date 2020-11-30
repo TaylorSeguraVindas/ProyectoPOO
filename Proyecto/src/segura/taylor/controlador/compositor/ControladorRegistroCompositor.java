@@ -2,6 +2,7 @@ package segura.taylor.controlador.compositor;
 
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import segura.taylor.bl.entidades.Genero;
 import segura.taylor.bl.entidades.Pais;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.ui.dialogos.AlertDialog;
@@ -16,6 +17,7 @@ public class ControladorRegistroCompositor {
     public TextField txtNombre;
     public TextField txtApellidos;
     public ComboBox txtPais;
+    public ComboBox txtGenero;
     public DatePicker txtFechaNacimiento;
 
     public Button btnRegistrarModificar;
@@ -38,10 +40,11 @@ public class ControladorRegistroCompositor {
         String apellidos = txtApellidos.getText();
         LocalDate fechaNacimiento = txtFechaNacimiento.getValue();
         Pais paisNacimiento = null;
+        Genero genero = null;
         int edad = ControladorGeneral.instancia.calcularEdad(fechaNacimiento);
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().crearCompositor(nombre, apellidos, paisNacimiento, fechaNacimiento, edad);
+            boolean resultado = ControladorGeneral.instancia.getGestor().crearCompositor(nombre, apellidos, paisNacimiento, genero, fechaNacimiento, edad);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Compositor registrado correctamente");

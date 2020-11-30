@@ -34,6 +34,8 @@
                                 <DatePicker fx:id="txtFechaNacimiento" prefHeight="25.0" prefWidth="299.0" promptText="Fecha de nacimiento" VBox.vgrow="ALWAYS" />
                                 <Label text="Pais" />
                                 <ComboBox fx:id="txtPais" prefHeight="25.0" prefWidth="270.0" promptText="Seleccione país" />
+                        <Label layoutX="10.0" layoutY="52.0" text="Genero" />
+                        <ComboBox fx:id="txtGenero" layoutX="10.0" layoutY="69.0" prefHeight="25.0" prefWidth="270.0" promptText="Seleccione género" />
                             </children>
                         </VBox>
                     </children>

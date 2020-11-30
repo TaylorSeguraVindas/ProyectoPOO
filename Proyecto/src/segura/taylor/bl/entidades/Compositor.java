@@ -11,6 +11,7 @@ public class Compositor {
     private String nombre;
     private String apellidos;
     private Pais paisNacimiento;
+    private Genero genero;
     private LocalDate fechaNacimiento;
     private int edad;
 
@@ -43,6 +44,13 @@ public class Compositor {
         this.paisNacimiento = paisNacimiento;
     }
 
+    public Genero getGenero() {
+        return genero;
+    }
+    public void setGenero(Genero genero) {
+        this.genero = genero;
+    }
+
     public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
@@ -59,11 +67,12 @@ public class Compositor {
 
     //Constructores
     public Compositor(){}
-    public Compositor(String nombre, String apellidos, Pais paisNacimiento, LocalDate fechaNacimiento, int edad) {
+    public Compositor(String nombre, String apellidos, Pais paisNacimiento, Genero genero, LocalDate fechaNacimiento, int edad) {
         this.id = idCompositores++;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.paisNacimiento = paisNacimiento;
+        this.genero = genero;
         this.fechaNacimiento = fechaNacimiento;
         this.edad = edad;
     }
@@ -76,6 +85,7 @@ public class Compositor {
                 ", nombre='" + nombre + '\'' +
                 ", apellidos='" + apellidos + '\'' +
                 ", paisNacimiento='" + paisNacimiento + '\'' +
+                ", genero='" + genero + '\'' +
                 ", fechaNacimiento='" + fechaNacimiento + '\'' +
                 ", edad=" + edad +
                 '}';
@@ -86,17 +96,18 @@ public class Compositor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Compositor that = (Compositor) o;
-        return edad == that.edad &&
-                Objects.equals(id, that.id) &&
+        return id == that.id &&
+                edad == that.edad &&
                 Objects.equals(nombre, that.nombre) &&
                 Objects.equals(apellidos, that.apellidos) &&
                 Objects.equals(paisNacimiento, that.paisNacimiento) &&
+                Objects.equals(genero, that.genero) &&
                 Objects.equals(fechaNacimiento, that.fechaNacimiento);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, apellidos, paisNacimiento, fechaNacimiento, edad);
+        return Objects.hash(id, nombre, apellidos, paisNacimiento, genero, fechaNacimiento, edad);
     }
 
     public boolean modificar(String pNombre, String pApellidos){

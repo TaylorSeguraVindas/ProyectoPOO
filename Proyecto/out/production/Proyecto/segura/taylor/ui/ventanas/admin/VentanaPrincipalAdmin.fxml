@@ -14,11 +14,14 @@
                             <children>
                                 <Button fx:id="btnMostrarInicio" mnemonicParsing="false" onAction="#mostrarInicio" prefHeight="25.0" prefWidth="182.0" text="Inicio" />
                                 <Button fx:id="btnMostrarTienda" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#mostrarTienda" prefHeight="25.0" prefWidth="182.0" text="Tienda" />
+                        <Button fx:id="btnMostrarUsuarios" layoutX="10.0" layoutY="225.0" mnemonicParsing="false" onAction="#mostrarUsuarios" prefHeight="25.0" prefWidth="182.0" text="Usuarios" />
                         <Button fx:id="btnMostrarAlbunes" layoutX="10.0" layoutY="120.0" mnemonicParsing="false" onAction="#mostrarAlbunes" prefHeight="25.0" prefWidth="182.0" text="Albunes" />
                         <Button fx:id="btnMostrarArtistas" layoutX="10.0" layoutY="155.0" mnemonicParsing="false" onAction="#mostrarArtistas" prefHeight="25.0" prefWidth="182.0" text="Artistas" />
                         <Button fx:id="btnMostrarCompositores" layoutX="10.0" layoutY="190.0" mnemonicParsing="false" onAction="#mostrarCompositores" prefHeight="25.0" prefWidth="182.0" text="Compositores" />
+                        <Button fx:id="btnMostrarGeneros" mnemonicParsing="false" onAction="#mostrarGeneros" prefHeight="25.0" prefWidth="182.0" text="Géneros" />
                         <Button fx:id="btnMostrarCanciones" layoutX="10.0" layoutY="225.0" mnemonicParsing="false" onAction="#mostrarCanciones" prefHeight="25.0" prefWidth="182.0" text="Canciones" />
                                 <Button fx:id="btnMostrarListasReproduccion" mnemonicParsing="false" onAction="#mostrarListasReproduccion" prefHeight="25.0" prefWidth="182.0" text="Listas de reproduccion" />
+                        <Button fx:id="btnMostrarListasReproduccion1" layoutX="10.0" layoutY="330.0" mnemonicParsing="false" onAction="#mostrarPaises" prefHeight="25.0" prefWidth="182.0" text="Paises" />
                             </children>
                             <padding>
                                 <Insets bottom="10.0" top="40.0" />

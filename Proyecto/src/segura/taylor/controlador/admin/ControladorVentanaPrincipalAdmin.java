@@ -25,6 +25,10 @@ public class ControladorVentanaPrincipalAdmin {
         limpiarPantalla();
     }
 
+    public void mostrarUsuarios() {
+        limpiarPantalla();
+    }
+
     public void mostrarAlbunes() {
         limpiarPantalla();
     }
@@ -55,11 +59,27 @@ public class ControladorVentanaPrincipalAdmin {
         }
     }
 
+    public void mostrarGeneros() {
+        limpiarPantalla();
+        try {
+            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/admin/GenerosAdmin.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            //Expandir
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void mostrarCanciones() {
         limpiarPantalla();
     }
 
     public void mostrarListasReproduccion() {
+        limpiarPantalla();
+    }
+
+    public void mostrarPaises() {
         limpiarPantalla();
     }
 }

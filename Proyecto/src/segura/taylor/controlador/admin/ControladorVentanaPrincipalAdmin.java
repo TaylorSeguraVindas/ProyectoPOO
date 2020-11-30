@@ -81,5 +81,14 @@ public class ControladorVentanaPrincipalAdmin {
 
     public void mostrarPaises() {
         limpiarPantalla();
+        try {
+            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/admin/PaisesAdmin.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            //Expandir
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

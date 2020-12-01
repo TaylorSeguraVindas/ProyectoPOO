@@ -17,7 +17,6 @@ public class Cancion implements IComboBoxItem {
     private String nombre;
     private String recurso;
     private double duracion;
-    private Album album;
     private Genero genero;
     private Artista artista;
     private Compositor compositor;
@@ -66,13 +65,6 @@ public class Cancion implements IComboBoxItem {
     }
     public void setDuracion(double duracion) {
         this.duracion = duracion;
-    }
-
-    public Album getAlbum() {
-        return album;
-    }
-    public void setAlbum(Album album) {
-        this.album = album;
     }
 
     public Genero getGenero() {
@@ -127,23 +119,19 @@ public class Cancion implements IComboBoxItem {
     public String getNombreCompositor() {
         return compositor.getNombre();
     }
-    public String getNombreAlbum() {
-        return album.getNombre();
-    }
 
     //Constructores
     public Cancion(){
         calificaciones = new ArrayList<Calificacion>();
     }
 
-    public Cancion(TipoCancion tipoCancion, Usuario creador, String nombre, String recurso, double duracion, Album album, Genero genero, Artista artista, Compositor compositor, LocalDate fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
+    public Cancion(TipoCancion tipoCancion, Usuario creador, String nombre, String recurso, double duracion, Genero genero, Artista artista, Compositor compositor, LocalDate fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
         this.id = idCanciones++;
         this.creador = creador;
         this.tipoCancion = tipoCancion;
         this.nombre = nombre;
         this.recurso = recurso;
         this.duracion = duracion;
-        this.album = album;
         this.genero = genero;
         this.artista = artista;
         this.compositor = compositor;
@@ -162,7 +150,6 @@ public class Cancion implements IComboBoxItem {
                 ", nombre='" + nombre + '\'' +
                 ", recurso='" + recurso + '\'' +
                 ", duracion='" + recurso + '\'' +
-                ", album='" + album + '\'' +
                 ", genero=" + genero +
                 ", artista=" + artista +
                 ", compositor=" + compositor +
@@ -184,7 +171,6 @@ public class Cancion implements IComboBoxItem {
                 Objects.equals(nombre, cancion.nombre) &&
                 Objects.equals(recurso, cancion.recurso) &&
                 Objects.equals(duracion, cancion.duracion) &&
-                Objects.equals(album, cancion.album) &&
                 Objects.equals(genero, cancion.genero) &&
                 Objects.equals(artista, cancion.artista) &&
                 Objects.equals(compositor, cancion.compositor) &&
@@ -194,7 +180,7 @@ public class Cancion implements IComboBoxItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(tipoCancion, id, creador, nombre, recurso, duracion, album, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        return Objects.hash(tipoCancion, id, creador, nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
     }
 
     public boolean modificar(String nombre, double pPrecio){

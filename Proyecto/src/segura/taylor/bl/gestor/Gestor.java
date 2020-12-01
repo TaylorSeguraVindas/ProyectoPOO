@@ -309,7 +309,7 @@ public class Gestor {
 
 
     //*******************Manejo de canciones******************
-    public boolean crearCancion(String nombre, String recurso, double duracion, int idAlbum, int idGenero, int idArtista, int idCompositor, LocalDate fechaLanzamiento, double precio) throws Exception {
+    public boolean crearCancion(String nombre, String recurso, double duracion, int idGenero, int idArtista, int idCompositor, LocalDate fechaLanzamiento, double precio) throws Exception {
         ArrayList<Calificacion> calificaciones = new ArrayList<>();
 
         TipoCancion tipoCancion;
@@ -319,12 +319,11 @@ public class Gestor {
             tipoCancion = TipoCancion.PARA_USUARIO;
         }
 
-        Album album = buscarAlbumPorId(idAlbum).get();
         Genero genero = buscarGeneroPorId(idGenero).get();
         Artista artista = buscarArtistaPorId(idArtista).get();
         Compositor compositor = buscarCompositorPorId(idCompositor).get();
 
-        Cancion nuevaCancion = new Cancion(tipoCancion, usuarioIngresado, nombre, recurso, duracion, album, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        Cancion nuevaCancion = new Cancion(tipoCancion, usuarioIngresado, nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
         return cancionDAO.save(nuevaCancion);
     }
     public boolean modificarCancion(int pIdCancion, String pNombre, double pPrecio) throws Exception {

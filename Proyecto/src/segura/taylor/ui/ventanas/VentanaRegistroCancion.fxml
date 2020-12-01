@@ -60,13 +60,6 @@
                               <Button fx:id="btnCrearGenero" mnemonicParsing="false" onAction="#crearGenero" prefHeight="25.0" prefWidth="106.0" text="Crear" />
                            </children>
                         </HBox>
-                        <Label layoutX="10.0" layoutY="10.0" text="Album" />
-                        <HBox layoutX="10.0" layoutY="27.0" spacing="5.0">
-                           <children>
-                              <ComboBox fx:id="txtAlbum" prefHeight="25.0" prefWidth="270.0" />
-                              <Button fx:id="btnCrearAlbum" mnemonicParsing="false" onAction="#crearAlbum" prefHeight="25.0" prefWidth="106.0" text="Crear" />
-                           </children>
-                        </HBox>
                                 <Label text="Precio" />
                                 <TextField fx:id="txtPrecio" promptText="0.00" />
                             </children>

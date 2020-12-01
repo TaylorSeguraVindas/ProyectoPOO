@@ -1,8 +1,10 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.interfaces.IComboBoxItem;
+
 import java.util.Objects;
 
-public class Pais {
+public class Pais implements IComboBoxItem {
     //Variables
     public static int idPaises = 0;
 
@@ -69,5 +71,10 @@ public class Pais {
         this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
         this.descripcion = (!pDescripcion.equals("")) ? pDescripcion : this.descripcion;
         return true;
+    }
+
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombre;
     }
 }

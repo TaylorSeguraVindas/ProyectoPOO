@@ -1,13 +1,14 @@
 package segura.taylor.bl.entidades;
 
 import segura.taylor.bl.enums.TipoRepositorioCanciones;
+import segura.taylor.bl.interfaces.IComboBoxItem;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Album extends RepositorioCanciones{
+public class Album extends RepositorioCanciones implements IComboBoxItem {
     //Variables
     private LocalDate fechaLanzamiento;
     private String imagen;
@@ -41,6 +42,11 @@ public class Album extends RepositorioCanciones{
     }
     public void setCompositor(Compositor compositor) {
         this.compositor = compositor;
+    }
+
+    //Tablas
+    public String getNombreCompositor() {
+        return compositor.getNombre();
     }
 
     //Constructores
@@ -125,5 +131,10 @@ public class Album extends RepositorioCanciones{
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombre;
     }
 }

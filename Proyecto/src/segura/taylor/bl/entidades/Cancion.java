@@ -1,12 +1,13 @@
 package segura.taylor.bl.entidades;
 
 import segura.taylor.bl.enums.TipoCancion;
+import segura.taylor.bl.interfaces.IComboBoxItem;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Cancion {
+public class Cancion implements IComboBoxItem {
     //Variables
     public static int idCanciones = 0;
 
@@ -74,13 +75,6 @@ public class Cancion {
         this.album = album;
     }
 
-    public Album getNombreAlbum() {
-        return album;
-    }
-    public void setNombreAlbum(Album album) {
-        this.album = album;
-    }
-
     public Genero getGenero() {
         return genero;
     }
@@ -121,6 +115,20 @@ public class Cancion {
     }
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    //Tablas
+    public String getNombreGenero() {
+        return genero.getNombre();
+    }
+    public String getNombreArtista() {
+        return artista.getNombreArtistico();
+    }
+    public String getNombreCompositor() {
+        return compositor.getNombre();
+    }
+    public String getNombreAlbum() {
+        return album.getNombre();
     }
 
     //Constructores
@@ -250,5 +258,10 @@ public class Cancion {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombre;
     }
 }

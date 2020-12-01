@@ -10,8 +10,6 @@ import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.enums.TipoCancion;
 import segura.taylor.bl.persistencia.*;
 
-import javax.swing.text.html.Option;
-
 public class Gestor {
     //Variables
     private Usuario usuarioIngresado;
@@ -122,16 +120,12 @@ public class Gestor {
     }
 
     //*******Manejo de albunes********
-    public boolean crearAlbum(String nombre, LocalDate fechaCreacion, LocalDate fechaLanzamiento, String imagen, Compositor compositor, Artista artista) throws Exception {
+    public boolean crearAlbum(String nombre, LocalDate fechaCreacion, LocalDate fechaLanzamiento, String imagen, int idCompositor) throws Exception {
         ArrayList<Cancion> canciones = new ArrayList<Cancion>();
         ArrayList<Artista> artistas = new ArrayList<Artista>();
 
-        if(artista != null) {
-            artistas.add(artista);
-        }
-
+        Compositor compositor = buscarCompositorPorId(idCompositor).get();
         Album nuevoAlbum = new Album(nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas, compositor);
-
         return repoCancionesDAO.save(nuevoAlbum);
     }
     public boolean modificarAlbum(int pId, String pNombre, String pImagen) throws Exception {
@@ -222,12 +216,10 @@ public class Gestor {
 
 
     //*********Manejo de Listas de Reproduccion***************
-    public boolean crearListaReproduccion(String id, String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, Usuario creador, String imagen) throws Exception {
-        if(canciones == null){
-            canciones = new ArrayList<Cancion>();
-        }
+    public boolean crearListaReproduccion(String id, String nombre, LocalDate fechaCreacion, String imagen) throws Exception {
+        ArrayList<Cancion> canciones = new ArrayList<>();   //Las listas de reproducción SIEMPRE se crea sin canciones por defecto
 
-        ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, creador, 0.0, imagen);
+        ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, usuarioIngresado, 0.0, imagen);
         return repoCancionesDAO.save(nuevaLista);
     }
     public boolean modificarListaReproduccion(int pIdLista, String pNombre, String pImagen) throws Exception {
@@ -286,7 +278,10 @@ public class Gestor {
 
 
     //*****************Manejo de artistas*******************
-    public boolean crearArtista(String nombre, String apellidos, String nombreArtistico, LocalDate fechaNacimiento, LocalDate fechaDefuncion, Pais paisNacimiento, Genero genero, int edad, String descripcion) throws Exception {
+    public boolean crearArtista(String nombre, String apellidos, String nombreArtistico, LocalDate fechaNacimiento, LocalDate fechaDefuncion, int idPaisNacimiento, int idGenero, int edad, String descripcion) throws Exception {
+        Pais paisNacimiento = buscarPaisPorId(idPaisNacimiento).get();
+        Genero genero = buscarGeneroPorId(idGenero).get();
+
         Artista nuevoArtista = new Artista(nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
         return artistaDAO.save(nuevoArtista);
     }
@@ -314,12 +309,22 @@ public class Gestor {
 
 
     //*******************Manejo de canciones******************
-    public boolean crearCancion(TipoCancion tipoCancion, int idCreador, String nombre, String recurso, double duracion, Album album, Genero genero, Artista artista, Compositor compositor, LocalDate fechaLanzamiento, double precio) throws Exception {
+    public boolean crearCancion(String nombre, String recurso, double duracion, int idAlbum, int idGenero, int idArtista, int idCompositor, LocalDate fechaLanzamiento, double precio) throws Exception {
         ArrayList<Calificacion> calificaciones = new ArrayList<>();
 
-        Usuario creador = buscarUsuarioPorId(idCreador);
+        TipoCancion tipoCancion;
+        if(usuarioIngresadoEsAdmin() || usuarioIngresadoEsCreador()) {
+            tipoCancion = TipoCancion.PARA_TIENDA;
+        } else {
+            tipoCancion = TipoCancion.PARA_USUARIO;
+        }
 
-        Cancion nuevaCancion = new Cancion(tipoCancion, creador, nombre, recurso, duracion, album, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        Album album = buscarAlbumPorId(idAlbum).get();
+        Genero genero = buscarGeneroPorId(idGenero).get();
+        Artista artista = buscarArtistaPorId(idArtista).get();
+        Compositor compositor = buscarCompositorPorId(idCompositor).get();
+
+        Cancion nuevaCancion = new Cancion(tipoCancion, usuarioIngresado, nombre, recurso, duracion, album, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
         return cancionDAO.save(nuevaCancion);
     }
     public boolean modificarCancion(int pIdCancion, String pNombre, double pPrecio) throws Exception {
@@ -412,7 +417,7 @@ public class Gestor {
         return false;
     }
 
-    //TODO completar esto
+    //TODO completar esto YA NO SE USA
     public boolean agregarCancionAFavoritosUsuario(int pIdCliente, Cancion pCancion){
         Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
 
@@ -440,7 +445,10 @@ public class Gestor {
 
 
     //**************Manejo de compositores********************
-    public boolean crearCompositor(String nombre, String apellidos, Pais paisNacimiento, Genero genero, LocalDate fechaNacimiento, int edad) throws Exception {
+    public boolean crearCompositor(String nombre, String apellidos, int idPaisNacimiento, int idGenero, LocalDate fechaNacimiento, int edad) throws Exception {
+        Pais paisNacimiento = buscarPaisPorId(idPaisNacimiento).get();
+        Genero genero = buscarGeneroPorId(idGenero).get();
+
         Compositor nuevoCompositor = new Compositor(nombre, apellidos, paisNacimiento, genero, fechaNacimiento, edad);
         return compostorDAO.save(nuevoCompositor);
     }

@@ -1,9 +1,11 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.interfaces.IComboBoxItem;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Compositor {
+public class Compositor implements IComboBoxItem {
     //Variables
     public static int idCompositores = 0;
 
@@ -65,6 +67,14 @@ public class Compositor {
         this.edad = edad;
     }
 
+    //Tablas
+    public String getNombrePais() {
+        return paisNacimiento.getNombre();
+    }
+    public String getNombreGenero() {
+        return genero.getNombre();
+    }
+
     //Constructores
     public Compositor(){}
     public Compositor(String nombre, String apellidos, Pais paisNacimiento, Genero genero, LocalDate fechaNacimiento, int edad) {
@@ -114,5 +124,10 @@ public class Compositor {
         this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
         this.apellidos = (!pApellidos.equals("")) ? pApellidos : this.nombre;
         return true;
+    }
+
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombre;
     }
 }

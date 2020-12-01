@@ -62,7 +62,7 @@ public class ControladorAlbunesAdmin {
         //Compositor
         TableColumn<Album, String> columnaCompositor = new TableColumn("Compositor");
         columnaCompositor.setMinWidth(100);
-        columnaCompositor.setCellValueFactory(new PropertyValueFactory<>("compositor"));
+        columnaCompositor.setCellValueFactory(new PropertyValueFactory<>("nombreCompositor"));
 
         tblAlbunes.getColumns().addAll(columnaNombre, columnaFechaCreacion, columnaFechaLanzamiento, columnaCompositor);
 
@@ -78,6 +78,11 @@ public class ControladorAlbunesAdmin {
         columnaNombre.setMinWidth(100);
         columnaNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
 
+        //Genero
+        TableColumn<Cancion, String> columnaGenero = new TableColumn("Genero");
+        columnaGenero.setMinWidth(100);
+        columnaGenero.setCellValueFactory(new PropertyValueFactory<>("nombreGenero"));
+
         //Duración
         TableColumn<Cancion, String> columnaDuracion = new TableColumn("Duración");
         columnaDuracion.setMinWidth(100);
@@ -88,12 +93,8 @@ public class ControladorAlbunesAdmin {
         columnaFechaLanzamiento.setMinWidth(100);
         columnaFechaLanzamiento.setCellValueFactory(new PropertyValueFactory<>("fechaLanzamiento"));
 
-        //Precio
-        TableColumn<Cancion, String> columnaPrecio = new TableColumn("Precio");
-        columnaPrecio.setMinWidth(100);
-        columnaPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
 
-        tblCanciones.getColumns().addAll(columnaRecurso, columnaNombre, columnaDuracion, columnaFechaLanzamiento, columnaPrecio);
+        tblCanciones.getColumns().addAll(columnaRecurso, columnaNombre, columnaGenero, columnaDuracion, columnaFechaLanzamiento);
     }
     public void inicializarTablaArtistas() {
         //NombreArtistico
@@ -104,12 +105,12 @@ public class ControladorAlbunesAdmin {
         //Genero
         TableColumn<Artista, String> columnaGenero = new TableColumn("Genero");
         columnaGenero.setMinWidth(100);
-        columnaGenero.setCellValueFactory(new PropertyValueFactory<>("genero"));
+        columnaGenero.setCellValueFactory(new PropertyValueFactory<>("nombreGenero"));
 
         //Pais
         TableColumn<Artista, String> columnaPais = new TableColumn("Pais");
         columnaPais.setMinWidth(100);
-        columnaPais.setCellValueFactory(new PropertyValueFactory<>("pais"));
+        columnaPais.setCellValueFactory(new PropertyValueFactory<>("nombrePais"));
 
         //Descripcion
         TableColumn<Artista, String> columnaDescripcion = new TableColumn("Descripcion");
@@ -165,7 +166,7 @@ public class ControladorAlbunesAdmin {
             ControladorRegistroAlbum.modificando = false;
 
             VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroAlbum.fxml"));
-            Scene escena = new Scene(root, 660, 400);
+            Scene escena = new Scene(root, 720, 510);
 
             ventanaRegistroAlbum.setScene(escena);
             ventanaRegistroAlbum.setTitle("Registro de Album");

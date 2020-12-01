@@ -52,12 +52,12 @@ public class ControladorCompositoresAdmin {
         //Pais
         TableColumn<Compositor, String> columnaPais = new TableColumn("Pais");
         columnaPais.setMinWidth(100);
-        columnaPais.setCellValueFactory(new PropertyValueFactory<>("pais"));
+        columnaPais.setCellValueFactory(new PropertyValueFactory<>("nombrePais"));
 
         //Genero
         TableColumn<Compositor, String> columnaGenero = new TableColumn("Genero");
         columnaGenero.setMinWidth(100);
-        columnaGenero.setCellValueFactory(new PropertyValueFactory<>("genero"));
+        columnaGenero.setCellValueFactory(new PropertyValueFactory<>("nombreGenero"));
 
         tblCompositores.getColumns().addAll(columnaNombre, columnaApellidos, columnaFechaNacimiento, columnaEdad, columnaPais, columnaGenero);
 

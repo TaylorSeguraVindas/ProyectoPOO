@@ -8,6 +8,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import segura.taylor.bl.entidades.Artista;
 import segura.taylor.bl.entidades.Compositor;
+import segura.taylor.bl.entidades.Genero;
+import segura.taylor.bl.entidades.Pais;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.compositor.ControladorRegistroCompositor;
 import segura.taylor.ui.dialogos.AlertDialog;
@@ -40,8 +42,34 @@ public class ControladorRegistroAlbum {
             btnRegistrarModificar.setText("Registrar");
             btnRegistrarModificar.setOnAction(e -> { registrarAlbum(); });
         }
+
+        actualizarComboBoxCompositores();
     }
 
+    public void registrarAlbum() {
+        String nombre = txtNombre.getText();
+        LocalDate fechaCreacion = LocalDate.now();
+        LocalDate fechaLanzamiento = txtFechaLanzamiento.getValue();
+        String imagen = "";
+
+        //Combo box
+        String[] itemCompositor = txtCompositor.getValue().toString().split("-");
+        int compositor = Integer.parseInt(itemCompositor[0]);
+
+        try {
+            boolean resultado = ControladorGeneral.instancia.getGestor().crearAlbum(nombre, fechaCreacion, fechaLanzamiento, imagen, compositor);
+            if (resultado) {
+                AlertDialog alertDialog = new AlertDialog();
+                alertDialog.mostrar("Registro exitoso", "Album registrado correctamente");
+                ventana.close();
+            } else {
+                AlertDialog alertDialog = new AlertDialog();
+                alertDialog.mostrar("Error", "No se pudo registrar el Album");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void seleccionarImagen() {
         //TODO Funcionalidad para agregar una cancion
         AlertDialog alertDialog = new AlertDialog();
@@ -70,28 +98,6 @@ public class ControladorRegistroAlbum {
             e.printStackTrace();
         }
     }
-    public void registrarAlbum() {
-        String nombre = txtNombre.getText();
-        LocalDate fechaCreacion = LocalDate.now();
-        LocalDate fechaLanzamiento = txtFechaLanzamiento.getValue();
-        String imagen = "";
-        Compositor compositor = null;
-        Artista artista = null;
-
-        try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().crearAlbum(nombre, fechaCreacion, fechaLanzamiento, imagen, compositor, artista);
-            if (resultado) {
-                AlertDialog alertDialog = new AlertDialog();
-                alertDialog.mostrar("Registro exitoso", "Album registrado correctamente");
-                ventana.close();
-            } else {
-                AlertDialog alertDialog = new AlertDialog();
-                alertDialog.mostrar("Error", "No se pudo registrar el Album");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public void modificarAlbum() {
         String nombre = txtNombre.getText();
         String imagen = "";
@@ -112,5 +118,13 @@ public class ControladorRegistroAlbum {
     }
     public void cerrar() {
         ventana.close();
+    }
+
+    private void actualizarComboBoxCompositores() {
+        txtCompositor.getItems().clear();
+
+        for (Compositor compositor : ControladorGeneral.instancia.getGestor().listarCompositores()) {
+            txtCompositor.getItems().add(compositor.toComboBoxItem());
+        }
     }
 }

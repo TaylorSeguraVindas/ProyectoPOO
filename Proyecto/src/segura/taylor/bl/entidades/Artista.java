@@ -1,9 +1,11 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.interfaces.IComboBoxItem;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Artista {
+public class Artista implements IComboBoxItem {
     //Variables
     public static int idArtistas = 0;
 
@@ -89,6 +91,14 @@ public class Artista {
         this.descripcion = descripcion;
     }
 
+    //Tablas
+    public String getNombrePais() {
+        return paisNacimiento.getNombre();
+    }
+    public String getNombreGenero() {
+        return genero.getNombre();
+    }
+
     //Constructores
     public Artista(){}
     public Artista(String nombre, String apellidos, String nombreArtistico, LocalDate fechaNacimiento, LocalDate fechaDefuncion, Pais paisNacimiento, Genero genero, int edad, String descripcion) {
@@ -105,8 +115,6 @@ public class Artista {
     }
 
     //Metodos
-
-
     @Override
     public String toString() {
         return "Artista{" +
@@ -152,5 +160,10 @@ public class Artista {
         this.fechaDefuncion = pFechaDefuncion;
         this.descripcion = pDescripcion;
         return true;
+    }
+
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombreArtistico;
     }
 }

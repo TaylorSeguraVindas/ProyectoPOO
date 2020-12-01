@@ -2,6 +2,8 @@ package segura.taylor.controlador.compositor;
 
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import segura.taylor.bl.entidades.Artista;
+import segura.taylor.bl.entidades.Compositor;
 import segura.taylor.bl.entidades.Genero;
 import segura.taylor.bl.entidades.Pais;
 import segura.taylor.controlador.ControladorGeneral;
@@ -33,14 +35,23 @@ public class ControladorRegistroCompositor {
             btnRegistrarModificar.setText("Registrar");
             btnRegistrarModificar.setOnAction(e -> { registrarCompositor(); });
         }
+
+        actualizarComboBoxPaises();
+        actualizarComboBoxGeneros();
     }
 
     public void registrarCompositor() {
         String nombre = txtNombre.getText();
         String apellidos = txtApellidos.getText();
         LocalDate fechaNacimiento = txtFechaNacimiento.getValue();
-        Pais paisNacimiento = null;
-        Genero genero = null;
+
+        //Combo boxes
+        String[] itemPais = txtPais.getValue().toString().split("-");
+        int paisNacimiento = Integer.parseInt(itemPais[0]);
+
+        String[] itemGenero = txtGenero.getValue().toString().split("-");
+        int genero = Integer.parseInt(itemPais[0]);
+
         int edad = ControladorGeneral.instancia.calcularEdad(fechaNacimiento);
 
         try {
@@ -77,5 +88,21 @@ public class ControladorRegistroCompositor {
     }
     public void cerrar() {
         ventana.close();
+    }
+
+    private void actualizarComboBoxPaises() {
+        txtPais.getItems().clear();
+
+        for (Pais pais : ControladorGeneral.instancia.getGestor().listarPaises()) {
+            txtPais.getItems().add(pais.toComboBoxItem());
+        }
+    }
+
+    private void actualizarComboBoxGeneros() {
+        txtGenero.getItems().clear();
+
+        for (Genero genero : ControladorGeneral.instancia.getGestor().listarGeneros()) {
+            txtGenero.getItems().add(genero.toComboBoxItem());
+        }
     }
 }

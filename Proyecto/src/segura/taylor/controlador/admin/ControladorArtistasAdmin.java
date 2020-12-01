@@ -65,12 +65,12 @@ public class ControladorArtistasAdmin {
         //Genero
         TableColumn<Artista, String> columnaGenero = new TableColumn("Genero");
         columnaGenero.setMinWidth(100);
-        columnaGenero.setCellValueFactory(new PropertyValueFactory<>("genero"));
+        columnaGenero.setCellValueFactory(new PropertyValueFactory<>("nombreGenero"));
 
         //Pais
         TableColumn<Artista, String> columnaPais = new TableColumn("Pais");
         columnaPais.setMinWidth(100);
-        columnaPais.setCellValueFactory(new PropertyValueFactory<>("pais"));
+        columnaPais.setCellValueFactory(new PropertyValueFactory<>("nombrePais"));
 
         //Descripcion
         TableColumn<Artista, String> columnaDescripcion = new TableColumn("Descripcion");

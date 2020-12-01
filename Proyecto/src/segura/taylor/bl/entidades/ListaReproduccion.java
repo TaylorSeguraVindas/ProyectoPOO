@@ -1,12 +1,13 @@
 package segura.taylor.bl.entidades;
 
 import segura.taylor.bl.enums.TipoRepositorioCanciones;
+import segura.taylor.bl.interfaces.IComboBoxItem;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ListaReproduccion extends RepositorioCanciones {
+public class ListaReproduccion extends RepositorioCanciones implements IComboBoxItem {
     //Variables
     private Usuario creador;
     private double calificacion;
@@ -88,5 +89,10 @@ public class ListaReproduccion extends RepositorioCanciones {
         this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
         this.imagen = (!pImagen.equals("")) ? pImagen : this.imagen;
         return true;
+    }
+
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombre;
     }
 }

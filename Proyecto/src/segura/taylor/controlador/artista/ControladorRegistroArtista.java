@@ -8,6 +8,7 @@ import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.ui.dialogos.AlertDialog;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class ControladorRegistroArtista {
@@ -37,6 +38,9 @@ public class ControladorRegistroArtista {
             btnRegistrarModificar.setText("Registrar");
             btnRegistrarModificar.setOnAction(e -> { registrarArtista(); });
         }
+
+        actualizarComboBoxPaises();
+        actualizarComboBoxGeneros();
     }
 
     public void registrarArtista() {
@@ -45,8 +49,14 @@ public class ControladorRegistroArtista {
         String nombreArtistico = txtNombreArtistico.getText();
         LocalDate fechaNacimiento = txtFechaNacimiento.getValue();
         LocalDate fechaDefuncion = txtFechaDefuncion.getValue();
-        Pais paisNacimiento = null;
-        Genero genero = null;
+
+        //Combo boxes
+        String[] itemPais = txtPais.getValue().toString().split("-");
+        int paisNacimiento = Integer.parseInt(itemPais[0]);
+
+        String[] itemGenero = txtGenero.getValue().toString().split("-");
+        int genero = Integer.parseInt(itemPais[0]);
+
         int edad = ControladorGeneral.instancia.calcularEdad(fechaNacimiento);
         String descripcion = txtDescripcion.getText();
 
@@ -87,6 +97,22 @@ public class ControladorRegistroArtista {
     }
     public void cerrar() {
         ventana.close();
+    }
+
+    private void actualizarComboBoxPaises() {
+        txtPais.getItems().clear();
+
+        for (Pais pais : ControladorGeneral.instancia.getGestor().listarPaises()) {
+            txtPais.getItems().add(pais.toComboBoxItem());
+        }
+    }
+
+    private void actualizarComboBoxGeneros() {
+        txtGenero.getItems().clear();
+
+        for (Genero genero : ControladorGeneral.instancia.getGestor().listarGeneros()) {
+            txtGenero.getItems().add(genero.toComboBoxItem());
+        }
     }
 
     private void limpiarCampos() {

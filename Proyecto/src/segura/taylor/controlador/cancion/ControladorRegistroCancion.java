@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.enums.TipoCancion;
 import segura.taylor.controlador.ControladorGeneral;
+import segura.taylor.controlador.album.ControladorRegistroAlbum;
 import segura.taylor.controlador.artista.ControladorRegistroArtista;
 import segura.taylor.controlador.compositor.ControladorRegistroCompositor;
 import segura.taylor.controlador.genero.ControladorRegistroGenero;
@@ -63,6 +64,11 @@ public class ControladorRegistroCancion {
             txtPrecio.setText("0.00");
             paraTienda = false;
         }
+
+        actualizarComboBoxArtistas();
+        actualizarComboBoxCompositores();
+        actualizarComboBoxGeneros();
+        actualizarComboBoxAlbunes();
     }
 
     public void seleccionarRecurso() {
@@ -88,7 +94,8 @@ public class ControladorRegistroCancion {
             ventanaRegistroArtista.setResizable(false);
             ventanaRegistroArtista.showAndWait();
 
-            //TODO Actualizar valores de los dropdown
+            //Actualizar valores de los dropdown
+            actualizarComboBoxArtistas();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,7 +118,8 @@ public class ControladorRegistroCancion {
             ventanaRegistroArtista.setResizable(false);
             ventanaRegistroArtista.showAndWait();
 
-            //TODO Actualizar valores de los dropdown
+            //Actualizar valores de los dropdown
+            actualizarComboBoxCompositores();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -134,15 +142,35 @@ public class ControladorRegistroCancion {
             ventanaRegistroArtista.setResizable(false);
             ventanaRegistroArtista.showAndWait();
 
-            //TODO Actualizar valores de los dropdown
+            //Actualizar valores de los dropdown
+            actualizarComboBoxGeneros();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     public void crearAlbum() {
-        //TODO Funcionalidad para crear un album
-        AlertDialog alertDialog = new AlertDialog();
-        alertDialog.mostrar("Prueba", "Aquí crearía el album");
+        try {
+            Stage ventanaRegistroAlbum = new Stage();
+            //This locks previous window interacivity until this one is closed.
+            ventanaRegistroAlbum.initModality(Modality.APPLICATION_MODAL);
+
+            //Referencias para el controlador
+            ControladorRegistroAlbum.ventana = ventanaRegistroAlbum;
+            ControladorRegistroAlbum.modificando = false;
+
+            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroAlbum.fxml"));
+            Scene escena = new Scene(root, 720, 510);
+
+            ventanaRegistroAlbum.setScene(escena);
+            ventanaRegistroAlbum.setTitle("Registro de Album");
+            ventanaRegistroAlbum.setResizable(false);
+            ventanaRegistroAlbum.showAndWait();
+
+            //Actualizar valores del dropdown
+            actualizarComboBoxAlbunes();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void registrarCancion() {
@@ -151,15 +179,25 @@ public class ControladorRegistroCancion {
         String nombre = txtNombre.getText();
         String recurso = txtRecurso.getText();
         double duracion = Double.parseDouble(txtDuracion.getText());
-        Album album = null;
-        Genero genero = null;
-        Artista artista = null;
-        Compositor compositor = null;
+
+        //Combo boxes
+        String[] itemAlbum = txtAlbum.getValue().toString().split("-");
+        int album = Integer.parseInt(itemAlbum[0]);
+
+        String[] itemGenero = txtGenero.getValue().toString().split("-");
+        int genero = Integer.parseInt(itemGenero[0]);
+
+        String[] itemArtista = txtArtista.getValue().toString().split("-");
+        int artista = Integer.parseInt(itemArtista[0]);
+
+        String[] itemCompositor = txtCompositor.getValue().toString().split("-");
+        int compositor = Integer.parseInt(itemCompositor[0]);
+
         LocalDate fechaLanzamiento = txtFechaLanzamiento.getValue();
         double precio = Double.parseDouble(txtPrecio.getText());
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().crearCancion(tipoCancion, idCreador, nombre, recurso, duracion, album, genero, artista, compositor, fechaLanzamiento, precio);
+            boolean resultado = ControladorGeneral.instancia.getGestor().crearCancion(nombre, recurso, duracion, album, genero, artista, compositor, fechaLanzamiento, precio);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Cancion registrada correctamente");
@@ -192,5 +230,37 @@ public class ControladorRegistroCancion {
     }
     public void cerrar() {
         ventana.close();
+    }
+
+    private void actualizarComboBoxArtistas() {
+        txtArtista.getItems().clear();
+
+        for (Artista artista : ControladorGeneral.instancia.getGestor().listarArtistas()) {
+            txtArtista.getItems().add(artista.toComboBoxItem());
+        }
+    }
+
+    private void actualizarComboBoxCompositores() {
+        txtCompositor.getItems().clear();
+
+        for (Compositor compositor : ControladorGeneral.instancia.getGestor().listarCompositores()) {
+            txtCompositor.getItems().add(compositor.toComboBoxItem());
+        }
+    }
+
+    private void actualizarComboBoxGeneros() {
+        txtGenero.getItems().clear();
+
+        for (Genero genero : ControladorGeneral.instancia.getGestor().listarGeneros()) {
+            txtGenero.getItems().add(genero.toComboBoxItem());
+        }
+    }
+
+    private void actualizarComboBoxAlbunes() {
+        txtAlbum.getItems().clear();
+
+        for (Album album : ControladorGeneral.instancia.getGestor().listarAlbunes()) {
+            txtAlbum.getItems().add(album.toComboBoxItem());
+        }
     }
 }

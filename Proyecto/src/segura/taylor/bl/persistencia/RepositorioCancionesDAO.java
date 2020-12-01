@@ -16,8 +16,7 @@ public class RepositorioCancionesDAO {
 
     public boolean save(RepositorioCanciones nuevoRepositorioCanciones) throws Exception {
         if(!findByID(nuevoRepositorioCanciones.getId()).isPresent()) {
-            repoCanciones.add(nuevoRepositorioCanciones);
-            return true;
+            return repoCanciones.add(nuevoRepositorioCanciones);
         }
 
         throw new Exception("Ya existe un Repositorio de Canciones con el id especificado");
@@ -72,7 +71,7 @@ public class RepositorioCancionesDAO {
         ArrayList<ListaReproduccion> listasReproduccion = new ArrayList<>();
 
         for (RepositorioCanciones repo : repoCanciones) {
-            if(repo.getTipoRepo() == TipoRepositorioCanciones.ALBUM) {
+            if(repo.getTipoRepo() == TipoRepositorioCanciones.LISTA_REPRODUCCION) {
                 listasReproduccion.add((ListaReproduccion) repo);
             }
         }
@@ -82,7 +81,7 @@ public class RepositorioCancionesDAO {
         ArrayList<Biblioteca> bibliotecas = new ArrayList<>();
 
         for (RepositorioCanciones repo : repoCanciones) {
-            if(repo.getTipoRepo() == TipoRepositorioCanciones.ALBUM) {
+            if(repo.getTipoRepo() == TipoRepositorioCanciones.BIBLIOTECA) {
                 bibliotecas.add((Biblioteca) repo);
             }
         }

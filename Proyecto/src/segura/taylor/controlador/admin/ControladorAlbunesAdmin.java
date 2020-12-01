@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import segura.taylor.bl.entidades.*;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.album.ControladorRegistroAlbum;
-import segura.taylor.controlador.cancion.ControladorAgregarCancionALista;
 import segura.taylor.ui.dialogos.AlertDialog;
 import segura.taylor.ui.dialogos.VentanaSeleccionarArtista;
 import segura.taylor.ui.dialogos.VentanaSeleccionarCancion;

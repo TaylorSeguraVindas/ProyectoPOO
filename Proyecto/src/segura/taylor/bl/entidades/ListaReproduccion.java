@@ -12,6 +12,7 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
     private Usuario creador;
     private double calificacion;
     private String imagen;
+    private String descripcion;
 
     //Propiedades
     public Usuario getCreador() {
@@ -35,16 +36,24 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
         this.imagen = imagen;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     //Constructores
     public ListaReproduccion(){
         this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
     }
-    public ListaReproduccion(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, Usuario creador, double calificacion, String imagen) {
+    public ListaReproduccion(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, Usuario creador, double calificacion, String imagen, String descripcion) {
         super(nombre, fechaCreacion, canciones);
         this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
         this.creador = creador;
         this.calificacion = calificacion;
         this.imagen = imagen;
+        this.descripcion = descripcion;
     }
 
     //Metodos
@@ -52,11 +61,12 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
     @Override
     public String toString() {
         return "ListaReproduccion{" +
-                "Creador='" + creador + '\'' +
+                "ID='" + id + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", creador='" + creador + '\'' +
                 ", calificacion=" + calificacion +
                 ", imagen='" + imagen + '\'' +
-                ", id='" + id + '\'' +
-                ", nombre='" + nombre + '\'' +
                 ", fechaCreacion='" + fechaCreacion + '\'' +
                 ", canciones=" + canciones +
                 '}';
@@ -70,12 +80,13 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
         ListaReproduccion that = (ListaReproduccion) o;
         return Double.compare(that.calificacion, calificacion) == 0 &&
                 Objects.equals(creador, that.creador) &&
-                Objects.equals(imagen, that.imagen);
+                Objects.equals(imagen, that.imagen) &&
+                Objects.equals(descripcion, that.descripcion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), creador, calificacion, imagen);
+        return Objects.hash(super.hashCode(), creador, calificacion, imagen, descripcion);
     }
 
     public Cancion cargarCancion(int posicion){
@@ -85,9 +96,10 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
         return null;
     }
 
-    public boolean modificar(String pNombre, String pImagen){
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.imagen = (!pImagen.equals("")) ? pImagen : this.imagen;
+    public boolean modificar(String pNombre, String pImagen, String pDescripcion){
+        this.nombre = pNombre;
+        this.imagen = pImagen;
+        this.descripcion = pDescripcion;
         return true;
     }
 

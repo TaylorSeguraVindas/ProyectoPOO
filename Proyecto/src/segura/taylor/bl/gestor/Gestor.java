@@ -216,18 +216,18 @@ public class Gestor {
 
 
     //*********Manejo de Listas de Reproduccion***************
-    public boolean crearListaReproduccion(String id, String nombre, LocalDate fechaCreacion, String imagen) throws Exception {
+    public boolean crearListaReproduccion(String nombre, LocalDate fechaCreacion, String imagen, String descripcion) throws Exception {
         ArrayList<Cancion> canciones = new ArrayList<>();   //Las listas de reproducción SIEMPRE se crea sin canciones por defecto
 
-        ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, usuarioIngresado, 0.0, imagen);
+        ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, usuarioIngresado, 0.0, imagen, descripcion);
         return repoCancionesDAO.save(nuevaLista);
     }
-    public boolean modificarListaReproduccion(int pIdLista, String pNombre, String pImagen) throws Exception {
+    public boolean modificarListaReproduccion(int pIdLista, String pNombre, String pImagen, String pDescripcion) throws Exception {
         Optional<RepositorioCanciones> listaEncontrada = repoCancionesDAO.findByID(pIdLista);
 
         if(listaEncontrada.isPresent()) {
             ListaReproduccion listaModifica = (ListaReproduccion) listaEncontrada.get();
-            listaModifica.modificar(pNombre, pImagen);
+            listaModifica.modificar(pNombre, pImagen, pDescripcion);
             return repoCancionesDAO.update(listaModifica);
         }
 

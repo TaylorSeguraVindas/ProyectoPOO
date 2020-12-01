@@ -95,6 +95,15 @@ public class ControladorVentanaPrincipalAdmin {
 
     public void mostrarListasReproduccion() {
         limpiarPantalla();
+        try {
+            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/admin/ListasReproduccionAdmin.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            //Expandir
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void mostrarPaises() {

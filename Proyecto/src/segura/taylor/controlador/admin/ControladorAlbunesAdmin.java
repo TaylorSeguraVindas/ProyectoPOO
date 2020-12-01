@@ -14,7 +14,9 @@ import javafx.stage.Stage;
 import segura.taylor.bl.entidades.*;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.album.ControladorRegistroAlbum;
+import segura.taylor.controlador.cancion.ControladorAgregarCancionALista;
 import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.VentanaSeleccionarCancion;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.util.List;
@@ -291,9 +293,25 @@ public class ControladorAlbunesAdmin {
 
     //Canciones
     public void agregarCancion() {
-        //TODO Funcionalidad para agregar una cancion
-        AlertDialog alertDialog = new AlertDialog();
-        alertDialog.mostrar("Prueba", "Aquí se mostraría un dropdown");
+        VentanaSeleccionarCancion ventanaSeleccionarCancion = new VentanaSeleccionarCancion();
+        int idCancion = ventanaSeleccionarCancion.mostrar();
+
+        if(idCancion != -1) {
+            try {
+                boolean resultado = ControladorGeneral.instancia.getGestor().agregarCancionEnAlbum(albumSeleccionado.getId(), idCancion);
+                if(resultado) {
+                    AlertDialog alertDialog = new AlertDialog();
+                    alertDialog.mostrar("Éxito", "Canción agregada correctamente!");
+                    actualizarInfoAlbum();
+                } else {
+                    AlertDialog alertDialog = new AlertDialog();
+                    alertDialog.mostrar("Error", "No se pudo agregar la canción");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
     public void removerCancion() {
         YesNoDialog yesNoDialog = new YesNoDialog();
@@ -303,7 +321,7 @@ public class ControladorAlbunesAdmin {
             Cancion cancionSeleccionada = (Cancion) tblCanciones.getSelectionModel().getSelectedItem();
 
             try {
-                resultado = ControladorGeneral.instancia.getGestor().removerArtistaDeAlbum(albumSeleccionado.getId(), cancionSeleccionada.getId());
+                resultado = ControladorGeneral.instancia.getGestor().removerCancionDeAlbum(albumSeleccionado.getId(), cancionSeleccionada.getId());
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Canción removida correctamente");

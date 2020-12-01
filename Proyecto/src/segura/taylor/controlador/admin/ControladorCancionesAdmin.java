@@ -142,7 +142,6 @@ public class ControladorCancionesAdmin {
             ComboBox txtCompositor = (ComboBox) root.lookup("#txtCompositor");
             ComboBox txtGenero = (ComboBox) root.lookup("#txtGenero");
 
-            ComboBox txtAlbum = (ComboBox) root.lookup("#txtAlbum");
             TextField txtPrecio = (TextField) root.lookup("#txtPrecio");
 
             //Actualizar campos
@@ -166,11 +165,6 @@ public class ControladorCancionesAdmin {
                 txtGenero.setValue(generoCancion.getNombre());
             }
 
-            Album albumCancion = cancionSeleccionada.getAlbum();
-            if(albumCancion != null) {
-                txtAlbum.setValue(albumCancion.getNombre());
-            }
-
             txtPrecio.setText(String.valueOf(cancionSeleccionada.getPrecio()));
 
             //Desactivar campos inmodificables
@@ -180,7 +174,6 @@ public class ControladorCancionesAdmin {
             txtArtista.setDisable(true);
             txtCompositor.setDisable(true);
             txtGenero.setDisable(true);
-            txtAlbum.setDisable(true);
 
             Scene escena = new Scene(root, 580, 440);
 

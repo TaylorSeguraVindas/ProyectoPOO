@@ -16,6 +16,7 @@ import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.album.ControladorRegistroAlbum;
 import segura.taylor.controlador.cancion.ControladorAgregarCancionALista;
 import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.VentanaSeleccionarArtista;
 import segura.taylor.ui.dialogos.VentanaSeleccionarCancion;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
@@ -264,9 +265,25 @@ public class ControladorAlbunesAdmin {
 
     //Artistas
     public void agregarArtista() {
-        //TODO Funcionalidad para agregar un artista
-        AlertDialog alertDialog = new AlertDialog();
-        alertDialog.mostrar("Prueba", "Aquí se mostraría un dropdown");
+        VentanaSeleccionarArtista ventanaSeleccionarArtista = new VentanaSeleccionarArtista();
+        int idArtista = ventanaSeleccionarArtista.mostrar();
+
+        if(idArtista != -1) {
+            try {
+                boolean resultado = ControladorGeneral.instancia.getGestor().agregarArtistaEnAlbum(albumSeleccionado.getId(), idArtista);
+                if(resultado) {
+                    AlertDialog alertDialog = new AlertDialog();
+                    alertDialog.mostrar("Éxito", "Artista agregado correctamente!");
+                    actualizarInfoAlbum();
+                } else {
+                    AlertDialog alertDialog = new AlertDialog();
+                    alertDialog.mostrar("Error", "No se pudo agregar el artista");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
     public void removerArtista() {
         YesNoDialog yesNoDialog = new YesNoDialog();
@@ -280,7 +297,7 @@ public class ControladorAlbunesAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Artista removido correctamente");
-                    mostrarDatos();
+                    actualizarInfoAlbum();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Error", "No se pudo remover el artista");
@@ -325,7 +342,7 @@ public class ControladorAlbunesAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Canción removida correctamente");
-                    mostrarDatos();
+                    actualizarInfoAlbum();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Error", "No se pudo remover la canción :(");

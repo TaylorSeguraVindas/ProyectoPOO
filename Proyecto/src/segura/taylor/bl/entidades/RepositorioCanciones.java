@@ -2,6 +2,7 @@ package segura.taylor.bl.entidades;
 
 import segura.taylor.bl.enums.TipoRepositorioCanciones;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public abstract class RepositorioCanciones {
@@ -11,7 +12,7 @@ public abstract class RepositorioCanciones {
     protected int id;
     protected TipoRepositorioCanciones tipoRepo;
     protected String nombre;
-    protected String fechaCreacion;
+    protected LocalDate fechaCreacion;
     protected ArrayList<Cancion> canciones;
 
     //Propiedades
@@ -31,10 +32,10 @@ public abstract class RepositorioCanciones {
         this.nombre = nombre;
     }
 
-    public String getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
-    public void setFechaCreacion(String fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
@@ -49,7 +50,7 @@ public abstract class RepositorioCanciones {
     public RepositorioCanciones(){
         canciones = new ArrayList<>();
     }
-    public RepositorioCanciones(String nombre, String fechaCreacion, ArrayList<Cancion> canciones) {
+    public RepositorioCanciones(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones) {
         this.id = idRepoCanciones++;
         this.nombre = nombre;
         this.fechaCreacion = fechaCreacion;

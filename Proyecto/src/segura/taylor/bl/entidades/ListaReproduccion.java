@@ -2,6 +2,7 @@ package segura.taylor.bl.entidades;
 
 import segura.taylor.bl.enums.TipoRepositorioCanciones;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -37,7 +38,7 @@ public class ListaReproduccion extends RepositorioCanciones {
     public ListaReproduccion(){
         this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
     }
-    public ListaReproduccion(String nombre, String fechaCreacion, ArrayList<Cancion> canciones, Usuario creador, double calificacion, String imagen) {
+    public ListaReproduccion(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, Usuario creador, double calificacion, String imagen) {
         super(nombre, fechaCreacion, canciones);
         this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
         this.creador = creador;

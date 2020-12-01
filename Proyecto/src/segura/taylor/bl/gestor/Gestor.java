@@ -122,24 +122,24 @@ public class Gestor {
     }
 
     //*******Manejo de albunes********
-    public boolean crearAlbum(String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor) throws Exception {
-        if(canciones == null){
-            canciones = new ArrayList<Cancion>();
-        }
-        if(artistas == null){
-            artistas = new ArrayList<Artista>();
+    public boolean crearAlbum(String nombre, LocalDate fechaCreacion, LocalDate fechaLanzamiento, String imagen, Compositor compositor, Artista artista) throws Exception {
+        ArrayList<Cancion> canciones = new ArrayList<Cancion>();
+        ArrayList<Artista> artistas = new ArrayList<Artista>();
+
+        if(artista != null) {
+            artistas.add(artista);
         }
 
         Album nuevoAlbum = new Album(nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas, compositor);
 
         return repoCancionesDAO.save(nuevoAlbum);
     }
-    public boolean modificarAlbum(int pId, String pNombre, String pImagen, Compositor pCompositor) throws Exception {
+    public boolean modificarAlbum(int pId, String pNombre, String pImagen) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pId);
 
         if(repoEncontrado.isPresent()){
             Album albumModifica = (Album) repoEncontrado.get();
-            albumModifica.modificar(pNombre, pImagen, pCompositor);
+            albumModifica.modificar(pNombre, pImagen);
             return repoCancionesDAO.update(albumModifica);
         }
 
@@ -222,7 +222,7 @@ public class Gestor {
 
 
     //*********Manejo de Listas de Reproduccion***************
-    public boolean crearListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, Usuario creador, String imagen) throws Exception {
+    public boolean crearListaReproduccion(String id, String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, Usuario creador, String imagen) throws Exception {
         if(canciones == null){
             canciones = new ArrayList<Cancion>();
         }

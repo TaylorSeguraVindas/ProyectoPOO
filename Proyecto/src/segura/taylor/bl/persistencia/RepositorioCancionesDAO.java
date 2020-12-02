@@ -1,12 +1,12 @@
 package segura.taylor.bl.persistencia;
 
-import segura.taylor.bl.entidades.Album;
-import segura.taylor.bl.entidades.Biblioteca;
-import segura.taylor.bl.entidades.ListaReproduccion;
-import segura.taylor.bl.entidades.RepositorioCanciones;
+import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.enums.TipoRepositorioCanciones;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +49,6 @@ public class RepositorioCancionesDAO {
 
         throw new Exception("El Repositorio de Canciones que se desea actualizar no existe");
     }
-
     public boolean delete(int idRepositorioCanciones) throws Exception {
         Optional<RepositorioCanciones> RepositorioCancionesEncontrado = findByID(idRepositorioCanciones);
 
@@ -61,9 +60,23 @@ public class RepositorioCancionesDAO {
         throw new Exception("El Repositorio de Canciones que se desea eliminar no existe");
     }
 
+
+    //General
     public List<RepositorioCanciones> findAll() {
         return Collections.unmodifiableList(repoCanciones);
     }
+    public Optional<RepositorioCanciones> findByID(int id) {
+        for (RepositorioCanciones RepositorioCanciones : repoCanciones) {
+            if(RepositorioCanciones.getId() == id) {
+                return Optional.of(RepositorioCanciones);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+
+    //Albunes
     public List<Album> findAlbunes() {
         ArrayList<Album> albunes = new ArrayList<>();
 
@@ -74,6 +87,9 @@ public class RepositorioCancionesDAO {
         }
         return Collections.unmodifiableList(albunes);
     }
+
+
+    //Listas de reproducción
     public List<ListaReproduccion> findListasReproduccion() {
         ArrayList<ListaReproduccion> listasReproduccion = new ArrayList<>();
 
@@ -84,22 +100,37 @@ public class RepositorioCancionesDAO {
         }
         return Collections.unmodifiableList(listasReproduccion);
     }
-    public List<Biblioteca> findBibliotecas() {
-        ArrayList<Biblioteca> bibliotecas = new ArrayList<>();
 
-        for (RepositorioCanciones repo : repoCanciones) {
-            if(repo.getTipoRepo() == TipoRepositorioCanciones.BIBLIOTECA) {
-                bibliotecas.add((Biblioteca) repo);
-            }
+
+    //Bibliotecas
+    public List<Biblioteca> findBibliotecas() throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM bibliotecas");
+
+        ArrayList<Biblioteca> listaBibliotecas = new ArrayList<>();
+
+        while (result.next()) {
+            Biblioteca bibliotecaLeida = new Biblioteca();
+            bibliotecaLeida.setId(result.getInt("idBiblioteca"));
+            bibliotecaLeida.setNombre(result.getString("nombre"));
+            bibliotecaLeida.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
+
+            listaBibliotecas.add(bibliotecaLeida);
         }
-        return Collections.unmodifiableList(bibliotecas);
-    }
 
-    public Optional<RepositorioCanciones> findByID(int id) {
-        for (RepositorioCanciones RepositorioCanciones : repoCanciones) {
-            if(RepositorioCanciones.getId() == id) {
-                return Optional.of(RepositorioCanciones);
-            }
+        return Collections.unmodifiableList(listaBibliotecas);
+    }
+    public Optional<Biblioteca> findBibliotecaByID(int idBiblioteca) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery(("SELECT * FROM bibliotecas WHERE idBiblioteca = " + idBiblioteca));
+
+        while (result.next()) {
+            Biblioteca bibliotecaLeida = new Biblioteca();
+            bibliotecaLeida.setId(result.getInt("idBiblioteca"));
+            bibliotecaLeida.setNombre(result.getString("nombre"));
+            bibliotecaLeida.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
+
+            return Optional.of(bibliotecaLeida);
         }
 
         return Optional.empty();

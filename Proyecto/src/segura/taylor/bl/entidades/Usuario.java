@@ -1,5 +1,6 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoCancion;
 import segura.taylor.bl.enums.TipoUsuario;
 
 import java.util.Objects;
@@ -23,6 +24,10 @@ public abstract class Usuario {
     }
     public void setId(int id) {
         this.id = id;
+    }
+
+    public TipoUsuario getTipoUsuario() {
+        return this.tipoUsuario;
     }
 
     public String getCorreo() {
@@ -123,7 +128,7 @@ public abstract class Usuario {
     }
 
     public boolean esAdmin(){
-        return tipoUsuario == TipoUsuario.ADMIN && id == 0;
+        return tipoUsuario == TipoUsuario.ADMIN;
     }
 
     public boolean esCreador() {

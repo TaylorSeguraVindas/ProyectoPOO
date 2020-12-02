@@ -20,6 +20,7 @@ public class ControladorLogin {
             alertDialog.mostrar("No se pudo iniciar sesion", "El correo o la contraseña son incorrectos");
         } else {
             boolean usuarioEsAdmin = ControladorGeneral.instancia.getGestor().usuarioIngresadoEsAdmin();
+            System.out.println("Ingresando como admin: " + usuarioEsAdmin);
             ControladorGeneral.instancia.menuPrincipal(usuarioEsAdmin);
         }
     }

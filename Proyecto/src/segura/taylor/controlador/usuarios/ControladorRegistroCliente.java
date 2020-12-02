@@ -1,9 +1,11 @@
 package segura.taylor.controlador.usuarios;
 
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import segura.taylor.bl.entidades.Pais;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.ui.dialogos.AlertDialog;
 
@@ -18,6 +20,11 @@ public class ControladorRegistroCliente {
     public TextField txtApellidos;
     public TextField txtNombreUsuario;
     public DatePicker txtFechaNacimiento;
+    public ComboBox txtPais;
+
+    public void initialize() {
+        actualizarComboBoxPaises();
+    }
 
     public void registrarUsuario() {
         String correo = txtCorreo.getText();
@@ -44,8 +51,15 @@ public class ControladorRegistroCliente {
         }
     }
 
-
     public void volverAInicioDeSesion() {
         ControladorGeneral.instancia.menuIniciarSesion();
+    }
+
+    private void actualizarComboBoxPaises() {
+        txtPais.getItems().clear();
+
+        for (Pais pais : ControladorGeneral.instancia.getGestor().listarPaises()) {
+            txtPais.getItems().add(pais.toComboBoxItem());
+        }
     }
 }

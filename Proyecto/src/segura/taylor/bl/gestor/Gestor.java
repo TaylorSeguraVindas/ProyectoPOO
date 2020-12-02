@@ -70,20 +70,32 @@ public class Gestor {
 
     //*******General**********
     public boolean existeAdmin(){
-        if(usuarioDAO.findAll().size() == 0){
-            return false;
+        try {
+            if(usuarioDAO.findAll().size() == 0){
+                return false;
+            }
+
+            return (usuarioDAO.findAll().get(0).esAdmin());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
-        return (usuarioDAO.findAll().get(0).esAdmin());
+        return false;
     }
     public boolean iniciarSesion(String pCorreo, String pContrasenna){
-        for (Usuario objUsuario: usuarioDAO.findAll()) {
-            if(objUsuario.getCorreo().equals(pCorreo)){
-                if(objUsuario.getContrasenna().equals(pContrasenna)){
-                    usuarioIngresado = objUsuario;
-                    return true;
+        try {
+            for (Usuario objUsuario: usuarioDAO.findAll()) {
+                if(objUsuario.getCorreo().equals(pCorreo)){
+                    if(objUsuario.getContrasenna().equals(pContrasenna)){
+                        usuarioIngresado = objUsuario;
+                        System.out.println("Usuario: " + objUsuario.getTipoUsuario());
+                        return true;
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return false;
@@ -127,7 +139,13 @@ public class Gestor {
         return usuarioDAO.delete(idUsuario);
     }
     public List<Usuario> listarUsuarios(){
-        return Collections.unmodifiableList(usuarioDAO.findAll());
+        try {
+            return Collections.unmodifiableList(usuarioDAO.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 
     public Usuario buscarUsuarioPorId(int pId){

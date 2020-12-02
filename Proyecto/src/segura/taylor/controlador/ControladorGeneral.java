@@ -38,7 +38,7 @@ public class ControladorGeneral {
         return fecha;
     }
     public LocalDate fechaDesdeString(String pFechaNacimiento) {
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate nuevaFecha = null;
         nuevaFecha = LocalDate.parse(pFechaNacimiento, formato);
 

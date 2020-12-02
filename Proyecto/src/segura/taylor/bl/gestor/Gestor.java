@@ -218,7 +218,7 @@ public class Gestor {
     public boolean crearListaReproduccion(String nombre, LocalDate fechaCreacion, String imagen, String descripcion) throws Exception {
         ArrayList<Cancion> canciones = new ArrayList<>();   //Las listas de reproducción SIEMPRE se crea sin canciones por defecto
 
-        ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, usuarioIngresado, 0.0, imagen, descripcion);
+        ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, 0.0, imagen, descripcion);
         return repoCancionesDAO.save(nuevaLista);
     }
     public boolean modificarListaReproduccion(int pIdLista, String pNombre, String pImagen, String pDescripcion) throws Exception {
@@ -322,7 +322,7 @@ public class Gestor {
         Artista artista = buscarArtistaPorId(idArtista).get();
         Compositor compositor = buscarCompositorPorId(idCompositor).get();
 
-        Cancion nuevaCancion = new Cancion(tipoCancion, usuarioIngresado, nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        Cancion nuevaCancion = new Cancion(tipoCancion, nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
         return cancionDAO.save(nuevaCancion);
     }
     public boolean modificarCancion(int pIdCancion, String pNombre, double pPrecio) throws Exception {

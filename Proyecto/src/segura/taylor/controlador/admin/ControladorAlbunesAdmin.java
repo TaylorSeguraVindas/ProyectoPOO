@@ -199,7 +199,7 @@ public class ControladorAlbunesAdmin {
             //Referencia a los campos
             TextField txtNombre = (TextField) root.lookup("#txtNombre");
             DatePicker txtFechaLanzamiento = (DatePicker) root.lookup("#txtFechaLanzamiento");
-            
+
             //Actualizar campos
             txtNombre.setText(AlbumSeleccionado.getNombre());
             txtFechaLanzamiento.setValue(AlbumSeleccionado.getFechaLanzamiento());

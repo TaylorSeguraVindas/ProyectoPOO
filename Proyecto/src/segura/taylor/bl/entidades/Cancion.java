@@ -13,7 +13,6 @@ public class Cancion implements IComboBoxItem {
 
     private TipoCancion tipoCancion;
     private int id;
-    private Usuario creador;
     private String nombre;
     private String recurso;
     private double duracion;
@@ -37,13 +36,6 @@ public class Cancion implements IComboBoxItem {
     }
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Usuario getCreador() {
-        return creador;
-    }
-    public void setCreador(Usuario creador) {
-        this.creador = creador;
     }
 
     public String getNombre() {
@@ -125,9 +117,8 @@ public class Cancion implements IComboBoxItem {
         calificaciones = new ArrayList<Calificacion>();
     }
 
-    public Cancion(TipoCancion tipoCancion, Usuario creador, String nombre, String recurso, double duracion, Genero genero, Artista artista, Compositor compositor, LocalDate fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
+    public Cancion(TipoCancion tipoCancion, String nombre, String recurso, double duracion, Genero genero, Artista artista, Compositor compositor, LocalDate fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
         this.id = idCanciones++;
-        this.creador = creador;
         this.tipoCancion = tipoCancion;
         this.nombre = nombre;
         this.recurso = recurso;
@@ -145,7 +136,6 @@ public class Cancion implements IComboBoxItem {
     public String toString() {
         return "Cancion{" +
                 "id='" + id + '\'' +
-                ", creador='" + creador + '\'' +
                 ", tipoCancion='" + tipoCancion + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", recurso='" + recurso + '\'' +
@@ -167,7 +157,6 @@ public class Cancion implements IComboBoxItem {
         return id == cancion.id &&
                 Double.compare(cancion.precio, precio) == 0 &&
                 tipoCancion == cancion.tipoCancion &&
-                Objects.equals(creador, cancion.creador) &&
                 Objects.equals(nombre, cancion.nombre) &&
                 Objects.equals(recurso, cancion.recurso) &&
                 Objects.equals(duracion, cancion.duracion) &&
@@ -180,7 +169,7 @@ public class Cancion implements IComboBoxItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(tipoCancion, id, creador, nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
+        return Objects.hash(tipoCancion, id, nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
     }
 
     public boolean modificar(String nombre, double pPrecio){

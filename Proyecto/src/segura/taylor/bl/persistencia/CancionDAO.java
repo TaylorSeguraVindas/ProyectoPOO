@@ -2,6 +2,7 @@ package segura.taylor.bl.persistencia;
 
 import segura.taylor.bl.entidades.Cancion;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,6 +10,12 @@ import java.util.Optional;
 
 public class CancionDAO {
     private ArrayList<Cancion> canciones = new ArrayList<>();
+
+    private Connection connection;
+
+    public CancionDAO(Connection connection) {
+        this.connection = connection;
+    }
 
     public boolean save(Cancion nuevoCancion) throws Exception {
         if(!findByID(nuevoCancion.getId()).isPresent()) {

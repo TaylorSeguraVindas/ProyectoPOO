@@ -6,6 +6,7 @@ import segura.taylor.bl.entidades.ListaReproduccion;
 import segura.taylor.bl.entidades.RepositorioCanciones;
 import segura.taylor.bl.enums.TipoRepositorioCanciones;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +14,12 @@ import java.util.Optional;
 
 public class RepositorioCancionesDAO {
     private ArrayList<RepositorioCanciones> repoCanciones = new ArrayList<>();
+
+    private Connection connection;
+
+    public RepositorioCancionesDAO(Connection connection) {
+        this.connection = connection;
+    }
 
     public boolean save(RepositorioCanciones nuevoRepositorioCanciones) throws Exception {
         if(!findByID(nuevoRepositorioCanciones.getId()).isPresent()) {

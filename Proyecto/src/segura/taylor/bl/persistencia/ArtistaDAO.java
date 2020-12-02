@@ -2,6 +2,7 @@ package segura.taylor.bl.persistencia;
 
 import segura.taylor.bl.entidades.Artista;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,6 +10,12 @@ import java.util.Optional;
 
 public class ArtistaDAO {
     private ArrayList<Artista> artistas = new ArrayList<>();
+
+    private Connection connection;
+
+    public ArtistaDAO(Connection connection) {
+        this.connection = connection;
+    }
 
     public boolean save(Artista nuevoArtista) throws Exception {
         if(!findByID(nuevoArtista.getId()).isPresent()) {

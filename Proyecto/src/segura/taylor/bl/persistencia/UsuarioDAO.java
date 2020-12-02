@@ -2,6 +2,7 @@ package segura.taylor.bl.persistencia;
 
 import segura.taylor.bl.entidades.Usuario;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,6 +10,12 @@ import java.util.Optional;
 
 public class UsuarioDAO {
     private ArrayList<Usuario> usuarios = new ArrayList<>();
+
+    private Connection connection;
+
+    public UsuarioDAO(Connection connection) {
+        this.connection = connection;
+    }
 
     public boolean save(Usuario nuevoUsuario) throws Exception {
         if(!findByID(nuevoUsuario.getId()).isPresent()) {

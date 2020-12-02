@@ -2,6 +2,10 @@ package segura.taylor.bl.persistencia;
 
 import segura.taylor.bl.entidades.Pais;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,9 +14,20 @@ import java.util.Optional;
 public class PaisDAO {
     private ArrayList<Pais> paises = new ArrayList<>();
 
+    private Connection connection;
+
+    public PaisDAO(Connection connection) {
+        this.connection = connection;
+    }
+
     public boolean save(Pais nuevoPais) throws Exception {
         if(!findByID(nuevoPais.getId()).isPresent()) {
-            paises.add(nuevoPais);
+            Statement query = connection.createStatement();
+            String insert = "INSERT INTO paises (nombre, descripcion) VALUES ";
+            insert += "('" + nuevoPais.getNombre() + "','";
+            insert += nuevoPais.getDescripcion() + "')";
+
+            query.execute(insert);
             return true;
         }
 
@@ -51,15 +66,35 @@ public class PaisDAO {
         throw new Exception("El Pais que se desea eliminar no existe");
     }
 
-    public List<Pais> findAll() {
-        return Collections.unmodifiableList(paises);
+    public List<Pais> findAll() throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM paises");
+
+        ArrayList<Pais> listaPaises = new ArrayList<>();
+
+        while (result.next()) {
+            Pais paisLeido = new Pais();
+            paisLeido.setId(result.getInt("idPais"));
+            paisLeido.setNombre(result.getString("nombre"));
+            paisLeido.setDescripcion(result.getString("descripcion"));
+
+            listaPaises.add(paisLeido);
+        }
+
+        return Collections.unmodifiableList(listaPaises);
     }
 
-    public Optional<Pais> findByID(int id) {
-        for (Pais Pais : paises) {
-            if(Pais.getId() == id) {
-                return Optional.of(Pais);
-            }
+    public Optional<Pais> findByID(int id) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery(("SELECT * FROM paises WHERE idPais = " + id));
+
+        while (result.next()) {
+            Pais paisLeido = new Pais();
+            paisLeido.setId(result.getInt("idPais"));
+            paisLeido.setNombre(result.getString("nombre"));
+            paisLeido.setDescripcion(result.getString("descripcion"));
+
+            return Optional.of(paisLeido);
         }
 
         return Optional.empty();

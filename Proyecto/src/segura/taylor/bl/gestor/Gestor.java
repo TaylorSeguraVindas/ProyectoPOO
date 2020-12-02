@@ -1,11 +1,11 @@
 package segura.taylor.bl.gestor;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import segura.taylor.PropertiesHandler;
 import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.enums.TipoCancion;
 import segura.taylor.bl.persistencia.*;
@@ -13,6 +13,11 @@ import segura.taylor.bl.persistencia.*;
 public class Gestor {
     //Variables
     private Usuario usuarioIngresado;
+
+    private Connection connection;
+
+    private PropertiesHandler propertiesHandler = new PropertiesHandler();
+
 
     private ArtistaDAO artistaDAO;
     private CancionDAO cancionDAO;
@@ -24,17 +29,30 @@ public class Gestor {
 
     //Constructor
     public Gestor(){
-        artistaDAO = new ArtistaDAO();
-        cancionDAO = new CancionDAO();
-        compostorDAO = new CompositorDAO();
-        generoDAO = new GeneroDAO();
-        paisDAO = new PaisDAO();
-        repoCancionesDAO = new RepositorioCancionesDAO();
-        usuarioDAO = new UsuarioDAO();
-
         try {
-            usuarioDAO.save(new Admin("Admin@admin.com", "Admin1234", "Taylor", "Segura", "", "Teco", LocalDate.now()));
+            propertiesHandler.loadProperties();
+            //ABRIR DB
+            String driver = propertiesHandler.getDriver();
+            try {
+                Class.forName(driver).newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("LOADED DRIVER ---> " + driver);
+            String url = propertiesHandler.getCnxStr();
+            this.connection = DriverManager.getConnection(url, propertiesHandler.getUser(), propertiesHandler.getPwd());
+            System.out.println("CONNECTED TO ---> "+ url);
+
+            artistaDAO = new ArtistaDAO(this.connection);
+            cancionDAO = new CancionDAO(this.connection);
+            compostorDAO = new CompositorDAO(this.connection);
+            generoDAO = new GeneroDAO(this.connection);
+            paisDAO = new PaisDAO(this.connection);
+            repoCancionesDAO = new RepositorioCancionesDAO(this.connection);
+            usuarioDAO = new UsuarioDAO(this.connection);
         } catch (Exception e) {
+            System.out.println("CANT CONNECT TO DATABASE");
             e.printStackTrace();
         }
     }
@@ -493,11 +511,23 @@ public class Gestor {
         return generoDAO.delete(pIdGenero);
     }
     public List<Genero> listarGeneros(){
-        return Collections.unmodifiableList(generoDAO.findAll());
+        try {
+            return Collections.unmodifiableList(generoDAO.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 
     public Optional<Genero> buscarGeneroPorId(int pIdGenero){
-        return generoDAO.findByID(pIdGenero);
+        try {
+            return generoDAO.findByID(pIdGenero);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 
 
@@ -521,10 +551,22 @@ public class Gestor {
         return paisDAO.delete(pIdPais);
     }
     public List<Pais> listarPaises(){
-        return Collections.unmodifiableList(paisDAO.findAll());
+        try {
+            return Collections.unmodifiableList(paisDAO.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 
     public Optional<Pais> buscarPaisPorId(int pIdPais){
-        return paisDAO.findByID(pIdPais);
+        try {
+            return paisDAO.findByID(pIdPais);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 }

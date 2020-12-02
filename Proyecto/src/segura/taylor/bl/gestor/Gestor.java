@@ -120,12 +120,11 @@ public class Gestor {
     }
 
     //*******Manejo de albunes********
-    public boolean crearAlbum(String nombre, LocalDate fechaCreacion, LocalDate fechaLanzamiento, String imagen, int idCompositor) throws Exception {
+    public boolean crearAlbum(String nombre, LocalDate fechaCreacion, LocalDate fechaLanzamiento, String imagen) throws Exception {
         ArrayList<Cancion> canciones = new ArrayList<Cancion>();
         ArrayList<Artista> artistas = new ArrayList<Artista>();
 
-        Compositor compositor = buscarCompositorPorId(idCompositor).get();
-        Album nuevoAlbum = new Album(nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas, compositor);
+        Album nuevoAlbum = new Album(nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas);
         return repoCancionesDAO.save(nuevoAlbum);
     }
     public boolean modificarAlbum(int pId, String pNombre, String pImagen) throws Exception {

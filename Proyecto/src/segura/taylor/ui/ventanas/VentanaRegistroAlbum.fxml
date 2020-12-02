@@ -32,13 +32,6 @@
                         <TextField fx:id="txtNombre" promptText="Nombre" />
                         <Label text="Fecha de lanzamiento" />
                   <DatePicker fx:id="txtFechaLanzamiento" prefHeight="25.0" prefWidth="745.0" />
-                  <Label text="Compositor" />
-                  <HBox spacing="5.0">
-                     <children>
-                        <ComboBox fx:id="txtCompositor" prefHeight="25.0" prefWidth="580.0" />
-                        <Button fx:id="btnCrearCompositor" mnemonicParsing="false" onAction="#crearCompositor" prefHeight="25.0" prefWidth="104.0" text="Crear" />
-                     </children>
-                  </HBox>
                </children>
             </VBox>
                 <VBox alignment="CENTER" prefHeight="160.0" prefWidth="663.0" spacing="10.0">

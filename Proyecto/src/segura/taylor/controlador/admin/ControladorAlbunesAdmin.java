@@ -61,12 +61,7 @@ public class ControladorAlbunesAdmin {
         columnaFechaLanzamiento.setMinWidth(100);
         columnaFechaLanzamiento.setCellValueFactory(new PropertyValueFactory<>("fechaLanzamiento"));
 
-        //Compositor
-        TableColumn<Album, String> columnaCompositor = new TableColumn("Compositor");
-        columnaCompositor.setMinWidth(100);
-        columnaCompositor.setCellValueFactory(new PropertyValueFactory<>("nombreCompositor"));
-
-        tblAlbunes.getColumns().addAll(columnaNombre, columnaFechaCreacion, columnaFechaLanzamiento, columnaCompositor);
+        tblAlbunes.getColumns().addAll(columnaNombre, columnaFechaCreacion, columnaFechaLanzamiento);
 
     }
     public void inicializarTablaCanciones() {
@@ -204,21 +199,13 @@ public class ControladorAlbunesAdmin {
             //Referencia a los campos
             TextField txtNombre = (TextField) root.lookup("#txtNombre");
             DatePicker txtFechaLanzamiento = (DatePicker) root.lookup("#txtFechaLanzamiento");
-
-            ComboBox txtCompositor = (ComboBox) root.lookup("#txtCompositor");
-
+            
             //Actualizar campos
             txtNombre.setText(AlbumSeleccionado.getNombre());
             txtFechaLanzamiento.setValue(AlbumSeleccionado.getFechaLanzamiento());
 
-            Compositor compositorAlbun = AlbumSeleccionado.getCompositor();
-            if(compositorAlbun != null) {
-                txtCompositor.setValue(compositorAlbun.getNombre());
-            }
-
             //Desactivar campos inmodificables
             txtFechaLanzamiento.setDisable(true);
-            txtCompositor.setDisable(true);
 
             Scene escena = new Scene(root, 580, 440);
 

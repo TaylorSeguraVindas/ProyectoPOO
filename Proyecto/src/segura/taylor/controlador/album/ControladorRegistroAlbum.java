@@ -23,10 +23,8 @@ public class ControladorRegistroAlbum {
 
     public TextField txtNombre;
     public DatePicker txtFechaLanzamiento;
-    public ComboBox txtCompositor;
 
     public Button btnRegistrarModificar;
-    public Button btnCrearCompositor;
     public Button btnSeleccionarImagen;
 
     public Label lblTitulo;
@@ -36,14 +34,11 @@ public class ControladorRegistroAlbum {
             lblTitulo.setText("Modificar Album");
             btnRegistrarModificar.setText("Modificar");
             btnRegistrarModificar.setOnAction(e -> { modificarAlbum(); });
-            btnCrearCompositor.setDisable(true);
         } else {
             lblTitulo.setText("Registrar Album");
             btnRegistrarModificar.setText("Registrar");
             btnRegistrarModificar.setOnAction(e -> { registrarAlbum(); });
         }
-
-        actualizarComboBoxCompositores();
     }
 
     public void registrarAlbum() {
@@ -52,12 +47,8 @@ public class ControladorRegistroAlbum {
         LocalDate fechaLanzamiento = txtFechaLanzamiento.getValue();
         String imagen = "";
 
-        //Combo box
-        String[] itemCompositor = txtCompositor.getValue().toString().split("-");
-        int compositor = Integer.parseInt(itemCompositor[0]);
-
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().crearAlbum(nombre, fechaCreacion, fechaLanzamiento, imagen, compositor);
+            boolean resultado = ControladorGeneral.instancia.getGestor().crearAlbum(nombre, fechaCreacion, fechaLanzamiento, imagen);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Album registrado correctamente");
@@ -74,29 +65,6 @@ public class ControladorRegistroAlbum {
         //TODO Funcionalidad para agregar una cancion
         AlertDialog alertDialog = new AlertDialog();
         alertDialog.mostrar("Prueba", "Aquí se mostraría un dropdown");
-    }
-    public void crearCompositor() {
-        try {
-            Stage ventanaRegistroArtista = new Stage();
-            //This locks previous window interacivity until this one is closed.
-            ventanaRegistroArtista.initModality(Modality.APPLICATION_MODAL);
-
-            //Referencias para el controlador
-            ControladorRegistroCompositor.ventana = ventanaRegistroArtista;
-            ControladorRegistroCompositor.modificando = false;
-
-            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroCompositor.fxml"));
-            Scene escena = new Scene(root, 580, 440);
-
-            ventanaRegistroArtista.setScene(escena);
-            ventanaRegistroArtista.setTitle("Registro de artista");
-            ventanaRegistroArtista.setResizable(false);
-            ventanaRegistroArtista.showAndWait();
-
-            //TODO Actualizar valores de los dropdown
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
     public void modificarAlbum() {
         String nombre = txtNombre.getText();
@@ -118,13 +86,5 @@ public class ControladorRegistroAlbum {
     }
     public void cerrar() {
         ventana.close();
-    }
-
-    private void actualizarComboBoxCompositores() {
-        txtCompositor.getItems().clear();
-
-        for (Compositor compositor : ControladorGeneral.instancia.getGestor().listarCompositores()) {
-            txtCompositor.getItems().add(compositor.toComboBoxItem());
-        }
     }
 }

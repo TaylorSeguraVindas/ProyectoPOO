@@ -13,7 +13,6 @@ public class Album extends RepositorioCanciones implements IComboBoxItem {
     private LocalDate fechaLanzamiento;
     private String imagen;
     private ArrayList<Artista> artistas;
-    private Compositor compositor;
 
     //Propiedades
     public LocalDate getFechaLanzamiento() {
@@ -37,45 +36,31 @@ public class Album extends RepositorioCanciones implements IComboBoxItem {
         this.artistas = artistas;
     }
 
-    public Compositor getCompositor() {
-        return compositor;
-    }
-    public void setCompositor(Compositor compositor) {
-        this.compositor = compositor;
-    }
-
-    //Tablas
-    public String getNombreCompositor() {
-        return compositor.getNombre();
-    }
-
     //Constructores
     public Album() {
         this.tipoRepo = TipoRepositorioCanciones.ALBUM;
         this.artistas = new ArrayList<>();
     }
 
-    public Album(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, LocalDate fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor) {
+    public Album(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, LocalDate fechaLanzamiento, String imagen, ArrayList<Artista> artistas) {
         super(nombre, fechaCreacion, canciones);
         this.tipoRepo = TipoRepositorioCanciones.ALBUM;
         this.fechaLanzamiento = fechaLanzamiento;
         this.imagen = imagen;
         this.artistas = artistas;
-        this.compositor = compositor;
     }
 
     //Metodos
     @Override
     public String toString() {
         return "Album{" +
-                "fechaLanzamiento='" + fechaLanzamiento + '\'' +
-                ", imagen='" + imagen + '\'' +
-                ", artistas=" + artistas +
-                ", compositor=" + compositor +
-                ", id='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", fechaCreacion='" + fechaCreacion + '\'' +
+                ", fechaLanzamiento='" + fechaLanzamiento + '\'' +
+                ", imagen='" + imagen + '\'' +
                 ", canciones=" + canciones +
+                ", artistas=" + artistas +
                 '}';
     }
 
@@ -87,13 +72,12 @@ public class Album extends RepositorioCanciones implements IComboBoxItem {
         Album album = (Album) o;
         return Objects.equals(fechaLanzamiento, album.fechaLanzamiento) &&
                 Objects.equals(imagen, album.imagen) &&
-                Objects.equals(artistas, album.artistas) &&
-                Objects.equals(compositor, album.compositor);
+                Objects.equals(artistas, album.artistas);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), fechaLanzamiento, imagen, artistas, compositor);
+        return Objects.hash(super.hashCode(), fechaLanzamiento, imagen, artistas);
     }
 
     public boolean modificar(String pNombre, String pImagen){

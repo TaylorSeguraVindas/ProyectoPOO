@@ -343,11 +343,23 @@ public class Gestor {
         return artistaDAO.delete(pIdArtista);
     }
     public List<Artista> listarArtistas(){
-        return Collections.unmodifiableList(artistaDAO.findAll());
+        try {
+            return Collections.unmodifiableList(artistaDAO.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 
     public Optional<Artista> buscarArtistaPorId(int pId){
-        return artistaDAO.findByID(pId);
+        try {
+            return artistaDAO.findByID(pId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 
 

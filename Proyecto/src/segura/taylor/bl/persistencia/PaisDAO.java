@@ -20,8 +20,8 @@ public class PaisDAO {
         this.connection = connection;
     }
 
-    public boolean save(Pais nuevoPais) throws Exception {
-        if(!findByID(nuevoPais.getId()).isPresent()) {
+    public boolean save(Pais nuevoPais) {
+        try {
             Statement query = connection.createStatement();
             String insert = "INSERT INTO paises (nombre, descripcion) VALUES ";
             insert += "('" + nuevoPais.getNombre() + "','";
@@ -29,9 +29,10 @@ public class PaisDAO {
 
             query.execute(insert);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("Ya existe un Pais con el id especificado");
+        return false;
     }
 
     public boolean update(Pais PaisActualizado) throws Exception {

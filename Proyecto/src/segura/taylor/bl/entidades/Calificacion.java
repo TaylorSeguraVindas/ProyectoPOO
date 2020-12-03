@@ -4,12 +4,20 @@ import java.util.Objects;
 
 public class Calificacion {
     //Variables
+    private int id;
     private String idUsuario;
     private float estrellas;
     private String comentario;
     private String fechaCreacion;
 
     //Metodos
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getIdUsuario() {
         return idUsuario;
     }
@@ -39,8 +47,11 @@ public class Calificacion {
     }
 
     //Constructores
-    public Calificacion(){}
+    public Calificacion(){
+        this.id = 0;
+    }
     public Calificacion(String idUsuario, float estrellas, String comentario, String fechaCreacion) {
+        this.id = 0;
         this.idUsuario = idUsuario;
         this.estrellas = estrellas;
         this.comentario = comentario;
@@ -51,7 +62,8 @@ public class Calificacion {
     @Override
     public String toString() {
         return "Calificacion{" +
-                "idUsuario='" + idUsuario + '\'' +
+                "id='" + id + '\'' +
+                ", idUsuario='" + idUsuario + '\'' +
                 ", estrellas=" + estrellas +
                 ", comentario='" + comentario + '\'' +
                 ", fechaCreacion='" + fechaCreacion + '\'' +
@@ -63,7 +75,8 @@ public class Calificacion {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Calificacion that = (Calificacion) o;
-        return Float.compare(that.estrellas, estrellas) == 0 &&
+        return id == that.id &&
+                Float.compare(that.estrellas, estrellas) == 0 &&
                 Objects.equals(idUsuario, that.idUsuario) &&
                 Objects.equals(comentario, that.comentario) &&
                 Objects.equals(fechaCreacion, that.fechaCreacion);
@@ -71,7 +84,7 @@ public class Calificacion {
 
     @Override
     public int hashCode() {
-        return Objects.hash(idUsuario, estrellas, comentario, fechaCreacion);
+        return Objects.hash(id, idUsuario, estrellas, comentario, fechaCreacion);
     }
 
     public boolean modificar(int estrellas, String comentario){

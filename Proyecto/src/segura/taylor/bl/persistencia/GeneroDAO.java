@@ -21,8 +21,8 @@ public class GeneroDAO {
         this.connection = connection;
     }
 
-    public boolean save(Genero nuevoGenero) throws Exception {
-        if(!findByID(nuevoGenero.getId()).isPresent()) {
+    public boolean save(Genero nuevoGenero) {
+        try {
             Statement query = connection.createStatement();
             String insert = "INSERT INTO generos (nombre, descripcion) VALUES ";
             insert += "('" + nuevoGenero.getNombre() + "','";
@@ -30,9 +30,11 @@ public class GeneroDAO {
 
             query.execute(insert);
             return true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        throw new Exception("Ya existe un Genero con el id especificado");
+        return false;
     }
 
     public boolean update(Genero GeneroActualizado) throws Exception {

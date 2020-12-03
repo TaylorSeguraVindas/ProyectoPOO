@@ -37,7 +37,7 @@ public class Pais implements IComboBoxItem {
     //Constructores
     public Pais(){}
     public Pais(String nombrePais, String descripcion) {
-        this.id = idPaises++;
+        this.id = 0;
         this.nombre = nombrePais;
         this.descripcion = descripcion;
     }

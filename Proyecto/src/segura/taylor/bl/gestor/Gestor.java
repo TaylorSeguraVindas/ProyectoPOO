@@ -112,15 +112,23 @@ public class Gestor {
         return usuarioDAO.save(admin);
     }
     //Cliente
-    public boolean crearUsuarioCliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaNacimiento, int edad, int idPais, Biblioteca biblioteca) throws Exception {
+    public boolean crearUsuarioCliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaNacimiento, int edad, int idPais) throws Exception {
         //Si no hay admin no se puede registrar usuarios.
         //if(usuarioDAO.findAll().size() == 0) return false;
+        Biblioteca biblioteca = new Biblioteca();
+        biblioteca.setNombre("Biblioteca " + nombreUsuario);
+        biblioteca.setFechaCreacion(LocalDate.now());
 
-        if(biblioteca == null){
-            biblioteca = new Biblioteca();
-        }
+        Pais pais = buscarPaisPorId(idPais).get();
+
+        System.out.println(biblioteca);
+
+        int idBibliotecaGuardada = repoCancionesDAO.save(biblioteca);
+        biblioteca.setId(idBibliotecaGuardada);
+
         //Pais pais = buscarPaisPorId(idPais).get();
-        Cliente nuevoCliente = new Cliente(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, null, biblioteca);
+        Cliente nuevoCliente = new Cliente(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, pais, biblioteca);
+        nuevoCliente.setBiblioteca(biblioteca);
 
         return usuarioDAO.save(nuevoCliente);
     }
@@ -161,7 +169,7 @@ public class Gestor {
         ArrayList<Artista> artistas = new ArrayList<Artista>();
 
         Album nuevoAlbum = new Album(nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas);
-        return repoCancionesDAO.save(nuevoAlbum);
+        return (repoCancionesDAO.save(nuevoAlbum)) != -1;
     }
     public boolean modificarAlbum(int pId, String pNombre, String pImagen) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pId);
@@ -255,7 +263,7 @@ public class Gestor {
         ArrayList<Cancion> canciones = new ArrayList<>();   //Las listas de reproducción SIEMPRE se crea sin canciones por defecto
 
         ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, 0.0, imagen, descripcion);
-        return repoCancionesDAO.save(nuevaLista);
+        return (repoCancionesDAO.save(nuevaLista)) != -1;
     }
     public boolean modificarListaReproduccion(int pIdLista, String pNombre, String pImagen, String pDescripcion) throws Exception {
         Optional<RepositorioCanciones> listaEncontrada = repoCancionesDAO.findByID(pIdLista);
@@ -451,32 +459,6 @@ public class Gestor {
         return false;
     }
 
-    //TODO completar esto YA NO SE USA
-    public boolean agregarCancionAFavoritosUsuario(int pIdCliente, Cancion pCancion){
-        Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
-
-        if(clienteModifica != null){
-            return clienteModifica.getBiblioteca().agregarAFavoritos(pCancion.getId());
-        }
-        return false;
-    }
-    public int buscarCancionEnFavoritos(int pIdCliente, int pIdCancion){
-        Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
-
-        if(clienteModifica != null){
-            return clienteModifica.getBiblioteca().buscarEnFavoritos(pIdCancion);
-        }
-        return -1;
-    }
-    public boolean removerCancionDeFavoritosUsuario(int pIdCliente, int pIdCancion){
-        Cliente clienteModifica = (Cliente) buscarUsuarioPorId(pIdCliente);
-
-        if(clienteModifica != null){
-            return clienteModifica.getBiblioteca().removerDeFavoritos(pIdCancion);
-        }
-        return false;
-    }
-
 
     //**************Manejo de compositores********************
     public boolean crearCompositor(String nombre, String apellidos, int idPaisNacimiento, int idGenero, LocalDate fechaNacimiento, int edad) throws Exception {
@@ -501,11 +483,23 @@ public class Gestor {
         return compostorDAO.delete(pIdCompositor);
     }
     public List<Compositor> listarCompositores(){
-        return Collections.unmodifiableList(compostorDAO.findAll());
+        try {
+            return Collections.unmodifiableList(compostorDAO.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 
     public Optional<Compositor> buscarCompositorPorId(int idCompositor){
-        return compostorDAO.findByID(idCompositor);
+        try {
+            return compostorDAO.findByID(idCompositor);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 
 

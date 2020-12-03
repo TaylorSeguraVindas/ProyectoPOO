@@ -75,7 +75,7 @@ public abstract class Usuario {
     //Constructores
     public Usuario(){}
     public Usuario(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario) {
-        this.id = idUsuarios++;
+        this.id = 0;
         this.correo = correo;
         this.contrasenna = contrasenna;
         this.nombre = nombre;

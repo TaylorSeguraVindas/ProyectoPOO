@@ -36,7 +36,7 @@ public class Genero implements IComboBoxItem {
     //Constructores
     public Genero(){}
     public Genero(String nombre, String descripcion) {
-        this.id = idGeneros++;
+        this.id = 0;
         this.nombre = nombre;
         this.descripcion = descripcion;
     }

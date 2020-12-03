@@ -51,7 +51,7 @@ public abstract class RepositorioCanciones {
         canciones = new ArrayList<>();
     }
     public RepositorioCanciones(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones) {
-        this.id = idRepoCanciones++;
+        this.id = 0;
         this.nombre = nombre;
         this.fechaCreacion = fechaCreacion;
         this.canciones = canciones;

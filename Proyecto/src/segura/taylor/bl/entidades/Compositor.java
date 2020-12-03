@@ -78,7 +78,7 @@ public class Compositor implements IComboBoxItem {
     //Constructores
     public Compositor(){}
     public Compositor(String nombre, String apellidos, Pais paisNacimiento, Genero genero, LocalDate fechaNacimiento, int edad) {
-        this.id = idCompositores++;
+        this.id = 0;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.paisNacimiento = paisNacimiento;

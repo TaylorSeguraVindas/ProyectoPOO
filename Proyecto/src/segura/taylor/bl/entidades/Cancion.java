@@ -118,7 +118,7 @@ public class Cancion implements IComboBoxItem {
     }
 
     public Cancion(TipoCancion tipoCancion, String nombre, String recurso, double duracion, Genero genero, Artista artista, Compositor compositor, LocalDate fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
-        this.id = idCanciones++;
+        this.id = 0;
         this.tipoCancion = tipoCancion;
         this.nombre = nombre;
         this.recurso = recurso;

@@ -102,7 +102,7 @@ public class Artista implements IComboBoxItem {
     //Constructores
     public Artista(){}
     public Artista(String nombre, String apellidos, String nombreArtistico, LocalDate fechaNacimiento, LocalDate fechaDefuncion, Pais paisNacimiento, Genero genero, int edad, String descripcion) {
-        this.id = idArtistas++;
+        this.id = 0;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.nombreArtistico = nombreArtistico;

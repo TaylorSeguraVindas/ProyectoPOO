@@ -35,13 +35,17 @@ public class ControladorRegistroCliente {
         String nombreUsuario = txtNombreUsuario.getText();
         LocalDate fechaNacimiento = txtFechaNacimiento.getValue();
         int edad = ControladorGeneral.instancia.calcularEdad(fechaNacimiento);
-        int pais = 0;
+
+        //Combo boxes
+        String[] itemPais = txtPais.getValue().toString().split("-");
+        int pais = Integer.parseInt(itemPais[0]);
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().crearUsuarioCliente(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, pais, null);
+            boolean resultado = ControladorGeneral.instancia.getGestor().crearUsuarioCliente(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, pais);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Usuario registrado correctamente");
+                volverAInicioDeSesion();
             } else {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Error", "No se pudo registrar el usuario");

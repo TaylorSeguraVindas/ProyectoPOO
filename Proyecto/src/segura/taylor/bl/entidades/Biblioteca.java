@@ -9,15 +9,15 @@ import java.util.Optional;
 
 public class Biblioteca extends RepositorioCanciones {
     //Variables
-    ArrayList<Integer> idCancionesFavoritas;
+    ArrayList<Cancion> cancionesEnCola;
     ArrayList<ListaReproduccion> listasDeReproduccion;
 
     //Propiedades
-    public ArrayList<Integer> getIdCancionesFavoritas() {
-        return idCancionesFavoritas;
+    public ArrayList<Cancion> getIdCancionesFavoritas() {
+        return cancionesEnCola;
     }
-    public void setIdCancionesFavoritas(ArrayList<Integer> idCancionesFavoritas) {
-        this.idCancionesFavoritas = idCancionesFavoritas;
+    public void setIdCancionesFavoritas(ArrayList<Cancion> cancionesEnCola) {
+        this.cancionesEnCola = cancionesEnCola;
     }
 
     public ArrayList<ListaReproduccion> getListasDeReproduccion() {
@@ -30,12 +30,13 @@ public class Biblioteca extends RepositorioCanciones {
     //Contructores
     public Biblioteca() {
         this.tipoRepo = TipoRepositorioCanciones.BIBLIOTECA;
+        this.cancionesEnCola = new ArrayList<>();
+        this.listasDeReproduccion = new ArrayList<>();
     }
-
-    public Biblioteca(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, ArrayList<Integer> idCancionesFavoritas, ArrayList<ListaReproduccion> listasDeReproduccion) {
+    public Biblioteca(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, ArrayList<Cancion> cancionesEnCola, ArrayList<ListaReproduccion> listasDeReproduccion) {
         super(nombre, fechaCreacion, canciones);
         this.tipoRepo = TipoRepositorioCanciones.BIBLIOTECA;
-        this.idCancionesFavoritas = idCancionesFavoritas;
+        this.cancionesEnCola = cancionesEnCola;
         this.listasDeReproduccion = listasDeReproduccion;
     }
 
@@ -43,11 +44,11 @@ public class Biblioteca extends RepositorioCanciones {
     @Override
     public String toString() {
         return "Biblioteca{" +
-                "idCancionesFavoritas=" + idCancionesFavoritas +
-                ", id='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", fechaCreacion='" + fechaCreacion + '\'' +
                 ", canciones=" + canciones +
+                ", cancionesEnCola=" + cancionesEnCola +
                 '}';
     }
 
@@ -57,40 +58,41 @@ public class Biblioteca extends RepositorioCanciones {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Biblioteca that = (Biblioteca) o;
-        return Objects.equals(idCancionesFavoritas, that.idCancionesFavoritas);
+        return Objects.equals(cancionesEnCola, that.cancionesEnCola) &&
+                Objects.equals(listasDeReproduccion, that.listasDeReproduccion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), idCancionesFavoritas);
+        return Objects.hash(super.hashCode(), cancionesEnCola, listasDeReproduccion);
     }
 
-    public boolean agregarAFavoritos(int id){
-        if(!existeEnFavoritos(id)){
-            idCancionesFavoritas.add(id);
+    public boolean agregarACola(Cancion cancion){
+        if(!existeEnCola(cancion.getId())){
+            cancionesEnCola.add(cancion);
             return true;
         }
         return false;
     }
 
-    public boolean removerDeFavoritos(int id){
-        if(existeEnFavoritos(id)){
-            idCancionesFavoritas.remove(id);
+    public boolean removerDeCola(Cancion cancion){
+        if(existeEnCola(cancion.getId())){
+            cancionesEnCola.remove(cancion);
             return true;
         }
         return false;
     }
 
-    public int buscarEnFavoritos(int pIdCancion){
-        for (int objCancion: idCancionesFavoritas) {
-            if(objCancion == pIdCancion){
-                return objCancion;
+    public Optional<Cancion> buscarEnCola(int pIdCancion){
+        for (Cancion objCancion: cancionesEnCola) {
+            if(objCancion.getId() == pIdCancion){
+                return Optional.of(objCancion);
             }
         }
-        return -1;
+        return Optional.empty();
     }
-    public boolean existeEnFavoritos(int id){
-        for (Cancion objCancion: canciones) {
+    public boolean existeEnCola(int id){
+        for (Cancion objCancion: cancionesEnCola) {
             if(id == objCancion.getId()){
                 return true;
             }

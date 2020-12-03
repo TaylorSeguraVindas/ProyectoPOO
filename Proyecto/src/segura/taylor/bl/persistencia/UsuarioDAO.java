@@ -7,6 +7,8 @@ import segura.taylor.bl.entidades.Usuario;
 import segura.taylor.bl.enums.TipoUsuario;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,8 +27,9 @@ public class UsuarioDAO {
         this.repoCancionesDAO = new RepositorioCancionesDAO(connection);
     }
 
-    public boolean save(Usuario nuevoUsuario) throws Exception {
-        if(!findByID(nuevoUsuario.getId()).isPresent()) {
+    public boolean save(Usuario nuevoUsuario) {
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Statement query = connection.createStatement();
             String insert;
 
@@ -41,7 +44,7 @@ public class UsuarioDAO {
                 insert += "'" + nuevoAdmin.getApellidos() + "',";
                 insert += "'" + nuevoAdmin.getImagenPerfil() + "',";
                 insert += "'" + nuevoAdmin.getNombreUsuario() + "',";
-                insert += "'" + Date.valueOf(nuevoAdmin.getFechaCreacion()) + "')";
+                insert += "'" + dateFormat.format(nuevoAdmin.getFechaCreacion().toString()) + "')";
             } else {
                 //Registro normal
                 Cliente nuevoCliente = (Cliente) nuevoUsuario;
@@ -53,17 +56,19 @@ public class UsuarioDAO {
                 insert += "'" + nuevoCliente.getApellidos() + "',";
                 insert += "'" + nuevoCliente.getImagenPerfil() + "',";
                 insert += "'" + nuevoCliente.getNombreUsuario() + "',";
-                insert += "'" + Date.valueOf(nuevoCliente.getFechaNacimiento()) + "')";
+                insert += "'" + Date.valueOf(nuevoCliente.getFechaNacimiento()) + "',";
                 insert += "" + nuevoCliente.getPais().getId() + ",";
-                insert += "" + nuevoCliente.getBiblioteca().getId() + ",";
+                insert += "" + nuevoCliente.getBiblioteca().getId() + ")";
             }
 
             System.out.println("Ejecuto query: " + insert);
             query.execute(insert);
             return true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        throw new Exception("Ya existe un Usuario con el id especificado");
+        return false;
     }
 
     public boolean update(Usuario UsuarioActualizado) throws Exception {

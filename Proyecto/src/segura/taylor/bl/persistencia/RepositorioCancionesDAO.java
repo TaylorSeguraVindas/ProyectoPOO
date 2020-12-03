@@ -3,10 +3,9 @@ package segura.taylor.bl.persistencia;
 import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.enums.TipoRepositorioCanciones;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,12 +20,33 @@ public class RepositorioCancionesDAO {
         this.connection = connection;
     }
 
-    public boolean save(RepositorioCanciones nuevoRepositorioCanciones) throws Exception {
-        if(!findByID(nuevoRepositorioCanciones.getId()).isPresent()) {
-            return repoCanciones.add(nuevoRepositorioCanciones);
+    //Devuelve el id de la lista creada.
+    public int save(RepositorioCanciones nuevoRepositorioCanciones) {
+        String insert = "";
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        if(nuevoRepositorioCanciones.getTipoRepo().equals(TipoRepositorioCanciones.BIBLIOTECA)) {
+            Biblioteca nuevaBiblioteca = (Biblioteca) nuevoRepositorioCanciones;
+            insert = "INSERT INTO bibliotecas (nombre, fechaCreacion) VALUES ";
+            insert += "('" + nuevaBiblioteca.getNombre() + "','";
+            insert += Date.valueOf(nuevaBiblioteca.getFechaCreacion()) + "')";
         }
 
-        throw new Exception("Ya existe un Repositorio de Canciones con el id especificado");
+        int key = -1;
+        try {
+            Statement query = connection.createStatement();
+            query.execute(insert, Statement.RETURN_GENERATED_KEYS);
+            ResultSet generatedKeys = query.getGeneratedKeys();
+
+            while (generatedKeys.next()) {
+                key = generatedKeys.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return key;
     }
 
     public boolean update(RepositorioCanciones RepositorioCancionesActualizado) throws Exception {

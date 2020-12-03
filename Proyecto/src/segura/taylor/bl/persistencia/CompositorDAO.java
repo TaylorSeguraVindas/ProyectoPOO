@@ -1,8 +1,10 @@
 package segura.taylor.bl.persistencia;
 
 import segura.taylor.bl.entidades.Compositor;
+import segura.taylor.bl.entidades.Pais;
+import sun.security.jgss.wrapper.GSSNameElement;
 
-import java.sql.Connection;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,18 +14,30 @@ public class CompositorDAO {
     private ArrayList<Compositor> compositores = new ArrayList<>();
 
     private Connection connection;
+    private PaisDAO paisDAO;
+    private GeneroDAO generoDAO;
 
     public CompositorDAO(Connection connection) {
         this.connection = connection;
+        this.paisDAO = new PaisDAO(connection);
+        this.generoDAO = new GeneroDAO(connection);
     }
 
     public boolean save(Compositor nuevoCompositor) throws Exception {
-        if(!findByID(nuevoCompositor.getId()).isPresent()) {
-            compositores.add(nuevoCompositor);
+        try {
+            Statement query = connection.createStatement();
+            String insert = "INSERT INTO compositores (nombre, apellidos, fechaNacimiento, idPais, idGenero) VALUES ";
+            insert += "('" + nuevoCompositor.getNombre() + "','";
+            insert += nuevoCompositor.getApellidos() + "','";
+            insert += Date.valueOf(nuevoCompositor.getFechaNacimiento()) + "',";
+            insert += nuevoCompositor.getPaisNacimiento().getId() + ",";
+            insert += nuevoCompositor.getGenero().getId() + ")";
+            query.execute(insert);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("Ya existe un Compositor con el id especificado");
+        return false;
     }
 
     public boolean update(Compositor CompositorActualizado) throws Exception {
@@ -58,15 +72,41 @@ public class CompositorDAO {
         throw new Exception("El Compositor que se desea eliminar no existe");
     }
 
-    public List<Compositor> findAll() {
-        return Collections.unmodifiableList(compositores);
+    public List<Compositor> findAll() throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM compositores");
+
+        ArrayList<Compositor> listaCompositores = new ArrayList<>();
+
+        while (result.next()) {
+            Compositor compositorLeido = new Compositor();
+            compositorLeido.setId(result.getInt("idCompositor"));
+            compositorLeido.setNombre(result.getString("nombre"));
+            compositorLeido.setApellidos(result.getString("apellidos"));
+            compositorLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
+            compositorLeido.setPaisNacimiento(paisDAO.findByID(result.getInt("idPais")).get());
+            compositorLeido.setGenero(generoDAO.findByID(result.getInt("idGenero")).get());
+
+            listaCompositores.add(compositorLeido);
+        }
+
+        return Collections.unmodifiableList(listaCompositores);
     }
 
-    public Optional<Compositor> findByID(int id) {
-        for (Compositor Compositor : compositores) {
-            if(Compositor.getId() == id) {
-                return Optional.of(Compositor);
-            }
+    public Optional<Compositor> findByID(int id) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM compositores WHERE idCompositor = " + id);
+
+        while (result.next()) {
+            Compositor compositorLeido = new Compositor();
+            compositorLeido.setId(result.getInt("idCompositor"));
+            compositorLeido.setNombre(result.getString("nombre"));
+            compositorLeido.setApellidos(result.getString("apellidos"));
+            compositorLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
+            compositorLeido.setPaisNacimiento(paisDAO.findByID(result.getInt("idPais")).get());
+            compositorLeido.setGenero(generoDAO.findByID(result.getInt("idCompositor")).get());
+
+            return Optional.of(compositorLeido);
         }
 
         return Optional.empty();

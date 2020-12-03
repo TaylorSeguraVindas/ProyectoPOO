@@ -104,7 +104,7 @@ public class CompositorDAO {
             compositorLeido.setApellidos(result.getString("apellidos"));
             compositorLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
             compositorLeido.setPaisNacimiento(paisDAO.findByID(result.getInt("idPais")).get());
-            compositorLeido.setGenero(generoDAO.findByID(result.getInt("idCompositor")).get());
+            compositorLeido.setGenero(generoDAO.findByID(result.getInt("idGenero")).get());
 
             return Optional.of(compositorLeido);
         }

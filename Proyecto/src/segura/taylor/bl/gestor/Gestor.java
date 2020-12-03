@@ -395,10 +395,22 @@ public class Gestor {
         return cancionDAO.delete(pIdCancion);
     }
     public List<Cancion> listarCanciones(){
-        return Collections.unmodifiableList(cancionDAO.findAll());
+        try {
+            return Collections.unmodifiableList(cancionDAO.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
     public Optional<Cancion> buscarCancionPorId(int pIdCancion){
-        return cancionDAO.findByID(pIdCancion);
+        try {
+            return cancionDAO.findByID(pIdCancion);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 
 

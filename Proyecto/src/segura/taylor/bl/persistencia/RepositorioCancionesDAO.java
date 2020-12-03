@@ -24,13 +24,28 @@ public class RepositorioCancionesDAO {
     public int save(RepositorioCanciones nuevoRepositorioCanciones) {
         String insert = "";
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
         if(nuevoRepositorioCanciones.getTipoRepo().equals(TipoRepositorioCanciones.BIBLIOTECA)) {
             Biblioteca nuevaBiblioteca = (Biblioteca) nuevoRepositorioCanciones;
             insert = "INSERT INTO bibliotecas (nombre, fechaCreacion) VALUES ";
             insert += "('" + nuevaBiblioteca.getNombre() + "','";
             insert += Date.valueOf(nuevaBiblioteca.getFechaCreacion()) + "')";
+
+        } else if (nuevoRepositorioCanciones.getTipoRepo().equals(TipoRepositorioCanciones.ALBUM)) {
+            Album nuevoAlbum = (Album) nuevoRepositorioCanciones;
+            insert = "INSERT INTO albunes (nombre, fechaCreacion, fechaLanzamiento, imagen) VALUES ";
+            insert += "('" + nuevoAlbum.getNombre() + "','";
+            insert += Date.valueOf(nuevoAlbum.getFechaCreacion()) + "','";
+            insert += Date.valueOf(nuevoAlbum.getFechaLanzamiento()) + "','";
+            insert += nuevoAlbum.getImagen() + "')";
+
+        } else if (nuevoRepositorioCanciones.getTipoRepo().equals(TipoRepositorioCanciones.LISTA_REPRODUCCION)) {
+            ListaReproduccion nuevaListaReproduccion = (ListaReproduccion) nuevoRepositorioCanciones;
+
+            insert = "INSERT INTO listasreproduccion (nombre, fechaCreacion, imagen, descripcion) VALUES ";
+            insert += "('" + nuevaListaReproduccion.getNombre() + "','";
+            insert += Date.valueOf(nuevaListaReproduccion.getFechaCreacion()) + "','";
+            insert += nuevaListaReproduccion.getImagen() + "','";
+            insert += nuevaListaReproduccion.getDescripcion() + "')";
         }
 
         int key = -1;
@@ -97,30 +112,66 @@ public class RepositorioCancionesDAO {
 
 
     //Albunes
-    public List<Album> findAlbunes() {
-        ArrayList<Album> albunes = new ArrayList<>();
+    public List<Album> findAlbunes() throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM albunes");
 
-        for (RepositorioCanciones repo : repoCanciones) {
-            if(repo.getTipoRepo() == TipoRepositorioCanciones.ALBUM) {
-                albunes.add((Album) repo);
-            }
+        ArrayList<Album> listaAlbunes = new ArrayList<>();
+
+        while (result.next()) {
+            Album albumLeido = new Album();
+            albumLeido.setId(result.getInt("idAlbum"));
+            albumLeido.setNombre(result.getString("nombre"));
+            albumLeido.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
+            albumLeido.setFechaLanzamiento(result.getDate("fechaLanzamiento").toLocalDate());
+            albumLeido.setImagen(result.getString("imagen"));
+
+            listaAlbunes.add(albumLeido);
         }
-        return Collections.unmodifiableList(albunes);
-    }
 
+        return Collections.unmodifiableList(listaAlbunes);
+    }
+    public Optional<Album> findAlbumById(int idAlbum) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM albunes WHERE idAlbum = " + idAlbum);
+
+        while (result.next()) {
+            Album albumLeido = new Album();
+            albumLeido.setId(result.getInt("idAlbum"));
+            albumLeido.setNombre(result.getString("nombre"));
+            albumLeido.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
+            albumLeido.setFechaLanzamiento(result.getDate("fechaLanzamiento").toLocalDate());
+            albumLeido.setImagen(result.getString("imagen"));
+
+            return Optional.of(albumLeido);
+        }
+
+        return Optional.empty();
+    }
 
     //Listas de reproducción
-    public List<ListaReproduccion> findListasReproduccion() {
-        ArrayList<ListaReproduccion> listasReproduccion = new ArrayList<>();
+    public List<ListaReproduccion> findListasReproduccion() throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM listasreproduccion");
 
-        for (RepositorioCanciones repo : repoCanciones) {
-            if(repo.getTipoRepo() == TipoRepositorioCanciones.LISTA_REPRODUCCION) {
-                listasReproduccion.add((ListaReproduccion) repo);
-            }
+        ArrayList<ListaReproduccion> listaListasReproduccion = new ArrayList<>();
+
+        while (result.next()) {
+            ListaReproduccion listaReproduccionLeida = new ListaReproduccion();
+            listaReproduccionLeida.setId(result.getInt("idListaReproduccion"));
+            listaReproduccionLeida.setNombre(result.getString("nombre"));
+            listaReproduccionLeida.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
+            listaReproduccionLeida.setImagen(result.getString("imagen"));
+            listaReproduccionLeida.setDescripcion(result.getString("descripcion"));
+
+            listaListasReproduccion.add(listaReproduccionLeida);
         }
-        return Collections.unmodifiableList(listasReproduccion);
-    }
 
+        return Collections.unmodifiableList(listaListasReproduccion);
+    }
+    public Optional<ListaReproduccion> findListaReproduccionById(int idLista) {
+        return Optional.empty();
+    }
 
     //Bibliotecas
     public List<Biblioteca> findBibliotecas() throws SQLException {

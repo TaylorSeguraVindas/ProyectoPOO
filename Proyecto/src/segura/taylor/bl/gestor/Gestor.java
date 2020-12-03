@@ -186,7 +186,12 @@ public class Gestor {
         return repoCancionesDAO.delete(idAlbum);
     }
     public List<Album> listarAlbunes(){
-        return Collections.unmodifiableList(repoCancionesDAO.findAlbunes());
+        try {
+            return Collections.unmodifiableList(repoCancionesDAO.findAlbunes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     //Para agregar o eliminar canciones y artistas
@@ -280,7 +285,13 @@ public class Gestor {
         return repoCancionesDAO.delete(pIdLista);
     }
     public List<ListaReproduccion> listarListasReproduccion(){
-        return Collections.unmodifiableList(repoCancionesDAO.findListasReproduccion());
+        try {
+            return Collections.unmodifiableList(repoCancionesDAO.findListasReproduccion());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 
     //Para agregar o eliminar canciones

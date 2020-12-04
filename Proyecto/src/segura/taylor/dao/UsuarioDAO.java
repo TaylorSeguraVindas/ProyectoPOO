@@ -27,7 +27,6 @@ public class UsuarioDAO {
 
     public boolean save(Usuario nuevoUsuario) {
         try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Statement query = connection.createStatement();
             String insert;
 
@@ -42,7 +41,7 @@ public class UsuarioDAO {
                 insert += "'" + nuevoAdmin.getApellidos() + "',";
                 insert += "'" + nuevoAdmin.getImagenPerfil() + "',";
                 insert += "'" + nuevoAdmin.getNombreUsuario() + "',";
-                insert += "'" + dateFormat.format(nuevoAdmin.getFechaCreacion().toString()) + "')";
+                insert += "'" + Date.valueOf(nuevoAdmin.getFechaCreacion()) + "')";
             } else {
                 //Registro normal
                 Cliente nuevoCliente = (Cliente) nuevoUsuario;

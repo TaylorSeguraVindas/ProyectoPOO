@@ -1,25 +1,30 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.interfaces.IComboBoxItem;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
-public class Artista {
+public class Artista implements IComboBoxItem {
     //Variables
-    private String id;
+    public static int idArtistas = 0;
+
+    private int id;
     private String nombre;
     private String apellidos;
     private String nombreArtistico;
-    private String fechaNacimiento;
-    private String fechaDefuncion;
-    private String paisNacimiento;
+    private LocalDate fechaNacimiento;
+    private LocalDate fechaDefuncion;
+    private Pais paisNacimiento;
     private Genero genero;
     private int edad;
     private String descripcion;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -44,24 +49,24 @@ public class Artista {
         this.nombreArtistico = nombreArtistico;
     }
 
-    public String getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
-    public void setFechaNacimiento(String fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public String getFechaDefuncion() {
+    public LocalDate getFechaDefuncion() {
         return fechaDefuncion;
     }
-    public void setFechaDefuncion(String fechaDefuncion) {
+    public void setFechaDefuncion(LocalDate fechaDefuncion) {
         this.fechaDefuncion = fechaDefuncion;
     }
 
-    public String getPaisNacimiento() {
+    public Pais getPaisNacimiento() {
         return paisNacimiento;
     }
-    public void setPaisNacimiento(String paisNacimiento) {
+    public void setPaisNacimiento(Pais paisNacimiento) {
         this.paisNacimiento = paisNacimiento;
     }
 
@@ -86,10 +91,37 @@ public class Artista {
         this.descripcion = descripcion;
     }
 
+    //Tablas
+    public String getNombrePais() {
+        return paisNacimiento.getNombre();
+    }
+    public String getNombreGenero() {
+        return genero.getNombre();
+    }
+
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Artista(){}
-    public Artista(String id, String nombre, String apellidos, String nombreArtistico, String fechaNacimiento, String fechaDefuncion, String paisNacimiento, Genero genero, int edad, String descripcion) {
-        this.id = id;
+
+    /**
+     * Método constructor
+     * @param nombre String que define el nombre
+     * @param apellidos String que define los apellidos
+     * @param nombreArtistico String que define el nombre artistico
+     * @param fechaNacimiento LocalDate que define la fecha de nacimiento
+     * @param fechaDefuncion LocalDate que define la fecha de defuncion
+     * @param paisNacimiento instancia de la clase Pais que define el pais de nacimiento
+     * @param genero instancia de la clase Genero que define el genero
+     * @param edad int que define la edad
+     * @param descripcion String que define la descripcion
+     * @see Pais
+     * @see Genero
+     */
+    public Artista(String nombre, String apellidos, String nombreArtistico, LocalDate fechaNacimiento, LocalDate fechaDefuncion, Pais paisNacimiento, Genero genero, int edad, String descripcion) {
+        this.id = 0;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.nombreArtistico = nombreArtistico;
@@ -102,8 +134,6 @@ public class Artista {
     }
 
     //Metodos
-
-
     @Override
     public String toString() {
         return "Artista{" +
@@ -142,11 +172,8 @@ public class Artista {
         return Objects.hash(id, nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
     }
 
-    public boolean modificar(String pNombre, String pApellidos, String pNomArtistico, String pFechaDefuncion){
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.apellidos = (!pApellidos.equals("")) ? pApellidos : this.apellidos;
-        this.nombreArtistico = (!pNomArtistico.equals("")) ? pNomArtistico : this.nombreArtistico;
-        this.fechaDefuncion = (!pFechaDefuncion.equals("")) ? pFechaDefuncion : this.fechaDefuncion;
-        return true;
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombreArtistico;
     }
 }

@@ -1,20 +1,24 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoRepositorioCanciones;
+import segura.taylor.bl.interfaces.IComboBoxItem;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
-public class Album extends RepositorioCanciones{
+public class Album extends RepositorioCanciones implements IComboBoxItem {
     //Variables
-    private String fechaLanzamiento;
+    private LocalDate fechaLanzamiento;
     private String imagen;
     private ArrayList<Artista> artistas;
-    private Compositor compositor;
 
     //Propiedades
-    public String getFechaLanzamiento() {
+    public LocalDate getFechaLanzamiento() {
         return fechaLanzamiento;
     }
-    public void setFechaLanzamiento(String fechaLanzamiento) {
+    public void setFechaLanzamiento(LocalDate fechaLanzamiento) {
         this.fechaLanzamiento = fechaLanzamiento;
     }
 
@@ -32,38 +36,43 @@ public class Album extends RepositorioCanciones{
         this.artistas = artistas;
     }
 
-    public Compositor getCompositor() {
-        return compositor;
-    }
-    public void setCompositor(Compositor compositor) {
-        this.compositor = compositor;
-    }
-
     //Constructores
+    /**
+     * Método constructor por defecto
+     */
     public Album() {
-        artistas = new ArrayList<Artista>();
+        this.tipoRepo = TipoRepositorioCanciones.ALBUM;
+        this.artistas = new ArrayList<>();
     }
 
-    public Album(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String fechaLanzamiento, String imagen, ArrayList<Artista> artistas, Compositor compositor) {
-        super(id, nombre, fechaCreacion, canciones);
+    /**
+     * Método constructor
+     * @param nombre String que define el nombre
+     * @param fechaCreacion LocalDate que define la fecha de creacion
+     * @param canciones Arraylist que define las canciones que pertenecen a este album
+     * @param fechaLanzamiento LocalDate que define la fecha de lanzamiento
+     * @param imagen String que define la ruta de la imagen
+     * @param artistas ArrayList que define los artistas que pertenecen a este album
+     */
+    public Album(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, LocalDate fechaLanzamiento, String imagen, ArrayList<Artista> artistas) {
+        super(nombre, fechaCreacion, canciones);
+        this.tipoRepo = TipoRepositorioCanciones.ALBUM;
         this.fechaLanzamiento = fechaLanzamiento;
         this.imagen = imagen;
         this.artistas = artistas;
-        this.compositor = compositor;
     }
 
     //Metodos
     @Override
     public String toString() {
         return "Album{" +
-                "fechaLanzamiento='" + fechaLanzamiento + '\'' +
-                ", imagen='" + imagen + '\'' +
-                ", artistas=" + artistas +
-                ", compositor=" + compositor +
-                ", id='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", fechaCreacion='" + fechaCreacion + '\'' +
+                ", fechaLanzamiento='" + fechaLanzamiento + '\'' +
+                ", imagen='" + imagen + '\'' +
                 ", canciones=" + canciones +
+                ", artistas=" + artistas +
                 '}';
     }
 
@@ -75,21 +84,20 @@ public class Album extends RepositorioCanciones{
         Album album = (Album) o;
         return Objects.equals(fechaLanzamiento, album.fechaLanzamiento) &&
                 Objects.equals(imagen, album.imagen) &&
-                Objects.equals(artistas, album.artistas) &&
-                Objects.equals(compositor, album.compositor);
+                Objects.equals(artistas, album.artistas);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), fechaLanzamiento, imagen, artistas, compositor);
+        return Objects.hash(super.hashCode(), fechaLanzamiento, imagen, artistas);
     }
 
-    public boolean modificar(String pNombre, String pImagen, Compositor pCompositor){
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.imagen = (!pImagen.equals("")) ? pImagen : this.imagen;
-        this.compositor = (!pCompositor.equals("")) ? pCompositor : this.compositor;
-        return true;
-    }
+    /**
+     * Método usado para agregar un artista a este album
+     * @param artista instancia de la clase Artista que será almacenado
+     * @return true si la agregación es exitosa, false si el artista ya ha sido agregado
+     * @see Artista
+     */
     public boolean agregarArtista(Artista artista){
         if(!tieneArtista(artista)){
             artistas.add(artista);
@@ -98,6 +106,12 @@ public class Album extends RepositorioCanciones{
         return false;
     }
 
+    /**
+     * Método usado para remover un artista de este album
+     * @param artista instancia de la clase Artista que se desea remover
+     * @return true si la eliminación es exitosa, false si el artista no existe
+     * @see Artista
+     */
     public boolean removerArtista(Artista artista){
         if(tieneArtista(artista)){
             artistas.remove(artista);
@@ -106,6 +120,11 @@ public class Album extends RepositorioCanciones{
         return false;
     }
 
+    /**
+     * Método para verificar si un artista está siendo almacenado en este album
+     * @param artista instancia de la clase Artista de la que se desea verificar su existencia
+     * @return true si existe, false si no
+     */
     public boolean tieneArtista(Artista artista){
         for (Artista objArtista: artistas) {
             if(objArtista.equals(artista)){
@@ -115,12 +134,24 @@ public class Album extends RepositorioCanciones{
         return false;
     }
 
-    public Artista buscarArtista(String datoArtista){
+    /**
+     * Método usado para buscar un artista en los almacenados usando como filtro su id
+     * @param idArtista int que define el id del artista que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Artista si se encuentra una coincidencia
+     * @see Optional
+     * @see Artista
+     */
+    public Optional<Artista> buscarArtista(int idArtista){
         for (Artista objArtista: artistas) {
-            if(objArtista.getId().equals(datoArtista) || objArtista.getNombre().equals(datoArtista)){
-                return objArtista;
+            if(objArtista.getId() == idArtista){
+                return Optional.of(objArtista);
             }
         }
-        return null;
+        return Optional.empty();
+    }
+
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombre;
     }
 }

@@ -1,27 +1,43 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoUsuario;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Admin extends Usuario {
     //Variables
-    private String fechaCreacion;
+    private LocalDate fechaCreacion;
 
     //Propiedades
-    public String getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
-    public void setFechaCreacion(String fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
     //Constructores
+    /**
+     * Método constructor por defecto
+     */
     public Admin(){
-        this.tipoUsuario = TipoUsuario.Admin;
+        this.tipoUsuario = TipoUsuario.ADMIN;
     }
 
-    public Admin(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaCreacion) {
-        super(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
-        this.tipoUsuario = TipoUsuario.Admin;
+    /**
+     * Método constructor
+     * @param correo String que define el correo
+     * @param contrasenna String que define la contraseña
+     * @param nombre String que define el nombre
+     * @param apellidos String que define los apellidos
+     * @param imagenPerfil String que define la ruta de la imagen de perfil
+     * @param nombreUsuario String que define el nombre de usuario
+     * @param fechaCreacion LocalDate que define la fecha de creacion
+     */
+    public Admin(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaCreacion) {
+        super(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
+        this.tipoUsuario = TipoUsuario.ADMIN;
         this.fechaCreacion = fechaCreacion;
     }
 

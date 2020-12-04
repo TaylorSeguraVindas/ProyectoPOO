@@ -1,16 +1,15 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoCancion;
+import segura.taylor.bl.enums.TipoUsuario;
+
 import java.util.Objects;
 
-public class Usuario {
-    //Enums
-    public enum TipoUsuario{
-        Admin,
-        Normal
-    }
-
+public abstract class Usuario {
     //Variables
-    protected String id;
+    public static int idUsuarios = 0;
+
+    protected int id;
     protected TipoUsuario tipoUsuario;
     protected String correo;
     protected String contrasenna;
@@ -20,11 +19,15 @@ public class Usuario {
     protected String nombreUsuario;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public TipoUsuario getTipoUsuario() {
+        return this.tipoUsuario;
     }
 
     public String getCorreo() {
@@ -70,9 +73,23 @@ public class Usuario {
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Usuario(){}
-    public Usuario(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario) {
-        this.id = id;
+
+    /**
+     * Método constructor
+     * @param correo String que define el correo
+     * @param contrasenna String que define la contraseña
+     * @param nombre String que define el nombre
+     * @param apellidos String que define los apellidos
+     * @param imagenPerfil String que define la ruta de la imagen de perfil
+     * @param nombreUsuario String que define el nombre de usuario
+     */
+    public Usuario(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario) {
+        this.id = 0;
         this.correo = correo;
         this.contrasenna = contrasenna;
         this.nombre = nombre;
@@ -115,16 +132,19 @@ public class Usuario {
         return Objects.hash(id, tipoUsuario, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
     }
 
-    public boolean modificar(String pNombreUsuario, String pImagenPerfil, String pContrasenna, String pNombre, String pApellidos){
-        this.nombreUsuario = (!pNombreUsuario.equals("")) ? pNombreUsuario : this.nombreUsuario;
-        this.imagenPerfil = (!pImagenPerfil.equals("")) ? pImagenPerfil : imagenPerfil;
-        this.contrasenna = (!pContrasenna.equals("")) ? pContrasenna : this.contrasenna;
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.apellidos = (!pApellidos.equals("")) ? pApellidos : this.apellidos;
-        return true;
+    /**
+     * Método usado para saber si esta instancia es un usuario administrador
+     * @return true si es administrador, false si no
+     */
+    public boolean esAdmin(){
+        return tipoUsuario == TipoUsuario.ADMIN;
     }
 
-    public boolean esAdmin(){
-        return tipoUsuario == TipoUsuario.Admin;
+    /**
+     * Método usado para saber si esta instancia es un usuario creador
+     * @return true si es creador, false si no
+     */
+    public boolean esCreador() {
+        return tipoUsuario == TipoUsuario.CREADOR;
     }
 }

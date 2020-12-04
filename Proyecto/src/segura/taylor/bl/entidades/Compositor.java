@@ -1,21 +1,27 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.interfaces.IComboBoxItem;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
-public class Compositor {
+public class Compositor implements IComboBoxItem {
     //Variables
-    private String id;
+    public static int idCompositores = 0;
+
+    private int id;
     private String nombre;
     private String apellidos;
-    private String paisNacimiento;
-    private String fechaNacimiento;
+    private Pais paisNacimiento;
+    private Genero genero;
+    private LocalDate fechaNacimiento;
     private int edad;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -33,17 +39,24 @@ public class Compositor {
         this.apellidos = apellidos;
     }
 
-    public String getPaisNacimiento() {
+    public Pais getPaisNacimiento() {
         return paisNacimiento;
     }
-    public void setPaisNacimiento(String paisNacimiento) {
+    public void setPaisNacimiento(Pais paisNacimiento) {
         this.paisNacimiento = paisNacimiento;
     }
 
-    public String getFechaNacimiento() {
+    public Genero getGenero() {
+        return genero;
+    }
+    public void setGenero(Genero genero) {
+        this.genero = genero;
+    }
+
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
-    public void setFechaNacimiento(String fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -54,13 +67,38 @@ public class Compositor {
         this.edad = edad;
     }
 
+    //Tablas
+    public String getNombrePais() {
+        return paisNacimiento.getNombre();
+    }
+    public String getNombreGenero() {
+        return genero.getNombre();
+    }
+
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Compositor(){}
-    public Compositor(String id, String nombre, String apellidos, String paisNacimiento, String fechaNacimiento, int edad) {
-        this.id = id;
+
+    /**
+     * Método constuctor
+     * @param nombre String que define el nombre
+     * @param apellidos String que define los apellidos
+     * @param paisNacimiento instancia de la clase Pais que define el pais de nacimiento
+     * @param genero instancia de la clase Genero que define el genero
+     * @param fechaNacimiento LocalDate que define la fecha de nacimiento
+     * @param edad int que define la edad
+     * @see Pais
+     * @see Genero
+     */
+    public Compositor(String nombre, String apellidos, Pais paisNacimiento, Genero genero, LocalDate fechaNacimiento, int edad) {
+        this.id = 0;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.paisNacimiento = paisNacimiento;
+        this.genero = genero;
         this.fechaNacimiento = fechaNacimiento;
         this.edad = edad;
     }
@@ -73,6 +111,7 @@ public class Compositor {
                 ", nombre='" + nombre + '\'' +
                 ", apellidos='" + apellidos + '\'' +
                 ", paisNacimiento='" + paisNacimiento + '\'' +
+                ", genero='" + genero + '\'' +
                 ", fechaNacimiento='" + fechaNacimiento + '\'' +
                 ", edad=" + edad +
                 '}';
@@ -83,22 +122,22 @@ public class Compositor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Compositor that = (Compositor) o;
-        return edad == that.edad &&
-                Objects.equals(id, that.id) &&
+        return id == that.id &&
+                edad == that.edad &&
                 Objects.equals(nombre, that.nombre) &&
                 Objects.equals(apellidos, that.apellidos) &&
                 Objects.equals(paisNacimiento, that.paisNacimiento) &&
+                Objects.equals(genero, that.genero) &&
                 Objects.equals(fechaNacimiento, that.fechaNacimiento);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, apellidos, paisNacimiento, fechaNacimiento, edad);
+        return Objects.hash(id, nombre, apellidos, paisNacimiento, genero, fechaNacimiento, edad);
     }
 
-    public boolean modificar(String pNombre, String pApellidos){
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.apellidos = (!pApellidos.equals("")) ? pApellidos : this.nombre;
-        return true;
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombre;
     }
 }

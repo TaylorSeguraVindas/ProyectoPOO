@@ -27,6 +27,9 @@ public class Cliente extends Usuario{
         this.edad = edad;
     }
 
+    public String getNombrePais() {
+        return this.pais.getNombre();
+    }
     public Pais getPais() {
         return pais;
     }

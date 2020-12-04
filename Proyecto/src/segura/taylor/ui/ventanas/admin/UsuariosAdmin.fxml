@@ -23,8 +23,8 @@
             <children>
                 <HBox alignment="TOP_RIGHT" minHeight="32.0" prefWidth="640.0" spacing="10.0">
                     <children>
-                        <Button fx:id="btnModificarUsuario" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarUsuario" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
-                        <Button fx:id="btnEliminarUsuario" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarUsuario" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
+                        <Button fx:id="btnModificarUsuario" disable="true" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarUsuario" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
+                        <Button fx:id="btnEliminarUsuario" disable="true" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarUsuario" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
                     </children>
                     <VBox.margin>
                         <Insets />

@@ -24,8 +24,8 @@
                 <HBox alignment="TOP_RIGHT" minHeight="32.0" prefWidth="640.0" spacing="10.0">
                     <children>
                         <Button fx:id="btnAgregarCancion" mnemonicParsing="false" onAction="#agregarCancion" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
-                        <Button fx:id="btnModificarCancion" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarCancion" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
-                        <Button fx:id="btnEliminarCancion" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarCancion" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
+                        <Button fx:id="btnModificarCancion" disable="true" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarCancion" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
+                        <Button fx:id="btnEliminarCancion" disable="true" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarCancion" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
                     </children>
                     <VBox.margin>
                         <Insets />

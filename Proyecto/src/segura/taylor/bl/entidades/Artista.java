@@ -100,7 +100,26 @@ public class Artista implements IComboBoxItem {
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Artista(){}
+
+    /**
+     * Método constructor
+     * @param nombre String que define el nombre
+     * @param apellidos String que define los apellidos
+     * @param nombreArtistico String que define el nombre artistico
+     * @param fechaNacimiento LocalDate que define la fecha de nacimiento
+     * @param fechaDefuncion LocalDate que define la fecha de defuncion
+     * @param paisNacimiento instancia de la clase Pais que define el pais de nacimiento
+     * @param genero instancia de la clase Genero que define el genero
+     * @param edad int que define la edad
+     * @param descripcion String que define la descripcion
+     * @see Pais
+     * @see Genero
+     */
     public Artista(String nombre, String apellidos, String nombreArtistico, LocalDate fechaNacimiento, LocalDate fechaDefuncion, Pais paisNacimiento, Genero genero, int edad, String descripcion) {
         this.id = 0;
         this.nombre = nombre;
@@ -151,15 +170,6 @@ public class Artista implements IComboBoxItem {
     @Override
     public int hashCode() {
         return Objects.hash(id, nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
-    }
-
-    public boolean modificar(String pNombre, String pApellidos, String pNomArtistico, LocalDate pFechaDefuncion, String pDescripcion){
-        this.nombre = pNombre;
-        this.apellidos = pApellidos;
-        this.nombreArtistico = pNomArtistico;
-        this.fechaDefuncion = pFechaDefuncion;
-        this.descripcion = pDescripcion;
-        return true;
     }
 
     @Override

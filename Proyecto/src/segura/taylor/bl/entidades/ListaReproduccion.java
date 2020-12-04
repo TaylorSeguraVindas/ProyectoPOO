@@ -36,9 +36,23 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public ListaReproduccion(){
         this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
     }
+
+    /**
+     * Método constructor
+     * @param nombre String que define el nombre
+     * @param fechaCreacion LocalDate que define la fecha de creacion
+     * @param canciones ArrayList que define las canciones que pertenecen a esta lista de reproduccion
+     * @param calificacion int que define la calificacion promedio
+     * @param imagen String que define la ruta de la imagen
+     * @param descripcion Stirng que define la calificacion
+     */
     public ListaReproduccion(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, double calificacion, String imagen, String descripcion) {
         super(nombre, fechaCreacion, canciones);
         this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
@@ -48,7 +62,6 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
     }
 
     //Metodos
-
     @Override
     public String toString() {
         return "ListaReproduccion{" +
@@ -78,18 +91,16 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
         return Objects.hash(super.hashCode(), calificacion, imagen, descripcion);
     }
 
+    /**
+     * Método usado par obtener una canción ubicada en X posicion
+     * @param posicion int que define el indice de la cancion que se desea obtener
+     * @return instancia de la clase Cancion que se encuentra en la posicion especificada
+     */
     public Cancion cargarCancion(int posicion){
         if(posicion < canciones.size()){
             return canciones.get(posicion);
         }
         return null;
-    }
-
-    public boolean modificar(String pNombre, String pImagen, String pDescripcion){
-        this.nombre = pNombre;
-        this.imagen = pImagen;
-        this.descripcion = pDescripcion;
-        return true;
     }
 
     @Override

@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Calificacion {
     //Variables
     private int id;
-    private String idUsuario;
+    private Usuario autor;
     private float estrellas;
     private String comentario;
     private String fechaCreacion;
@@ -18,11 +18,11 @@ public class Calificacion {
         this.id = id;
     }
 
-    public String getIdUsuario() {
-        return idUsuario;
+    public Usuario getAutor() {
+        return autor;
     }
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setAutor(Usuario autor) {
+        this.autor = autor;
     }
 
     public float getEstrellas() {
@@ -47,12 +47,24 @@ public class Calificacion {
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Calificacion(){
         this.id = 0;
     }
-    public Calificacion(String idUsuario, float estrellas, String comentario, String fechaCreacion) {
+
+    /**
+     * Método constructor
+     * @param autor instancia de la clase Usuario que define al autor
+     * @param estrellas int que define la cantidad de estrellas
+     * @param comentario String que define el comentario
+     * @param fechaCreacion LocalDate que define la fecha de creacion
+     */
+    public Calificacion(Usuario autor, float estrellas, String comentario, String fechaCreacion) {
         this.id = 0;
-        this.idUsuario = idUsuario;
+        this.autor = autor;
         this.estrellas = estrellas;
         this.comentario = comentario;
         this.fechaCreacion = fechaCreacion;
@@ -63,7 +75,7 @@ public class Calificacion {
     public String toString() {
         return "Calificacion{" +
                 "id='" + id + '\'' +
-                ", idUsuario='" + idUsuario + '\'' +
+                ", autor='" + autor + '\'' +
                 ", estrellas=" + estrellas +
                 ", comentario='" + comentario + '\'' +
                 ", fechaCreacion='" + fechaCreacion + '\'' +
@@ -77,22 +89,19 @@ public class Calificacion {
         Calificacion that = (Calificacion) o;
         return id == that.id &&
                 Float.compare(that.estrellas, estrellas) == 0 &&
-                Objects.equals(idUsuario, that.idUsuario) &&
+                Objects.equals(autor, that.autor) &&
                 Objects.equals(comentario, that.comentario) &&
                 Objects.equals(fechaCreacion, that.fechaCreacion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, idUsuario, estrellas, comentario, fechaCreacion);
+        return Objects.hash(id, autor, estrellas, comentario, fechaCreacion);
     }
 
-    public boolean modificar(int estrellas, String comentario){
-        this.estrellas = estrellas;
-        this.comentario = comentario;
-        return true;
-    }
-
+    /**
+     * Método usado para reiniciar a los valores por defecto
+     */
     public void limpiar(){
         this.estrellas = 1;
         this.comentario = "";

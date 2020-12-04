@@ -8,16 +8,20 @@ import java.util.*;
 import segura.taylor.PropertiesHandler;
 import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.enums.TipoCancion;
-import segura.taylor.bl.persistencia.*;
+import segura.taylor.dao.*;
 
+/**
+ * La clase gestor se encarga de realizar la conexión entre el controlador y los DAOs
+ *
+ * @author Taylor Segura Vindas
+ * @version 1.0
+ */
 public class Gestor {
     //Variables
     private Usuario usuarioIngresado;
 
     private Connection connection;
-
     private PropertiesHandler propertiesHandler = new PropertiesHandler();
-
 
     private ArtistaDAO artistaDAO;
     private CancionDAO cancionDAO;
@@ -27,7 +31,10 @@ public class Gestor {
     private RepositorioCancionesDAO repoCancionesDAO;
     private UsuarioDAO usuarioDAO;
 
-    //Constructor
+    /**
+     * Método constructor
+     * Inicializa la conexión con la base de datos y los DAOs que posteriormente serán usados
+     */
     public Gestor(){
         try {
             propertiesHandler.loadProperties();
@@ -58,17 +65,36 @@ public class Gestor {
     }
 
     //Metodos
+
+    /**
+     * Verifica si el usuario que usa la aplicación es administrador
+     * @return true si es administrador, false si no lo es
+     */
     public boolean usuarioIngresadoEsAdmin() {
         return usuarioIngresado.esAdmin();
     }
+    /**
+     * Verifica si el usuario que usa la aplicación es creador
+     * @return true si es creador, false si no lo es
+     */
     public boolean usuarioIngresadoEsCreador() {
         return usuarioIngresado.esCreador();
     }
+
+    /**
+     * Metodo usado para conocer el id del usuario que está usando la aplicación
+     * @return id del usuario que está usando la aplicación
+     */
     public int getIdUsuarioIngresado() {
         return usuarioIngresado.getId();
     }
 
+
     //*******General**********
+    /**
+     * Método usado para verificar la existencia del usuario administrador
+     * @return
+     */
     public boolean existeAdmin(){
         try {
             if(usuarioDAO.findAll().size() == 0){
@@ -83,6 +109,13 @@ public class Gestor {
 
         return false;
     }
+
+    /**
+     * Método usado para iniciar sesión. Busca el usuario que coincide con los atributos enviados como parámetros
+     * @param pCorreo el correo del usuario
+     * @param pContrasenna la contraseña del usuario
+     * @return true si se encuentra alguna coincidencia, false si no.
+     */
     public boolean iniciarSesion(String pCorreo, String pContrasenna){
         try {
             for (Usuario objUsuario: usuarioDAO.findAll()) {
@@ -101,8 +134,20 @@ public class Gestor {
         return false;
     }
 
+
     //*******Manejo de usuarios*******
-    //Admin
+    /**
+     * Método usado para el registro del usuario admin
+     * @param correo String que define el correo del usuario
+     * @param contrasenna String que define la contraseña del usuario
+     * @param nombre String que define el nombre del usuario
+     * @param apellidos String que define los apellidos del usuario
+     * @param imagenPerfil String que define la ruta de la imagen de perfil del usuario
+     * @param nombreUsuario String que define el nombre de usuario
+     * @param fechaCreacion LocalDate que define la fecha de creación del usuario
+     * @return true si se logra crear, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean crearUsuarioAdmin(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaCreacion) throws Exception {
         //Si ya existe un admin no se puede sobreescribir
         if(existeAdmin()) return false;
@@ -111,7 +156,21 @@ public class Gestor {
 
         return usuarioDAO.save(admin);
     }
-    //Cliente
+
+    /**
+     * Metodo usado para registrar clientes
+     * @param correo String que define el nombre del usuario
+     * @param contrasenna String que define la contraseña del usuario
+     * @param nombre String que define el nombre del usuario
+     * @param apellidos String que define los apellidos del usuario
+     * @param imagenPerfil String que define la ruta de la imagen de perfil
+     * @param nombreUsuario String que define el nombre de usuario
+     * @param fechaNacimiento LocalDate que define la fecha de nacimiento
+     * @param edad int que define la edad
+     * @param idPais int que define el id del pais en el que vive el usurio
+     * @return true si el registro es éxitoso, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean crearUsuarioCliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaNacimiento, int edad, int idPais) throws Exception {
         //Si no hay admin no se puede registrar usuarios.
         //if(usuarioDAO.findAll().size() == 0) return false;
@@ -132,20 +191,51 @@ public class Gestor {
 
         return usuarioDAO.save(nuevoCliente);
     }
+
+    /**
+     * Método usado para modificar un usuario
+     * @param id int que define el id del usuario que se va a modificar
+     * @param pNombreUsuario String que define el nuevo nombre de usuario
+     * @param pImagenPerfil String que define la nueva ruta de la imagen de perfil del usuario
+     * @param pContrasenna Strinq que define la nueva contraseña del usuario
+     * @param pNombre String que define el nuevo nombre del usuario
+     * @param pApellidos String que define los nuevos apellidos del usuario
+     * @return true si la modificación es existosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean modificarUsuario(int id, String pNombreUsuario, String pImagenPerfil, String pContrasenna, String pNombre, String pApellidos) throws Exception {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(id);
 
         if(usuarioEncontrado.isPresent()){
             Usuario usuarioModifica = usuarioEncontrado.get();
-            usuarioModifica.modificar(pNombreUsuario, pImagenPerfil, pContrasenna, pNombre, pApellidos);
+            usuarioModifica.setNombreUsuario(pNombreUsuario);
+            usuarioModifica.setImagenPerfil(pImagenPerfil);
+            usuarioModifica.setContrasenna(pContrasenna);
+            usuarioModifica.setNombre(pNombre);
+            usuarioModifica.setApellidos(pApellidos);
+
             return usuarioDAO.update(usuarioModifica);
         }
 
         return false;
     }
+
+    /**
+     * Método usado para eliminar un usuario
+     * @param idUsuario int que define el id del usuario que se va a eliminar
+     * @return true si la eliminación es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean eliminarUsuario(int idUsuario) throws Exception {
         return usuarioDAO.delete(idUsuario);
     }
+
+    /**
+     * Método usado para obtener una lista con todos los usuarios almacenados
+     * @return lista con todos los usuarios almacenados
+     * @see List
+     * @see Usuario
+     */
     public List<Usuario> listarUsuarios(){
         try {
             return Collections.unmodifiableList(usuarioDAO.findAll());
@@ -156,14 +246,34 @@ public class Gestor {
         return new ArrayList<>();
     }
 
+    /**
+     * Método usado para buscar un usuario usando como filtro su id
+     * @param pId int que define el id del usuario que se desea buscar
+     * @return instancia de la clase Usuario si se encuentra alguno, null si no hay coincidencias
+     */
     public Usuario buscarUsuarioPorId(int pId){
         return usuarioDAO.findByID(pId).get();
     }
+    /**
+     * Método usado para buscar un usuario por correo
+     * @param pCorreo String que define el correo del usuario que se desea buscar
+     * @return instancia de la clase Usuario si se encuentra alguno, null si no hay coincidencias
+     */
     public Usuario buscarUsuarioPorCorreo(String pCorreo){
         return usuarioDAO.findByEmail(pCorreo).get();
     }
 
+
     //*******Manejo de albunes********
+    /**
+     * Método usado para crear un album
+     * @param nombre String que define el nombre del album
+     * @param fechaCreacion LocalDate que define la fecha de creacion del album
+     * @param fechaLanzamiento LocalDate que define la fecha de lanzamiento del album
+     * @param imagen String que define la imagen del album
+     * @return true si el registro es exitoso, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean crearAlbum(String nombre, LocalDate fechaCreacion, LocalDate fechaLanzamiento, String imagen) throws Exception {
         ArrayList<Cancion> canciones = new ArrayList<Cancion>();
         ArrayList<Artista> artistas = new ArrayList<Artista>();
@@ -171,20 +281,45 @@ public class Gestor {
         Album nuevoAlbum = new Album(nombre, fechaCreacion, canciones, fechaLanzamiento, imagen, artistas);
         return (repoCancionesDAO.save(nuevoAlbum)) != -1;
     }
+
+    /**
+     * Método usado para modificar un album
+     * @param pId int que define el id del album que se desea modificar
+     * @param pNombre String que define el nuevo nombre del album
+     * @param pImagen String que define la nueva imagen del album
+     * @return true si la modificacion es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean modificarAlbum(int pId, String pNombre, String pImagen) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pId);
 
         if(repoEncontrado.isPresent()){
             Album albumModifica = (Album) repoEncontrado.get();
-            albumModifica.modificar(pNombre, pImagen);
+            albumModifica.setNombre(pNombre);
+            albumModifica.setImagen(pImagen);
+
             return repoCancionesDAO.update(albumModifica);
         }
 
         return false;
     }
+
+    /**
+     * Método usado para eliminar un album
+     * @param idAlbum int que define el id del album que se desea eliminar
+     * @return true si la eliminacion es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean eliminarAlbum(int idAlbum) throws Exception {
         return repoCancionesDAO.delete(idAlbum);
     }
+
+    /**
+     * Método usado para obtener una lista con todos los albunes almacenados
+     * @return una lista con todos los albunes almacenados
+     * @see List
+     * @see Album
+     */
     public List<Album> listarAlbunes(){
         try {
             return Collections.unmodifiableList(repoCancionesDAO.findAlbunes());
@@ -194,7 +329,22 @@ public class Gestor {
         return new ArrayList<>();
     }
 
-    //Para agregar o eliminar canciones y artistas
+    /**
+     * Método usado para buscar un album usando como filtro su id
+     * @param pId int que define el id del album que se desea encontrar
+     * @return
+     */
+    public Optional<Album> buscarAlbumPorId(int pId){
+        return Optional.of((Album) repoCancionesDAO.findByID(pId).get());
+    }
+
+    /**
+     * Método usado para agregar una canción a un album
+     * @param pIdAlbum int que define el id del album que se va a modificar
+     * @param idCancion int que define el id de la canción que se desea incluir
+     * @return true si la agregación es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean agregarCancionEnAlbum(int pIdAlbum, int idCancion) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
 
@@ -213,6 +363,14 @@ public class Gestor {
 
         return false;
     }
+
+    /**
+     * Método usado para remover una canción de un album
+     * @param pIdAlbum int que define el id del album que se va a modificar
+     * @param pIdCancion int que define el id de la canción que se desea remover
+     * @return true si la eliminación es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean removerCancionDeAlbum(int pIdAlbum, int pIdCancion) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
 
@@ -225,6 +383,14 @@ public class Gestor {
 
         return false;
     }
+
+    /**
+     * Método usado para agregar un artista a un album
+     * @param pIdAlbum int que define el id del album que se va a modificar
+     * @param pIdArtista int que define el id del artista que se desea incluir
+     * @return true si la agregación es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean agregarArtistaEnAlbum(int pIdAlbum, int pIdArtista) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
         Optional<Artista> artistaEncontrado = artistaDAO.findByID(pIdArtista);
@@ -241,6 +407,14 @@ public class Gestor {
 
         return false;
     }
+
+    /**
+     * Método usado para remover un artista de un albm
+     * @param pIdAlbum int que define el id del album que se va a modificar
+     * @param pIdArtista int que define el id del artista que se desea remover
+     * @return true si la eliminación es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean removerArtistaDeAlbum(int pIdAlbum, int pIdArtista) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
 
@@ -258,32 +432,64 @@ public class Gestor {
         return false;
     }
 
-    public Optional<Album> buscarAlbumPorId(int pId){
-        return Optional.of((Album) repoCancionesDAO.findByID(pId).get());
-    }
-
 
     //*********Manejo de Listas de Reproduccion***************
+    /**
+     * Método usado para crear una lista de reproducción
+     * @param nombre String que define el nombre de la lista
+     * @param fechaCreacion LocalDate que define la fecha de creacion de la lista
+     * @param imagen String que define la imagen de la lista
+     * @param descripcion String que define la descripción de la lista
+     * @return true si el registro es exitoso, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean crearListaReproduccion(String nombre, LocalDate fechaCreacion, String imagen, String descripcion) throws Exception {
         ArrayList<Cancion> canciones = new ArrayList<>();   //Las listas de reproducción SIEMPRE se crea sin canciones por defecto
 
         ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, 0.0, imagen, descripcion);
         return (repoCancionesDAO.save(nuevaLista)) != -1;
     }
+
+    /**
+     * Método usado para modificar una lista de reproduccion
+     * @param pIdLista int que define el id de la lista que se va a modificar
+     * @param pNombre String que define el nuevo nombre de la lista
+     * @param pImagen String que define la nueva ruta de la imagen de la lista
+     * @param pDescripcion String que define la nueva descripcio de la lista
+     * @return true si la modificación es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean modificarListaReproduccion(int pIdLista, String pNombre, String pImagen, String pDescripcion) throws Exception {
         Optional<RepositorioCanciones> listaEncontrada = repoCancionesDAO.findByID(pIdLista);
 
         if(listaEncontrada.isPresent()) {
             ListaReproduccion listaModifica = (ListaReproduccion) listaEncontrada.get();
-            listaModifica.modificar(pNombre, pImagen, pDescripcion);
+            listaModifica.setNombre(pNombre);
+            listaModifica.setImagen(pImagen);
+            listaModifica.setDescripcion(pDescripcion);
+
             return repoCancionesDAO.update(listaModifica);
         }
 
         return false;
     }
+
+    /**
+     * Método usado para eliminar una lista de reproduccion
+     * @param pIdLista int que define el id de la lista de reproduccion que se desea eliminar
+     * @return true si la eliminación es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean eliminarListaReproduccion(int pIdLista) throws Exception {
         return repoCancionesDAO.delete(pIdLista);
     }
+
+    /**
+     * Método para obtener la lista de todas las listas de reproduccion almacenadas
+     * @return lista con las listas de reproduccion almacenadas
+     * @see List
+     * @see ListaReproduccion
+     */
     public List<ListaReproduccion> listarListasReproduccion(){
         try {
             return Collections.unmodifiableList(repoCancionesDAO.findListasReproduccion());
@@ -294,7 +500,13 @@ public class Gestor {
         return new ArrayList<>();
     }
 
-    //Para agregar o eliminar canciones
+    /**
+     * Método usado para agregar una cancion a una lista de reproduccion
+     * @param pIdLista int que define el id de la lista que se va a modificar
+     * @param pIdCancion int que define el id de la cancion que se va a incluir
+     * @return true si la agregación es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean agregarCancionALista(int pIdLista, int pIdCancion) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdLista);
 
@@ -313,6 +525,14 @@ public class Gestor {
 
         return false;
     }
+
+    /**
+     * Método usado para remover una cancion de una lista de reproduccion
+     * @param pIdLista int que define el id de la lista que se va a modificar
+     * @param pIdCancion int que define el id de la cancion que se desea remover
+     * @return true si la eliminacion es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean removerCancionDeLista(int pIdLista, int pIdCancion) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdLista);
 
@@ -326,12 +546,33 @@ public class Gestor {
         return false;
     }
 
+    /**
+     * Método usado para buscar una lista de reproduccion usando como filtro su id
+     * @param pIdLista int que define el id de la lista que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de ListaReproduccion si se encuentra una coincidencia
+     * @see Optional
+     * @see ListaReproduccion
+     */
     public Optional<ListaReproduccion> buscarListaReproduccionPorId(int pIdLista){
         return Optional.of((ListaReproduccion) repoCancionesDAO.findByID(pIdLista).get());
     }
 
 
     //*****************Manejo de artistas*******************
+    /**
+     * Método usado para crear un artista
+     * @param nombre String que define el nombre del artista
+     * @param apellidos String que define los apellidos del artista
+     * @param nombreArtistico String que define el nombre artistico del artista
+     * @param fechaNacimiento LocalDate que define la fecha de nacimiento del artista
+     * @param fechaDefuncion LocalDate que define la fecha de defuncion del artista
+     * @param idPaisNacimiento int que define el id del pais donde vive el artista
+     * @param idGenero int que define el id del genero del artista
+     * @param edad int que define la edad del artista
+     * @param descripcion String que define la descripcion del artista
+     * @return true si el registro es exitoso, false si ocurre algún error
+     * @throws Exception
+     */
     public boolean crearArtista(String nombre, String apellidos, String nombreArtistico, LocalDate fechaNacimiento, LocalDate fechaDefuncion, int idPaisNacimiento, int idGenero, int edad, String descripcion) throws Exception {
         Pais paisNacimiento = buscarPaisPorId(idPaisNacimiento).get();
         Genero genero = buscarGeneroPorId(idGenero).get();
@@ -339,20 +580,49 @@ public class Gestor {
         Artista nuevoArtista = new Artista(nombre, apellidos, nombreArtistico, fechaNacimiento, fechaDefuncion, paisNacimiento, genero, edad, descripcion);
         return artistaDAO.save(nuevoArtista);
     }
-    public boolean modificarArtista(int pIdArtista, String pNombre, String pApellidos, String pNomArtistico, LocalDate pFechaDefuncion, String descripcion) throws Exception {
+
+    /**
+     * Método usado para modificar un artista
+     * @param pIdArtista int que define el id del artista que se desea modificar
+     * @param pNombre String que define el nuevo nombre del artista
+     * @param pApellidos String que define los nuevos apellidos del artista
+     * @param pNomArtistico String que define el nuevo nombre artistico del artista
+     * @param pFechaDefuncion LocalDate que define la nueva fecha de defunción del artista
+     * @param pDescripcion String que define la nueva descripcion del artista
+     * @return true si la modificacion es exitosa, false si ocurre algún error
+     * @throws Exception
+     */
+    public boolean modificarArtista(int pIdArtista, String pNombre, String pApellidos, String pNomArtistico, LocalDate pFechaDefuncion, String pDescripcion) throws Exception {
         Optional<Artista> artistaEncontrado = artistaDAO.findByID(pIdArtista);
 
         if(artistaEncontrado.isPresent()) {
             Artista artistaModifica = artistaEncontrado.get();
-            artistaModifica.modificar(pNombre, pApellidos, pNomArtistico, pFechaDefuncion, descripcion);
+            artistaModifica.setNombre(pNombre);
+            artistaModifica.setApellidos(pApellidos);
+            artistaModifica.setNombreArtistico(pNomArtistico);
+            artistaModifica.setFechaDefuncion(pFechaDefuncion);
+            artistaModifica.setDescripcion(pDescripcion);
+
             return artistaDAO.update(artistaModifica);
         }
 
         return false;
     }
+
+    /**
+     * Método usado para eliminar un artista
+     * @param pIdArtista int que define el id del artista que se desea eliminar
+     * @return true si la eliminacion es exitosa, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean eliminarArtista(int pIdArtista) throws Exception {
         return artistaDAO.delete(pIdArtista);
     }
+
+    /**
+     * Método usado para obtener una lista con todos los artistas almacenados
+     * @return una lista con todos los artistas almacenados
+     */
     public List<Artista> listarArtistas(){
         try {
             return Collections.unmodifiableList(artistaDAO.findAll());
@@ -363,6 +633,13 @@ public class Gestor {
         return new ArrayList<>();
     }
 
+    /**
+     * Método usado para buscar un artista usando como filtro su id
+     * @param pId int que define el id del artista que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de un artista si se encuentra una coincidencia
+     * @see Optional
+     * @see Artista
+     */
     public Optional<Artista> buscarArtistaPorId(int pId){
         try {
             return artistaDAO.findByID(pId);
@@ -375,6 +652,20 @@ public class Gestor {
 
 
     //*******************Manejo de canciones******************
+
+    /**
+     * Método usado para crear una cancion
+     * @param nombre String que define el nombre de la cancion
+     * @param recurso String que define la ruta de la cancion
+     * @param duracion double que define la duracion de la cancion
+     * @param idGenero int que define el id del genero de la cancion
+     * @param idArtista int que define el id del artista de la cancion
+     * @param idCompositor int que define el id del compositor de la cancion
+     * @param fechaLanzamiento LocalDate que define la fecha de lanzamiento de la cancion
+     * @param precio double que define el precio de la cancion
+     * @return true si el registro es exitoso, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean crearCancion(String nombre, String recurso, double duracion, int idGenero, int idArtista, int idCompositor, LocalDate fechaLanzamiento, double precio) throws Exception {
         ArrayList<Calificacion> calificaciones = new ArrayList<>();
 
@@ -392,19 +683,44 @@ public class Gestor {
         Cancion nuevaCancion = new Cancion(tipoCancion, nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
         return cancionDAO.save(nuevaCancion);
     }
+
+    /**
+     * Método usado para modificar una cancion
+     * @param pIdCancion int que define el id de la cancion que se desea modificar
+     * @param pNombre String que define el nuevo nombre de la cancion
+     * @param pPrecio double que define el nuevo precio de la cancion
+     * @return true si la modificacion es exitosa, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean modificarCancion(int pIdCancion, String pNombre, double pPrecio) throws Exception {
         Optional<Cancion> cancionEncontrada = cancionDAO.findByID(pIdCancion);
 
         if(cancionEncontrada.isPresent()) {
             Cancion cancionModifica = cancionEncontrada.get();
-            cancionModifica.modificar(pNombre, pPrecio);
+            cancionModifica.setNombre(pNombre);
+            cancionModifica.setPrecio(pPrecio);
+
             return cancionDAO.update(cancionModifica);
         }
         return false;
     }
+
+    /**
+     * Método usado para eliminar una cancion
+     * @param pIdCancion int que define el id de la cancion que se desea eliminar
+     * @return true si la eliminacion es exitosa, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean eliminarCancion(int pIdCancion) throws Exception {
         return cancionDAO.delete(pIdCancion);
     }
+
+    /**
+     * Método usado para obtener una lista con todas las canciones almacenadas
+     * @return una lista con todas las canciones almacenadas
+     * @see List
+     * @see Cancion
+     */
     public List<Cancion> listarCanciones(){
         try {
             return Collections.unmodifiableList(cancionDAO.findAll());
@@ -414,6 +730,14 @@ public class Gestor {
 
         return new ArrayList<>();
     }
+
+    /**
+     * Método usado para buscar una cancion usando como filtro su id
+     * @param pIdCancion int que define el id de la cancion que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Cancion si se encuentra una coincidencia
+     * @see Optional
+     * @see Cancion
+     */
     public Optional<Cancion> buscarCancionPorId(int pIdCancion){
         try {
             return cancionDAO.findByID(pIdCancion);
@@ -426,6 +750,14 @@ public class Gestor {
 
 
     //Canciones de cliente
+
+    /**
+     * Método usado para agregar una canción a la biblioteca de un usuario
+     * @param pIdCliente int que define el id del cliente dueño de la biblioteca
+     * @param pIdCancion int que define el id de la cancion que se desea incluir
+     * @return true si la agregacion es exitosa, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean agregarCancionABibliotecaUsuario(int pIdCliente, int pIdCancion) throws Exception {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
 
@@ -446,6 +778,12 @@ public class Gestor {
         }
         return false;
     }
+
+    /**
+     * Método usado para obtener una lista con las canciones almacenadas en la biblioteca de un usuario
+     * @param pIdCliente int que define el id del que se desea conocer sus canciones
+     * @return lista con las canciones almacenadas en la biblioteca del usuario
+     */
     public List<Cancion> listarCancionesDeBibliotecaUsuario(int pIdCliente){
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
 
@@ -461,6 +799,15 @@ public class Gestor {
 
         return null;
     }
+
+    /**
+     * Método usado para buscar una cancion dentro de la biblioteca de un usuario usando como filtro su id
+     * @param pIdCliente int que define el id del cliente dueño de la biblioteca
+     * @param pIdCancion int que define el id de la cancion que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de una Cancion si se encuentra una coincidencia
+     * @see Optional
+     * @see Cancion
+     */
     public Optional<Cancion> buscarCancionEnBibliotecaUsuario(int pIdCliente, int pIdCancion){
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
 
@@ -476,6 +823,14 @@ public class Gestor {
 
         return Optional.empty();
     }
+
+    /**
+     * Método usado para remover una canción de la biblioteca de un usuario
+     * @param pIdCliente int que define el id del cliente dueño de la biblioteca
+     * @param pIdCancion int que define el id de la cancion que se desea remover
+     * @return true si la eliminacion es exitosa, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean removerCancionDeBibliotecaUsuario(int pIdCliente, int pIdCancion) throws Exception {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
 
@@ -496,6 +851,18 @@ public class Gestor {
 
 
     //**************Manejo de compositores********************
+
+    /**
+     * Método usado para crear un compositor
+     * @param nombre String que define el nombre del compositor
+     * @param apellidos String que define los apellidos del compositor
+     * @param idPaisNacimiento int que define el id del pais de nacimiento del compositor
+     * @param idGenero int que define el id del genero del compositor
+     * @param fechaNacimiento LocalDate que define la fecha de nacimineto del compositor
+     * @param edad int que define la edad del compositor
+     * @return true si el registro es exitoso, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean crearCompositor(String nombre, String apellidos, int idPaisNacimiento, int idGenero, LocalDate fechaNacimiento, int edad) throws Exception {
         Pais paisNacimiento = buscarPaisPorId(idPaisNacimiento).get();
         Genero genero = buscarGeneroPorId(idGenero).get();
@@ -503,20 +870,43 @@ public class Gestor {
         Compositor nuevoCompositor = new Compositor(nombre, apellidos, paisNacimiento, genero, fechaNacimiento, edad);
         return compostorDAO.save(nuevoCompositor);
     }
+
+    /**
+     * Método usado para modificar un compositor
+     * @param pIdCompositor int que define el id del compositor que se desea modificar
+     * @param pNombre String que define el nuevo nombre del compositor
+     * @param pApellidos String que define los nuevos apellidos del compositor
+     * @return true si la modificacion es exitosa, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean modificarCompositor(int pIdCompositor, String pNombre, String pApellidos) throws Exception {
         Optional<Compositor> compositorEncontrado = compostorDAO.findByID(pIdCompositor);
 
         if(compositorEncontrado.isPresent()) {
             Compositor compositorModifica = compositorEncontrado.get();
-            compositorModifica.modificar(pNombre, pApellidos);
+            compositorModifica.setNombre(pNombre);
+            compositorModifica.setApellidos(pApellidos);
+
             return compostorDAO.update(compositorModifica);
         }
 
         return false;
     }
+
+    /**
+     * Método usado para eliminar un compositor
+     * @param pIdCompositor int que define el id del compositor que se desea eliminar
+     * @return true si la eliminacion es exitosa, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean eliminarCompositor(int pIdCompositor) throws Exception {
         return compostorDAO.delete(pIdCompositor);
     }
+
+    /**
+     * Método usado para obtener una lista de todos los compositores almacenados
+     * @return una lista con todos los compositores almacenados
+     */
     public List<Compositor> listarCompositores(){
         try {
             return Collections.unmodifiableList(compostorDAO.findAll());
@@ -527,6 +917,13 @@ public class Gestor {
         return new ArrayList<>();
     }
 
+    /**
+     * Método usado para buscar un compositor usando como filtro su id
+     * @param idCompositor int que define el id del compositor que se desea encontrar
+     * @return un objeto de tipo Optional que contiene una instancia de Compositor si se encuentra una coincidencia
+     * @see Optional
+     * @see Compositor
+     */
     public Optional<Compositor> buscarCompositorPorId(int idCompositor){
         try {
             return compostorDAO.findByID(idCompositor);
@@ -539,24 +936,55 @@ public class Gestor {
 
 
     //******************Manejo de Generos******************
+
+    /**
+     * Método usado para crear un genero
+     * @param nombre String que define el nombre del genero
+     * @param descripcion String que define la descripcion del genero
+     * @return true si el registro es exitoso, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean crearGenero(String nombre, String descripcion) throws Exception {
         Genero nuevoGenero = new Genero(nombre, descripcion);
         return generoDAO.save(nuevoGenero);
     }
+
+    /**
+     * Método usaodo para modificar un genero
+     * @param pIdGenero int que define el id del genero que se desea modificar
+     * @param pNombre String que define el nuevo nombre del genero
+     * @param pDesc String que define la nueva descripcion del genero
+     * @return true si la modificacion es exitosa, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean modificarGenero(int pIdGenero, String pNombre, String pDesc) throws Exception {
         Optional<Genero> generoEncontrado = generoDAO.findByID(pIdGenero);
 
         if(generoEncontrado.isPresent()) {
             Genero generoModifica = generoEncontrado.get();
-            generoModifica.modificar(pNombre, pDesc);
+            generoModifica.setNombre(pNombre);
+            generoModifica.setDescripcion(pDesc);
+
             return generoDAO.update(generoModifica);
         }
 
         return false;
     }
+
+    /**
+     * Método usado para eliminar un genero
+     * @param pIdGenero int que define el id del genero que se desea eliminar
+     * @return true si la eliminacion es exitosa, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean eliminarGenero(int pIdGenero) throws Exception {
         return generoDAO.delete(pIdGenero);
     }
+
+    /**
+     * Método usado para obtener una lista con todos los generos almacenados
+     * @return una lista con todos los generos almacenados
+     */
     public List<Genero> listarGeneros(){
         try {
             return Collections.unmodifiableList(generoDAO.findAll());
@@ -567,6 +995,11 @@ public class Gestor {
         return new ArrayList<>();
     }
 
+    /**
+     * Método usado para buscar un genero usando como filtro su id
+     * @param pIdGenero int que define el id del genero que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Genero si se encuentra una coincidencia
+     */
     public Optional<Genero> buscarGeneroPorId(int pIdGenero){
         try {
             return generoDAO.findByID(pIdGenero);
@@ -579,24 +1012,55 @@ public class Gestor {
 
 
     //*****************Manejo de Paises********************
+
+    /**
+     * Método usado para crear un pais
+     * @param nombrePais String que define el nombre del pais
+     * @param descripcion String que define la descripcion del pais
+     * @return true si el registro es exitoso, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean crearPais(String nombrePais, String descripcion) throws Exception {
         Pais nuevoPais = new Pais(nombrePais, descripcion);
         return paisDAO.save(nuevoPais);
     }
+
+    /**
+     * Método usado para modificar un pais
+     * @param pIdPais int que define el id del pais que se desea modificar
+     * @param pNombre String que define el nuevo nombre del pais
+     * @param pDescripcion String que define la nueva descripcion del pais
+     * @return true si el registro es exitoso, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean modificarPais(int pIdPais, String pNombre, String pDescripcion) throws Exception {
         Optional<Pais> paisEncontrado = paisDAO.findByID(pIdPais);
 
         if(paisEncontrado.isPresent()) {
             Pais paisModifica = paisEncontrado.get();
-            paisModifica.modificar(pNombre, pDescripcion);
+            paisModifica.setNombre(pNombre);
+            paisModifica.setDescripcion(pDescripcion);
+
             return paisDAO.update(paisModifica);
         }
 
         return false;
     }
+
+    /**
+     * Método usado para eliminar un pais
+     * @param pIdPais int que define el id del pais que se desea eliminar
+     * @return true si la eliminacion es exitosa, false si ocurre algun error
+     * @throws Exception
+     */
     public boolean eliminarPais(int pIdPais) throws Exception {
         return paisDAO.delete(pIdPais);
     }
+
+    /**
+     * Método usado para obtener una lista con todos los paises almacenados
+     * @return una lista con todos los paises almacenados
+     */
     public List<Pais> listarPaises(){
         try {
             return Collections.unmodifiableList(paisDAO.findAll());
@@ -607,6 +1071,11 @@ public class Gestor {
         return new ArrayList<>();
     }
 
+    /**
+     * Método usado para buscar un pais usando como filtro su id
+     * @param pIdPais int que define el id del pais que se desea encontrar
+     * @return
+     */
     public Optional<Pais> buscarPaisPorId(int pIdPais){
         try {
             return paisDAO.findByID(pIdPais);

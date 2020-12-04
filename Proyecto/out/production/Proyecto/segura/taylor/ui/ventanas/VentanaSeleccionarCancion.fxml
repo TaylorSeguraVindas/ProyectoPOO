@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="272.0" prefWidth="372.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.cancion.ControladorAgregarCancionALista">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="272.0" prefWidth="372.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.cancion.ControladorAgregarCancionALista">
    <children>
       <VBox alignment="CENTER" prefHeight="58.0" prefWidth="600.0">
          <children>

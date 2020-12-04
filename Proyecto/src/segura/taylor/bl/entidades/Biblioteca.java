@@ -13,10 +13,10 @@ public class Biblioteca extends RepositorioCanciones {
     ArrayList<ListaReproduccion> listasDeReproduccion;
 
     //Propiedades
-    public ArrayList<Cancion> getIdCancionesFavoritas() {
+    public ArrayList<Cancion> getCancionesEnCola() {
         return cancionesEnCola;
     }
-    public void setIdCancionesFavoritas(ArrayList<Cancion> cancionesEnCola) {
+    public void setCancionesEnCola(ArrayList<Cancion> cancionesEnCola) {
         this.cancionesEnCola = cancionesEnCola;
     }
 
@@ -28,11 +28,24 @@ public class Biblioteca extends RepositorioCanciones {
     }
 
     //Contructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Biblioteca() {
         this.tipoRepo = TipoRepositorioCanciones.BIBLIOTECA;
         this.cancionesEnCola = new ArrayList<>();
         this.listasDeReproduccion = new ArrayList<>();
     }
+
+    /**
+     * Método constructor
+     * @param nombre String que define el nombre
+     * @param fechaCreacion LocalDate que define la fecha de creacion
+     * @param canciones ArrayList que define las canciones que pertenecen a esta biblioteca
+     * @param cancionesEnCola ArrayList que define las canciones en cola
+     * @param listasDeReproduccion ArrayList que define las listas de reproduccion que pertenecen a esta biblioteca
+     */
     public Biblioteca(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, ArrayList<Cancion> cancionesEnCola, ArrayList<ListaReproduccion> listasDeReproduccion) {
         super(nombre, fechaCreacion, canciones);
         this.tipoRepo = TipoRepositorioCanciones.BIBLIOTECA;
@@ -67,6 +80,12 @@ public class Biblioteca extends RepositorioCanciones {
         return Objects.hash(super.hashCode(), cancionesEnCola, listasDeReproduccion);
     }
 
+    /**
+     * Método usado para agregar una cancion a la cola de reproduccion
+     * @param cancion instancia de la clase Cancion que se desea agregar
+     * @return true si la agregacion es exitosa, false si la cancion ya ha sido agregada
+     * @see Cancion
+     */
     public boolean agregarACola(Cancion cancion){
         if(!existeEnCola(cancion.getId())){
             cancionesEnCola.add(cancion);
@@ -75,6 +94,11 @@ public class Biblioteca extends RepositorioCanciones {
         return false;
     }
 
+    /**
+     * Método usado para remover una cancion de la cola de reproduccion
+     * @param cancion instancia de la clase Cancion que se desea remover
+     * @return true si la eliminacion es exitosa, false si la cancion no existe
+     */
     public boolean removerDeCola(Cancion cancion){
         if(existeEnCola(cancion.getId())){
             cancionesEnCola.remove(cancion);
@@ -83,6 +107,11 @@ public class Biblioteca extends RepositorioCanciones {
         return false;
     }
 
+    /**
+     * Método usado para buscar una cancion en la cola de reproduccion usando como filtro su id
+     * @param pIdCancion int que define el id de la cancion que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Cancion si se encuentra una coincidencia
+     */
     public Optional<Cancion> buscarEnCola(int pIdCancion){
         for (Cancion objCancion: cancionesEnCola) {
             if(objCancion.getId() == pIdCancion){
@@ -91,6 +120,12 @@ public class Biblioteca extends RepositorioCanciones {
         }
         return Optional.empty();
     }
+
+    /**
+     * Método usado para verificar si una cancion existe en la cola de reproduccion
+     * @param id int que define el id de al cancion que se desea encontrar
+     * @return true si existe en la cola, false si no
+     */
     public boolean existeEnCola(int id){
         for (Cancion objCancion: cancionesEnCola) {
             if(id == objCancion.getId()){
@@ -100,9 +135,21 @@ public class Biblioteca extends RepositorioCanciones {
         return false;
     }
 
+    /**
+     * Método usado para agregar una lista de reproduccion a esta biblioteca
+     * @param nuevaLista instancia de la clase ListaReproduccion que se desea agregar
+     * @return true si la agregacion es exitosa, false si la lista ya ha sido agregada
+     * @see ListaReproduccion
+     */
     public boolean agregarListaReproduccion(ListaReproduccion nuevaLista) {
         return listasDeReproduccion.add(nuevaLista);
     }
+
+    /**
+     * Método usado para remover una lista de reproduccion de esta biblioteca
+     * @param pIdLista int que define el id de la lista de reproduccion que se desea remover
+     * @return true si la eliminacion es exitosa, false si la lista no existe
+     */
     public boolean removerListaReproduccion(int pIdLista) {
         Optional<ListaReproduccion> listaEncontrada = buscarListaReproduccion(pIdLista);
 
@@ -112,6 +159,12 @@ public class Biblioteca extends RepositorioCanciones {
 
         return false;
     }
+
+    /**
+     * Método usado para buscar una lista de reproduccion en esta biblioteca
+     * @param pIdLista int que define el id de la lista que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de ListaReproduccion si se encuentra una coincidencia
+     */
     public Optional<ListaReproduccion> buscarListaReproduccion(int pIdLista) {
         for (ListaReproduccion lista : listasDeReproduccion) {
             if(pIdLista == lista.getId()) {

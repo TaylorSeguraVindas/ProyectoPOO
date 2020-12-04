@@ -113,10 +113,27 @@ public class Cancion implements IComboBoxItem {
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Cancion(){
         calificaciones = new ArrayList<Calificacion>();
     }
 
+    /**
+     * Método constructor
+     * @param tipoCancion valor de TipoCancion que define el tipo de cancion
+     * @param nombre String que define el nombre
+     * @param recurso String que define la ruta de la cancion
+     * @param duracion double que define la duracion
+     * @param genero instancia de la clase Genero que define el genero
+     * @param artista instancia de la clase Artista que define al artista
+     * @param compositor instancia de la clase Compositor que define al compositor
+     * @param fechaLanzamiento LocalDate que define la fecha de lanzamiento
+     * @param calificaciones ArrayList que define las calificaciones que pertenecen a esta cancion
+     * @param precio double que define el precio
+     */
     public Cancion(TipoCancion tipoCancion, String nombre, String recurso, double duracion, Genero genero, Artista artista, Compositor compositor, LocalDate fechaLanzamiento, ArrayList<Calificacion> calificaciones, double precio) {
         this.id = 0;
         this.tipoCancion = tipoCancion;
@@ -172,12 +189,10 @@ public class Cancion implements IComboBoxItem {
         return Objects.hash(tipoCancion, id, nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, calificaciones, precio);
     }
 
-    public boolean modificar(String nombre, double pPrecio){
-        this.nombre = nombre;
-        this.precio = pPrecio;
-        return true;
-    }
-
+    /**
+     * Método usado para obtener el promedio de estrellas en de las calficaciones que pertenecen a esta cancion
+     * @return calificacion promedio de esta cancion
+     */
     public double obtenerPromedioEstrellas(){
         double acum = 0.0;
         double promedio = 0.0;
@@ -191,22 +206,40 @@ public class Cancion implements IComboBoxItem {
         return promedio;
     }
 
+    /**
+     * Método usado para agregar una calificacion
+     * @param pCalificacion instancia de la clase calificacion que se desea agregar
+     * @return true si la agregacion es exitosa, false si la calificacion ya existe
+     * @see Calificacion
+     */
     public boolean agregarCalificacion(Calificacion pCalificacion){
-        if(!existeCalificacion(pCalificacion)){
+        if(!existeCalificacion(pCalificacion.getId())){
             calificaciones.add(pCalificacion);
         }
         return false;
     }
 
+    /**
+     * Método usado para eliminar una calificacion
+     * @param pCalificacion instancia de la clase calificacion que se desea eliminar
+     * @return true si la eliminacion es exitosa
+     * @see Calificacion
+     */
     public boolean eliminarCalificacion(Calificacion pCalificacion){
-        if(existeCalificacion(pCalificacion)){
+        if(existeCalificacion(pCalificacion.getId())){
             calificaciones.remove(pCalificacion);
         }
         return false;
     }
 
+    /**
+     * Método usado para modificar una calificacion
+     * @param nuevaCalificacion instancia de la clase Calificacion con los cambios aplicados
+     * @return true si la modificacion es exitosa
+     * @see Calificacion
+     */
     public boolean modificarCalificacion(Calificacion nuevaCalificacion){
-        Calificacion viejaCalificacion = buscarCalificacion(nuevaCalificacion.getIdUsuario());
+        Calificacion viejaCalificacion = buscarCalificacion(nuevaCalificacion.getAutor().getId());
 
         if(viejaCalificacion != null){
             eliminarCalificacion(viejaCalificacion);
@@ -217,18 +250,29 @@ public class Cancion implements IComboBoxItem {
         return false;
     }
 
-    public boolean existeCalificacion(Calificacion pCalificacion){
+    /**
+     * Método usado para verificar si existe una calificacion
+     * @param pIdCalificacion int que define el id de la calificacion de la que se desea verificar su existencia
+     * @return true si existe, false si no
+     */
+    public boolean existeCalificacion(int pIdCalificacion){
         for (Calificacion objCalificacion: calificaciones) {
-            if(objCalificacion.equals(pCalificacion)){
+            if(objCalificacion.getId() == pIdCalificacion){
                 return true;
             }
         }
         return false;
     }
 
-    public Calificacion buscarCalificacion(String pIdUsuario) {
+    /**
+     * Método usado para buscar una calificación usando como filtro el id de su autor
+     * @param pIdUsuario int que define el id del autor de la calificacion
+     * @return instancia de la clase Calificacion si se encuentra una coincidencia
+     * @see Calificacion
+     */
+    public Calificacion buscarCalificacion(int pIdUsuario) {
         for (Calificacion objCalificacion: calificaciones) {
-            if(pIdUsuario.equals(objCalificacion.getIdUsuario())){
+            if(pIdUsuario == objCalificacion.getAutor().getId()){
                 return objCalificacion;
             }
         }

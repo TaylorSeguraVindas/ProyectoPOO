@@ -73,7 +73,21 @@ public abstract class Usuario {
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Usuario(){}
+
+    /**
+     * Método constructor
+     * @param correo String que define el correo
+     * @param contrasenna String que define la contraseña
+     * @param nombre String que define el nombre
+     * @param apellidos String que define los apellidos
+     * @param imagenPerfil String que define la ruta de la imagen de perfil
+     * @param nombreUsuario String que define el nombre de usuario
+     */
     public Usuario(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario) {
         this.id = 0;
         this.correo = correo;
@@ -118,19 +132,18 @@ public abstract class Usuario {
         return Objects.hash(id, tipoUsuario, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
     }
 
-    public boolean modificar(String pNombreUsuario, String pImagenPerfil, String pContrasenna, String pNombre, String pApellidos){
-        this.nombreUsuario = (!pNombreUsuario.equals("")) ? pNombreUsuario : this.nombreUsuario;
-        this.imagenPerfil = (!pImagenPerfil.equals("")) ? pImagenPerfil : imagenPerfil;
-        this.contrasenna = (!pContrasenna.equals("")) ? pContrasenna : this.contrasenna;
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.apellidos = (!pApellidos.equals("")) ? pApellidos : this.apellidos;
-        return true;
-    }
-
+    /**
+     * Método usado para saber si esta instancia es un usuario administrador
+     * @return true si es administrador, false si no
+     */
     public boolean esAdmin(){
         return tipoUsuario == TipoUsuario.ADMIN;
     }
 
+    /**
+     * Método usado para saber si esta instancia es un usuario creador
+     * @return true si es creador, false si no
+     */
     public boolean esCreador() {
         return tipoUsuario == TipoUsuario.CREADOR;
     }

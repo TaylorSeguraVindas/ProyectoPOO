@@ -76,7 +76,23 @@ public class Compositor implements IComboBoxItem {
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Compositor(){}
+
+    /**
+     * Método constuctor
+     * @param nombre String que define el nombre
+     * @param apellidos String que define los apellidos
+     * @param paisNacimiento instancia de la clase Pais que define el pais de nacimiento
+     * @param genero instancia de la clase Genero que define el genero
+     * @param fechaNacimiento LocalDate que define la fecha de nacimiento
+     * @param edad int que define la edad
+     * @see Pais
+     * @see Genero
+     */
     public Compositor(String nombre, String apellidos, Pais paisNacimiento, Genero genero, LocalDate fechaNacimiento, int edad) {
         this.id = 0;
         this.nombre = nombre;
@@ -118,12 +134,6 @@ public class Compositor implements IComboBoxItem {
     @Override
     public int hashCode() {
         return Objects.hash(id, nombre, apellidos, paisNacimiento, genero, fechaNacimiento, edad);
-    }
-
-    public boolean modificar(String pNombre, String pApellidos){
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.apellidos = (!pApellidos.equals("")) ? pApellidos : this.nombre;
-        return true;
     }
 
     @Override

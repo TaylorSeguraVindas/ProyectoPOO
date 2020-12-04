@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="520.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.album.ControladorRegistroAlbum">
+<VBox prefHeight="520.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.album.ControladorRegistroAlbum">
     <children>
         <VBox alignment="CENTER" prefHeight="73.0" prefWidth="663.0">
             <children>

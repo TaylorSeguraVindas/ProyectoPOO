@@ -47,9 +47,22 @@ public abstract class RepositorioCanciones {
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public RepositorioCanciones(){
         canciones = new ArrayList<>();
     }
+
+    /**
+     * Método constructor
+     * @param nombre String que define el nombre
+     * @param fechaCreacion LocalDate que define la fecha de creacion
+     * @param canciones ArrayList que define las canciones que pertenecen a este repositorio
+     * @see ArrayList
+     * @see Cancion
+     */
     public RepositorioCanciones(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones) {
         this.id = 0;
         this.nombre = nombre;
@@ -58,7 +71,6 @@ public abstract class RepositorioCanciones {
     }
 
     //Metodos
-
     @Override
     public String toString() {
         return "RepositorioCanciones{" +
@@ -85,13 +97,24 @@ public abstract class RepositorioCanciones {
         return Objects.hash(id, nombre, fechaCreacion, canciones);
     }
 
+    /**
+     * Método usado para agregar una cancion a este repositorio
+     * @param pCancion instancia de la clase Cancion que se desea agregar
+     * @return true si la agregacion es exitosa, false si la cancion ya existe
+     * @see Cancion
+     */
     public boolean agregarCancion(Cancion pCancion){
-        if(!tieneCancion(pCancion)){
+        if(!tieneCancion(pCancion.getId())){
             return canciones.add(pCancion);
         }
         return false;
     }
 
+    /**
+     * Método usado para remover una canción de este repositorio
+     * @param pIdCancion int que hace referencia al id de la cancion que se desea remover
+     * @return true si la eliminacion es exitosa, false si la cancion no existe
+     */
     public boolean removerCancion(int pIdCancion){
         Optional<Cancion> cancionEncontrada = buscarCancion(pIdCancion);
 
@@ -101,6 +124,13 @@ public abstract class RepositorioCanciones {
         return false;
     }
 
+    /**
+     * Método usado para buscar una canción en este repositorio usando como filtro su id
+     * @param pIdCancion int que hace referencia al id de la cancion que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Cancion si se encuentra una coincidencia
+     * @see Optional
+     * @see Cancion
+     */
     public Optional<Cancion> buscarCancion(int pIdCancion){
         for (Cancion objCancion: canciones) {
             if(objCancion.getId() == pIdCancion){
@@ -110,9 +140,14 @@ public abstract class RepositorioCanciones {
         return Optional.empty();
     }
 
-    public boolean tieneCancion(Cancion pCancion){
+    /**
+     * Método usado para verificar si una canción pertenece a este repositorio
+     * @param pIdCancion int que define el id de la canción que se desea encontrar
+     * @return true si la cancion existe en este repo, false si no
+     */
+    public boolean tieneCancion(int pIdCancion){
         for (Cancion objCancion: canciones) {
-            if(objCancion.equals(pCancion)){
+            if(objCancion.getId() == pIdCancion){
                 return true;
             }
         }

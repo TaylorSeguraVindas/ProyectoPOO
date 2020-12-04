@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox minHeight="520.0" minWidth="920.0" prefHeight="520.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.admin.ControladorVentanaPrincipalAdmin">
+<VBox minHeight="520.0" minWidth="920.0" prefHeight="520.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.admin.ControladorVentanaPrincipalAdmin">
     <children>
         <HBox prefHeight="357.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
             <children>

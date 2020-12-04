@@ -37,11 +37,23 @@ public class Album extends RepositorioCanciones implements IComboBoxItem {
     }
 
     //Constructores
+    /**
+     * Método constructor por defecto
+     */
     public Album() {
         this.tipoRepo = TipoRepositorioCanciones.ALBUM;
         this.artistas = new ArrayList<>();
     }
 
+    /**
+     * Método constructor
+     * @param nombre String que define el nombre
+     * @param fechaCreacion LocalDate que define la fecha de creacion
+     * @param canciones Arraylist que define las canciones que pertenecen a este album
+     * @param fechaLanzamiento LocalDate que define la fecha de lanzamiento
+     * @param imagen String que define la ruta de la imagen
+     * @param artistas ArrayList que define los artistas que pertenecen a este album
+     */
     public Album(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, LocalDate fechaLanzamiento, String imagen, ArrayList<Artista> artistas) {
         super(nombre, fechaCreacion, canciones);
         this.tipoRepo = TipoRepositorioCanciones.ALBUM;
@@ -80,12 +92,12 @@ public class Album extends RepositorioCanciones implements IComboBoxItem {
         return Objects.hash(super.hashCode(), fechaLanzamiento, imagen, artistas);
     }
 
-    public boolean modificar(String pNombre, String pImagen){
-        this.nombre = pNombre;
-        this.imagen = pImagen;
-        return true;
-    }
-
+    /**
+     * Método usado para agregar un artista a este album
+     * @param artista instancia de la clase Artista que será almacenado
+     * @return true si la agregación es exitosa, false si el artista ya ha sido agregado
+     * @see Artista
+     */
     public boolean agregarArtista(Artista artista){
         if(!tieneArtista(artista)){
             artistas.add(artista);
@@ -93,6 +105,13 @@ public class Album extends RepositorioCanciones implements IComboBoxItem {
         }
         return false;
     }
+
+    /**
+     * Método usado para remover un artista de este album
+     * @param artista instancia de la clase Artista que se desea remover
+     * @return true si la eliminación es exitosa, false si el artista no existe
+     * @see Artista
+     */
     public boolean removerArtista(Artista artista){
         if(tieneArtista(artista)){
             artistas.remove(artista);
@@ -100,6 +119,12 @@ public class Album extends RepositorioCanciones implements IComboBoxItem {
         }
         return false;
     }
+
+    /**
+     * Método para verificar si un artista está siendo almacenado en este album
+     * @param artista instancia de la clase Artista de la que se desea verificar su existencia
+     * @return true si existe, false si no
+     */
     public boolean tieneArtista(Artista artista){
         for (Artista objArtista: artistas) {
             if(objArtista.equals(artista)){
@@ -108,9 +133,17 @@ public class Album extends RepositorioCanciones implements IComboBoxItem {
         }
         return false;
     }
-    public Optional<Artista> buscarArtista(int datoArtista){
+
+    /**
+     * Método usado para buscar un artista en los almacenados usando como filtro su id
+     * @param idArtista int que define el id del artista que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Artista si se encuentra una coincidencia
+     * @see Optional
+     * @see Artista
+     */
+    public Optional<Artista> buscarArtista(int idArtista){
         for (Artista objArtista: artistas) {
-            if(objArtista.getId() == datoArtista){
+            if(objArtista.getId() == idArtista){
                 return Optional.of(objArtista);
             }
         }

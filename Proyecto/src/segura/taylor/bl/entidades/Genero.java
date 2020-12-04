@@ -34,7 +34,17 @@ public class Genero implements IComboBoxItem {
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Genero(){}
+
+    /**
+     * Método constructor
+     * @param nombre String que define el nombre
+     * @param descripcion String que define la descripcion
+     */
     public Genero(String nombre, String descripcion) {
         this.id = 0;
         this.nombre = nombre;
@@ -64,12 +74,6 @@ public class Genero implements IComboBoxItem {
     @Override
     public int hashCode() {
         return Objects.hash(id, nombre, descripcion);
-    }
-
-    public boolean modificar(String pNombre, String pDesc){
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.descripcion = (!pDesc.equals("")) ? pDesc : this.descripcion;
-        return true;
     }
 
     @Override

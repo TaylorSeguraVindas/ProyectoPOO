@@ -35,7 +35,17 @@ public class Pais implements IComboBoxItem {
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Pais(){}
+
+    /**
+     * Método constructor
+     * @param nombrePais String que define el nombre
+     * @param descripcion String que define la descripcion
+     */
     public Pais(String nombrePais, String descripcion) {
         this.id = 0;
         this.nombre = nombrePais;
@@ -65,12 +75,6 @@ public class Pais implements IComboBoxItem {
     @Override
     public int hashCode() {
         return Objects.hash(id, nombre, descripcion);
-    }
-
-    public boolean modificar(String pNombre, String pDescripcion){
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.descripcion = (!pDescripcion.equals("")) ? pDescripcion : this.descripcion;
-        return true;
     }
 
     @Override

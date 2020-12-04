@@ -1,18 +1,21 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.interfaces.IComboBoxItem;
+
 import java.util.Objects;
 
-public class Genero {
+public class Genero implements IComboBoxItem {
     //Variables
-    private String id;
+    public static int idGeneros = 0;
+    private int id;
     private String nombre;
     private String descripcion;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -31,9 +34,19 @@ public class Genero {
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Genero(){}
-    public Genero(String id, String nombre, String descripcion) {
-        this.id = id;
+
+    /**
+     * Método constructor
+     * @param nombre String que define el nombre
+     * @param descripcion String que define la descripcion
+     */
+    public Genero(String nombre, String descripcion) {
+        this.id = 0;
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
@@ -63,9 +76,8 @@ public class Genero {
         return Objects.hash(id, nombre, descripcion);
     }
 
-    public boolean modificar(String pNombre, String pDesc){
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.descripcion = (!pDesc.equals("")) ? pDesc : this.descripcion;
-        return true;
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombre;
     }
 }

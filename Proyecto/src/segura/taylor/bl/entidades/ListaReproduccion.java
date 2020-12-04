@@ -1,22 +1,19 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoRepositorioCanciones;
+import segura.taylor.bl.interfaces.IComboBoxItem;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ListaReproduccion extends RepositorioCanciones {
+public class ListaReproduccion extends RepositorioCanciones implements IComboBoxItem {
     //Variables
-    private String idCreador;
     private double calificacion;
     private String imagen;
+    private String descripcion;
 
     //Propiedades
-    public String getIdCreador() {
-        return idCreador;
-    }
-    public void setIdCreador(String idCreador) {
-        this.idCreador = idCreador;
-    }
-
     public double getCalificacion() {
         return calificacion;
     }
@@ -31,25 +28,48 @@ public class ListaReproduccion extends RepositorioCanciones {
         this.imagen = imagen;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     //Constructores
-    public ListaReproduccion(){}
-    public ListaReproduccion(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones, String idCreador, double calificacion, String imagen) {
-        super(id, nombre, fechaCreacion, canciones);
-        this.idCreador = idCreador;
+
+    /**
+     * Método constructor por defecto
+     */
+    public ListaReproduccion(){
+        this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
+    }
+
+    /**
+     * Método constructor
+     * @param nombre String que define el nombre
+     * @param fechaCreacion LocalDate que define la fecha de creacion
+     * @param canciones ArrayList que define las canciones que pertenecen a esta lista de reproduccion
+     * @param calificacion int que define la calificacion promedio
+     * @param imagen String que define la ruta de la imagen
+     * @param descripcion Stirng que define la calificacion
+     */
+    public ListaReproduccion(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, double calificacion, String imagen, String descripcion) {
+        super(nombre, fechaCreacion, canciones);
+        this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
         this.calificacion = calificacion;
         this.imagen = imagen;
+        this.descripcion = descripcion;
     }
 
     //Metodos
-
     @Override
     public String toString() {
         return "ListaReproduccion{" +
-                "idCreador='" + idCreador + '\'' +
+                "ID='" + id + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", descripcion='" + descripcion + '\'' +
                 ", calificacion=" + calificacion +
                 ", imagen='" + imagen + '\'' +
-                ", id='" + id + '\'' +
-                ", nombre='" + nombre + '\'' +
                 ", fechaCreacion='" + fechaCreacion + '\'' +
                 ", canciones=" + canciones +
                 '}';
@@ -62,15 +82,20 @@ public class ListaReproduccion extends RepositorioCanciones {
         if (!super.equals(o)) return false;
         ListaReproduccion that = (ListaReproduccion) o;
         return Double.compare(that.calificacion, calificacion) == 0 &&
-                Objects.equals(idCreador, that.idCreador) &&
-                Objects.equals(imagen, that.imagen);
+                Objects.equals(imagen, that.imagen) &&
+                Objects.equals(descripcion, that.descripcion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), idCreador, calificacion, imagen);
+        return Objects.hash(super.hashCode(), calificacion, imagen, descripcion);
     }
 
+    /**
+     * Método usado par obtener una canción ubicada en X posicion
+     * @param posicion int que define el indice de la cancion que se desea obtener
+     * @return instancia de la clase Cancion que se encuentra en la posicion especificada
+     */
     public Cancion cargarCancion(int posicion){
         if(posicion < canciones.size()){
             return canciones.get(posicion);
@@ -78,9 +103,8 @@ public class ListaReproduccion extends RepositorioCanciones {
         return null;
     }
 
-    public boolean modificar(String pNombre, String pImagen){
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.imagen = (!pImagen.equals("")) ? pImagen : this.imagen;
-        return true;
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombre;
     }
 }

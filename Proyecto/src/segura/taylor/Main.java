@@ -1,11 +1,18 @@
 package segura.taylor;
 
-import segura.taylor.bl.logica.Controlador;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import segura.taylor.controlador.ControladorGeneral;
 
-public class Main {
+public class Main extends Application {
 
     public static void main(String[] args) {
-        Controlador controlador = new Controlador();
-        controlador.iniciarPrograma();
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        ControladorGeneral controladorGeneral = new ControladorGeneral();
+        controladorGeneral.iniciarPrograma(primaryStage);
     }
 }

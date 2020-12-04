@@ -1,22 +1,29 @@
 package segura.taylor.bl.entidades;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import segura.taylor.bl.enums.TipoRepositorioCanciones;
 
-public class RepositorioCanciones {
+import java.time.LocalDate;
+import java.util.*;
+
+public abstract class RepositorioCanciones {
     //Variables
-    protected String id;
+    public static int idRepoCanciones = 0;
+
+    protected int id;
+    protected TipoRepositorioCanciones tipoRepo;
     protected String nombre;
-    protected String fechaCreacion;
+    protected LocalDate fechaCreacion;
     protected ArrayList<Cancion> canciones;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
+
+    public TipoRepositorioCanciones getTipoRepo() {return this.tipoRepo; }
 
     public String getNombre() {
         return nombre;
@@ -25,33 +32,45 @@ public class RepositorioCanciones {
         this.nombre = nombre;
     }
 
-    public String getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
-    public void setFechaCreacion(String fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public ArrayList<Cancion> getCanciones() {
-        return canciones;
+    public List<Cancion> getCanciones() {
+        return Collections.unmodifiableList(this.canciones);
     }
     public void setCanciones(ArrayList<Cancion> canciones) {
         this.canciones = canciones;
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public RepositorioCanciones(){
         canciones = new ArrayList<>();
     }
-    public RepositorioCanciones(String id, String nombre, String fechaCreacion, ArrayList<Cancion> canciones) {
-        this.id = id;
+
+    /**
+     * Método constructor
+     * @param nombre String que define el nombre
+     * @param fechaCreacion LocalDate que define la fecha de creacion
+     * @param canciones ArrayList que define las canciones que pertenecen a este repositorio
+     * @see ArrayList
+     * @see Cancion
+     */
+    public RepositorioCanciones(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones) {
+        this.id = 0;
         this.nombre = nombre;
         this.fechaCreacion = fechaCreacion;
         this.canciones = canciones;
     }
 
     //Metodos
-
     @Override
     public String toString() {
         return "RepositorioCanciones{" +
@@ -78,34 +97,57 @@ public class RepositorioCanciones {
         return Objects.hash(id, nombre, fechaCreacion, canciones);
     }
 
+    /**
+     * Método usado para agregar una cancion a este repositorio
+     * @param pCancion instancia de la clase Cancion que se desea agregar
+     * @return true si la agregacion es exitosa, false si la cancion ya existe
+     * @see Cancion
+     */
     public boolean agregarCancion(Cancion pCancion){
-        if(!tieneCancion(pCancion)){
-            canciones.add(pCancion);
-            return true;
+        if(!tieneCancion(pCancion.getId())){
+            return canciones.add(pCancion);
         }
         return false;
     }
 
-    public boolean removerCancion(Cancion pCancion){
-        if(tieneCancion(pCancion)){
-            canciones.remove(pCancion);
-            return true;
+    /**
+     * Método usado para remover una canción de este repositorio
+     * @param pIdCancion int que hace referencia al id de la cancion que se desea remover
+     * @return true si la eliminacion es exitosa, false si la cancion no existe
+     */
+    public boolean removerCancion(int pIdCancion){
+        Optional<Cancion> cancionEncontrada = buscarCancion(pIdCancion);
+
+        if(cancionEncontrada.isPresent()){
+            return canciones.remove(cancionEncontrada.get());
         }
         return false;
     }
 
-    public Cancion buscarCancion(String dato){
+    /**
+     * Método usado para buscar una canción en este repositorio usando como filtro su id
+     * @param pIdCancion int que hace referencia al id de la cancion que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Cancion si se encuentra una coincidencia
+     * @see Optional
+     * @see Cancion
+     */
+    public Optional<Cancion> buscarCancion(int pIdCancion){
         for (Cancion objCancion: canciones) {
-            if(objCancion.getId().equals(dato) || objCancion.getNombre().equals(dato)){
-                return objCancion;
+            if(objCancion.getId() == pIdCancion){
+                return Optional.of(objCancion);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
-    public boolean tieneCancion(Cancion pCancion){
+    /**
+     * Método usado para verificar si una canción pertenece a este repositorio
+     * @param pIdCancion int que define el id de la canción que se desea encontrar
+     * @return true si la cancion existe en este repo, false si no
+     */
+    public boolean tieneCancion(int pIdCancion){
         for (Cancion objCancion: canciones) {
-            if(objCancion.equals(pCancion)){
+            if(objCancion.getId() == pIdCancion){
                 return true;
             }
         }

@@ -1,19 +1,22 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoUsuario;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Cliente extends Usuario{
     //Variables
-    private String fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private int edad;
-    private String pais;
+    private Pais pais;
     private Biblioteca biblioteca;
 
     //Propiedades
-    public String getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
-    public void setFechaNacimiento(String fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -24,10 +27,13 @@ public class Cliente extends Usuario{
         this.edad = edad;
     }
 
-    public String getPais() {
+    public String getNombrePais() {
+        return this.pais.getNombre();
+    }
+    public Pais getPais() {
         return pais;
     }
-    public void setPais(String pais) {
+    public void setPais(Pais pais) {
         this.pais = pais;
     }
 
@@ -39,12 +45,32 @@ public class Cliente extends Usuario{
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Cliente(){
-        this.tipoUsuario = TipoUsuario.Normal;
+        this.tipoUsuario = TipoUsuario.CLIENTE;
     }
-    public Cliente(String id, String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, String fechaNacimiento, int edad, String pais, Biblioteca biblioteca) {
-        super(id, correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
-        this.tipoUsuario = TipoUsuario.Normal;
+
+    /**
+     * Método constructor
+     * @param correo String que define el correo
+     * @param contrasenna String que define la contraseña
+     * @param nombre String que define el nombre
+     * @param apellidos String que define los apellidos
+     * @param imagenPerfil String que define la ruta de la imagen de perfil
+     * @param nombreUsuario String que define el nombre de usuario
+     * @param fechaNacimiento LocalDate que define la fecha de nacimiento
+     * @param edad int que define la edad
+     * @param pais instancia de la clase Pais que define el pais
+     * @param biblioteca instancia de la clase Biblioteca que define la biblioteca
+     * @see Pais
+     * @see Biblioteca
+     */
+    public Cliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaNacimiento, int edad, Pais pais, Biblioteca biblioteca) {
+        super(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
+        this.tipoUsuario = TipoUsuario.CLIENTE;
         this.fechaNacimiento = fechaNacimiento;
         this.edad = edad;
         this.pais = pais;

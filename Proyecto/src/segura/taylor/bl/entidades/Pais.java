@@ -1,18 +1,22 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.interfaces.IComboBoxItem;
+
 import java.util.Objects;
 
-public class Pais {
+public class Pais implements IComboBoxItem {
     //Variables
-    private String id;
+    public static int idPaises = 0;
+
+    private int id;
     private String nombre;
     private String descripcion;
 
     //Propiedades
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -31,9 +35,19 @@ public class Pais {
     }
 
     //Constructores
+
+    /**
+     * Método constructor por defecto
+     */
     public Pais(){}
-    public Pais(String id, String nombrePais, String descripcion) {
-        this.id = id;
+
+    /**
+     * Método constructor
+     * @param nombrePais String que define el nombre
+     * @param descripcion String que define la descripcion
+     */
+    public Pais(String nombrePais, String descripcion) {
+        this.id = 0;
         this.nombre = nombrePais;
         this.descripcion = descripcion;
     }
@@ -63,9 +77,8 @@ public class Pais {
         return Objects.hash(id, nombre, descripcion);
     }
 
-    public boolean modificar(String pNombre, String pDescripcion){
-        this.nombre = (!pNombre.equals("")) ? pNombre : this.nombre;
-        this.descripcion = (!pDescripcion.equals("")) ? pDescripcion : this.descripcion;
-        return true;
+    @Override
+    public String toComboBoxItem() {
+        return id + "-" + nombre;
     }
 }

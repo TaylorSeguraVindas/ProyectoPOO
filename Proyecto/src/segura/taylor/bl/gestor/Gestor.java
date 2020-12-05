@@ -93,7 +93,7 @@ public class Gestor {
     //*******General**********
     /**
      * Método usado para verificar la existencia del usuario administrador
-     * @return
+     * @return true si existe un admin, false si no
      */
     public boolean existeAdmin(){
         try {
@@ -146,9 +146,8 @@ public class Gestor {
      * @param nombreUsuario String que define el nombre de usuario
      * @param fechaCreacion LocalDate que define la fecha de creación del usuario
      * @return true si se logra crear, false si ocurre algún error
-     * @throws Exception
      */
-    public boolean crearUsuarioAdmin(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaCreacion) throws Exception {
+    public boolean crearUsuarioAdmin(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaCreacion) {
         //Si ya existe un admin no se puede sobreescribir
         if(existeAdmin()) return false;
 
@@ -169,9 +168,8 @@ public class Gestor {
      * @param edad int que define la edad
      * @param idPais int que define el id del pais en el que vive el usurio
      * @return true si el registro es éxitoso, false si ocurre algún error
-     * @throws Exception
      */
-    public boolean crearUsuarioCliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaNacimiento, int edad, int idPais) throws Exception {
+    public boolean crearUsuarioCliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaNacimiento, int edad, int idPais) {
         //Si no hay admin no se puede registrar usuarios.
         //if(usuarioDAO.findAll().size() == 0) return false;
         Biblioteca biblioteca = new Biblioteca();
@@ -201,7 +199,7 @@ public class Gestor {
      * @param pNombre String que define el nuevo nombre del usuario
      * @param pApellidos String que define los nuevos apellidos del usuario
      * @return true si la modificación es existosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se puede realizar la conexión con la DB o si el usuario no existe
      */
     public boolean modificarUsuario(int id, String pNombreUsuario, String pImagenPerfil, String pContrasenna, String pNombre, String pApellidos) throws Exception {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(id);
@@ -224,7 +222,7 @@ public class Gestor {
      * Método usado para eliminar un usuario
      * @param idUsuario int que define el id del usuario que se va a eliminar
      * @return true si la eliminación es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se puede realizar la conexion con la DB o si el usuario no existe
      */
     public boolean eliminarUsuario(int idUsuario) throws Exception {
         return usuarioDAO.delete(idUsuario);
@@ -272,9 +270,8 @@ public class Gestor {
      * @param fechaLanzamiento LocalDate que define la fecha de lanzamiento del album
      * @param imagen String que define la imagen del album
      * @return true si el registro es exitoso, false si ocurre algún error
-     * @throws Exception
      */
-    public boolean crearAlbum(String nombre, LocalDate fechaCreacion, LocalDate fechaLanzamiento, String imagen) throws Exception {
+    public boolean crearAlbum(String nombre, LocalDate fechaCreacion, LocalDate fechaLanzamiento, String imagen) {
         ArrayList<Cancion> canciones = new ArrayList<Cancion>();
         ArrayList<Artista> artistas = new ArrayList<Artista>();
 
@@ -288,7 +285,7 @@ public class Gestor {
      * @param pNombre String que define el nuevo nombre del album
      * @param pImagen String que define la nueva imagen del album
      * @return true si la modificacion es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se puede hacer la conexion con la DB o si el album no existe
      */
     public boolean modificarAlbum(int pId, String pNombre, String pImagen) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pId);
@@ -308,7 +305,7 @@ public class Gestor {
      * Método usado para eliminar un album
      * @param idAlbum int que define el id del album que se desea eliminar
      * @return true si la eliminacion es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se puede hacer la conexion con la DB o si el album no existe
      */
     public boolean eliminarAlbum(int idAlbum) throws Exception {
         return repoCancionesDAO.delete(idAlbum);
@@ -332,7 +329,7 @@ public class Gestor {
     /**
      * Método usado para buscar un album usando como filtro su id
      * @param pId int que define el id del album que se desea encontrar
-     * @return
+     * @return objeto de tipo Optiona que contiene una instancia de Album si se encuentra una coincidencia
      */
     public Optional<Album> buscarAlbumPorId(int pId){
         return Optional.of((Album) repoCancionesDAO.findByID(pId).get());
@@ -343,7 +340,7 @@ public class Gestor {
      * @param pIdAlbum int que define el id del album que se va a modificar
      * @param idCancion int que define el id de la canción que se desea incluir
      * @return true si la agregación es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el album o la cancion no existe
      */
     public boolean agregarCancionEnAlbum(int pIdAlbum, int idCancion) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
@@ -369,7 +366,7 @@ public class Gestor {
      * @param pIdAlbum int que define el id del album que se va a modificar
      * @param pIdCancion int que define el id de la canción que se desea remover
      * @return true si la eliminación es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el album o la cancion no existe
      */
     public boolean removerCancionDeAlbum(int pIdAlbum, int pIdCancion) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
@@ -389,7 +386,7 @@ public class Gestor {
      * @param pIdAlbum int que define el id del album que se va a modificar
      * @param pIdArtista int que define el id del artista que se desea incluir
      * @return true si la agregación es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el album o artista no existe
      */
     public boolean agregarArtistaEnAlbum(int pIdAlbum, int pIdArtista) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
@@ -413,7 +410,7 @@ public class Gestor {
      * @param pIdAlbum int que define el id del album que se va a modificar
      * @param pIdArtista int que define el id del artista que se desea remover
      * @return true si la eliminación es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el album o artista no existe
      */
     public boolean removerArtistaDeAlbum(int pIdAlbum, int pIdArtista) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
@@ -441,7 +438,7 @@ public class Gestor {
      * @param imagen String que define la imagen de la lista
      * @param descripcion String que define la descripción de la lista
      * @return true si el registro es exitoso, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si la lista de reproduccion ya existe
      */
     public boolean crearListaReproduccion(String nombre, LocalDate fechaCreacion, String imagen, String descripcion) throws Exception {
         ArrayList<Cancion> canciones = new ArrayList<>();   //Las listas de reproducción SIEMPRE se crea sin canciones por defecto
@@ -457,7 +454,7 @@ public class Gestor {
      * @param pImagen String que define la nueva ruta de la imagen de la lista
      * @param pDescripcion String que define la nueva descripcio de la lista
      * @return true si la modificación es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si la lista de reproduccion no existe
      */
     public boolean modificarListaReproduccion(int pIdLista, String pNombre, String pImagen, String pDescripcion) throws Exception {
         Optional<RepositorioCanciones> listaEncontrada = repoCancionesDAO.findByID(pIdLista);
@@ -478,7 +475,7 @@ public class Gestor {
      * Método usado para eliminar una lista de reproduccion
      * @param pIdLista int que define el id de la lista de reproduccion que se desea eliminar
      * @return true si la eliminación es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si nose puede conectar con la DB o si la lista de reproduccion no existe
      */
     public boolean eliminarListaReproduccion(int pIdLista) throws Exception {
         return repoCancionesDAO.delete(pIdLista);
@@ -505,7 +502,7 @@ public class Gestor {
      * @param pIdLista int que define el id de la lista que se va a modificar
      * @param pIdCancion int que define el id de la cancion que se va a incluir
      * @return true si la agregación es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se logra conectar con la DB o si la lista de reproduccion o cancion no existe
      */
     public boolean agregarCancionALista(int pIdLista, int pIdCancion) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdLista);
@@ -531,7 +528,7 @@ public class Gestor {
      * @param pIdLista int que define el id de la lista que se va a modificar
      * @param pIdCancion int que define el id de la cancion que se desea remover
      * @return true si la eliminacion es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se logra conectar con la DB o si la lista de reproduccion o cancion no existe
      */
     public boolean removerCancionDeLista(int pIdLista, int pIdCancion) throws Exception {
         Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdLista);
@@ -571,7 +568,7 @@ public class Gestor {
      * @param edad int que define la edad del artista
      * @param descripcion String que define la descripcion del artista
      * @return true si el registro es exitoso, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el artista ya existe
      */
     public boolean crearArtista(String nombre, String apellidos, String nombreArtistico, LocalDate fechaNacimiento, LocalDate fechaDefuncion, int idPaisNacimiento, int idGenero, int edad, String descripcion) throws Exception {
         Pais paisNacimiento = buscarPaisPorId(idPaisNacimiento).get();
@@ -590,7 +587,7 @@ public class Gestor {
      * @param pFechaDefuncion LocalDate que define la nueva fecha de defunción del artista
      * @param pDescripcion String que define la nueva descripcion del artista
      * @return true si la modificacion es exitosa, false si ocurre algún error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el artista no existe
      */
     public boolean modificarArtista(int pIdArtista, String pNombre, String pApellidos, String pNomArtistico, LocalDate pFechaDefuncion, String pDescripcion) throws Exception {
         Optional<Artista> artistaEncontrado = artistaDAO.findByID(pIdArtista);
@@ -613,7 +610,7 @@ public class Gestor {
      * Método usado para eliminar un artista
      * @param pIdArtista int que define el id del artista que se desea eliminar
      * @return true si la eliminacion es exitosa, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el artista no existe
      */
     public boolean eliminarArtista(int pIdArtista) throws Exception {
         return artistaDAO.delete(pIdArtista);
@@ -664,7 +661,7 @@ public class Gestor {
      * @param fechaLanzamiento LocalDate que define la fecha de lanzamiento de la cancion
      * @param precio double que define el precio de la cancion
      * @return true si el registro es exitoso, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si la cancion ya existe
      */
     public boolean crearCancion(String nombre, String recurso, double duracion, int idGenero, int idArtista, int idCompositor, LocalDate fechaLanzamiento, double precio) throws Exception {
         ArrayList<Calificacion> calificaciones = new ArrayList<>();
@@ -690,7 +687,7 @@ public class Gestor {
      * @param pNombre String que define el nuevo nombre de la cancion
      * @param pPrecio double que define el nuevo precio de la cancion
      * @return true si la modificacion es exitosa, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si la cancion no existe
      */
     public boolean modificarCancion(int pIdCancion, String pNombre, double pPrecio) throws Exception {
         Optional<Cancion> cancionEncontrada = cancionDAO.findByID(pIdCancion);
@@ -709,7 +706,7 @@ public class Gestor {
      * Método usado para eliminar una cancion
      * @param pIdCancion int que define el id de la cancion que se desea eliminar
      * @return true si la eliminacion es exitosa, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si la cancion no existe
      */
     public boolean eliminarCancion(int pIdCancion) throws Exception {
         return cancionDAO.delete(pIdCancion);
@@ -756,7 +753,7 @@ public class Gestor {
      * @param pIdCliente int que define el id del cliente dueño de la biblioteca
      * @param pIdCancion int que define el id de la cancion que se desea incluir
      * @return true si la agregacion es exitosa, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si la biblioteca o cancion no existe
      */
     public boolean agregarCancionABibliotecaUsuario(int pIdCliente, int pIdCancion) throws Exception {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
@@ -829,7 +826,7 @@ public class Gestor {
      * @param pIdCliente int que define el id del cliente dueño de la biblioteca
      * @param pIdCancion int que define el id de la cancion que se desea remover
      * @return true si la eliminacion es exitosa, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la Db o si la biblioteca o cancion no existe
      */
     public boolean removerCancionDeBibliotecaUsuario(int pIdCliente, int pIdCancion) throws Exception {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
@@ -861,7 +858,7 @@ public class Gestor {
      * @param fechaNacimiento LocalDate que define la fecha de nacimineto del compositor
      * @param edad int que define la edad del compositor
      * @return true si el registro es exitoso, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el compositor ya existe
      */
     public boolean crearCompositor(String nombre, String apellidos, int idPaisNacimiento, int idGenero, LocalDate fechaNacimiento, int edad) throws Exception {
         Pais paisNacimiento = buscarPaisPorId(idPaisNacimiento).get();
@@ -877,7 +874,7 @@ public class Gestor {
      * @param pNombre String que define el nuevo nombre del compositor
      * @param pApellidos String que define los nuevos apellidos del compositor
      * @return true si la modificacion es exitosa, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o el compositor no existe
      */
     public boolean modificarCompositor(int pIdCompositor, String pNombre, String pApellidos) throws Exception {
         Optional<Compositor> compositorEncontrado = compostorDAO.findByID(pIdCompositor);
@@ -897,7 +894,7 @@ public class Gestor {
      * Método usado para eliminar un compositor
      * @param pIdCompositor int que define el id del compositor que se desea eliminar
      * @return true si la eliminacion es exitosa, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la Db o si el compositor no existe
      */
     public boolean eliminarCompositor(int pIdCompositor) throws Exception {
         return compostorDAO.delete(pIdCompositor);
@@ -942,7 +939,7 @@ public class Gestor {
      * @param nombre String que define el nombre del genero
      * @param descripcion String que define la descripcion del genero
      * @return true si el registro es exitoso, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el genero ya existe
      */
     public boolean crearGenero(String nombre, String descripcion) throws Exception {
         Genero nuevoGenero = new Genero(nombre, descripcion);
@@ -955,7 +952,7 @@ public class Gestor {
      * @param pNombre String que define el nuevo nombre del genero
      * @param pDesc String que define la nueva descripcion del genero
      * @return true si la modificacion es exitosa, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el genero no existe
      */
     public boolean modificarGenero(int pIdGenero, String pNombre, String pDesc) throws Exception {
         Optional<Genero> generoEncontrado = generoDAO.findByID(pIdGenero);
@@ -975,7 +972,7 @@ public class Gestor {
      * Método usado para eliminar un genero
      * @param pIdGenero int que define el id del genero que se desea eliminar
      * @return true si la eliminacion es exitosa, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el genero no existe
      */
     public boolean eliminarGenero(int pIdGenero) throws Exception {
         return generoDAO.delete(pIdGenero);
@@ -1018,7 +1015,7 @@ public class Gestor {
      * @param nombrePais String que define el nombre del pais
      * @param descripcion String que define la descripcion del pais
      * @return true si el registro es exitoso, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la Db o si el pais ya existe
      */
     public boolean crearPais(String nombrePais, String descripcion) throws Exception {
         Pais nuevoPais = new Pais(nombrePais, descripcion);
@@ -1031,7 +1028,7 @@ public class Gestor {
      * @param pNombre String que define el nuevo nombre del pais
      * @param pDescripcion String que define la nueva descripcion del pais
      * @return true si el registro es exitoso, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la Db o si el pais no existe
      */
     public boolean modificarPais(int pIdPais, String pNombre, String pDescripcion) throws Exception {
         Optional<Pais> paisEncontrado = paisDAO.findByID(pIdPais);
@@ -1051,7 +1048,7 @@ public class Gestor {
      * Método usado para eliminar un pais
      * @param pIdPais int que define el id del pais que se desea eliminar
      * @return true si la eliminacion es exitosa, false si ocurre algun error
-     * @throws Exception
+     * @throws Exception si no se puede conectar con la DB o si el pais no existe
      */
     public boolean eliminarPais(int pIdPais) throws Exception {
         return paisDAO.delete(pIdPais);
@@ -1074,7 +1071,9 @@ public class Gestor {
     /**
      * Método usado para buscar un pais usando como filtro su id
      * @param pIdPais int que define el id del pais que se desea encontrar
-     * @return
+     * @return objeto de tipo Optional que contiene una instancia de Pais si se encuentra una coincidencia
+     * @see Optional
+     * @see Pais
      */
     public Optional<Pais> buscarPaisPorId(int pIdPais){
         try {

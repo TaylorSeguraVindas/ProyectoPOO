@@ -9,16 +9,29 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * La clase DAO se encarga de realizar la conexión, lectura y escritura en la base de datos
+ * @author Taylor Segura Vindas
+ * @version 1.0
+ */
 public class RepositorioCancionesDAO {
     private ArrayList<RepositorioCanciones> repoCanciones = new ArrayList<>();
 
     private Connection connection;
 
+    /**
+     * Método constructor
+     * @param connection instancia de la clase Connection que define la conexión con la DB
+     */
     public RepositorioCancionesDAO(Connection connection) {
         this.connection = connection;
     }
 
-    //Devuelve el id de la lista creada.
+    /**
+     * Este método se usa para escribir los datos de un nuevo repositorio de canciones en la base de datos
+     * @param nuevoRepositorioCanciones instancia de la clase RepositorioCanciones que se desea guardar
+     * @return el id del repositorio guardado, -1 si ocurre algún error
+     */
     public int save(RepositorioCanciones nuevoRepositorioCanciones) {
         String insert = "";
 
@@ -62,6 +75,12 @@ public class RepositorioCancionesDAO {
         return key;
     }
 
+    /**
+     * Este método se usa para sobreescribir los datos de un repositorio de canciones en la base de datos
+     * @param RepositorioCancionesActualizado instancia de la clase Repositorio con los cambios aplicados que se desean guardar
+     * @return true si la sobreescritura es correcta, false si ocurre algún error
+     * @throws Exception si no se puede conectar con la DB
+     */
     public boolean update(RepositorioCanciones RepositorioCancionesActualizado) throws Exception {
         int indiceRepositorioCanciones = -1;
         int cont = 0;
@@ -95,9 +114,19 @@ public class RepositorioCancionesDAO {
 
 
     //General
+    /**
+     * Este método se usa para obtener una lista con todos los repositorios de canciones guardados en la base de datos
+     * @return una lista con todos los repositorios de canciones guardados en la base de datos
+     */
     public List<RepositorioCanciones> findAll() {
         return Collections.unmodifiableList(repoCanciones);
     }
+
+    /**
+     * Este método se usa para buscar un repositorio de canciones usando como filtro su id
+     * @param id int que define el id del repositorio de canciones que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de la clase RepositorioCanciones si se encuentra una coincidencia
+     */
     public Optional<RepositorioCanciones> findByID(int id) {
         for (RepositorioCanciones RepositorioCanciones : repoCanciones) {
             if(RepositorioCanciones.getId() == id) {
@@ -110,6 +139,11 @@ public class RepositorioCancionesDAO {
 
 
     //Albunes
+    /**
+     * Este método se usa para obtener una lista con todos los albunes guardados en la base de datos
+     * @return una lista con todos los albunes guardados en la base de datos
+     * @throws SQLException si no se puede conectar con la DB
+     */
     public List<Album> findAlbunes() throws SQLException {
         Statement query = connection.createStatement();
         ResultSet result = query.executeQuery("SELECT * FROM albunes");
@@ -129,6 +163,12 @@ public class RepositorioCancionesDAO {
 
         return Collections.unmodifiableList(listaAlbunes);
     }
+    /**
+     * Este método se usa para buscar un album usando como filtro su id
+     * @param idAlbum int que define el id del album que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de la clase Album si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la DB
+     */
     public Optional<Album> findAlbumById(int idAlbum) throws SQLException {
         Statement query = connection.createStatement();
         ResultSet result = query.executeQuery("SELECT * FROM albunes WHERE idAlbum = " + idAlbum);
@@ -148,6 +188,11 @@ public class RepositorioCancionesDAO {
     }
 
     //Listas de reproducción
+    /**
+     * Este método se usa para obtener una lista con todas las listas de reproduccion guardadas en la base de datos
+     * @return una lista con todas las listas de reproduccion guardadas en la base de datos
+     * @throws SQLException si no se puede conectar con la DB
+     */
     public List<ListaReproduccion> findListasReproduccion() throws SQLException {
         Statement query = connection.createStatement();
         ResultSet result = query.executeQuery("SELECT * FROM listasreproduccion");
@@ -167,11 +212,21 @@ public class RepositorioCancionesDAO {
 
         return Collections.unmodifiableList(listaListasReproduccion);
     }
+    /**
+     * Este método se usa para buscar una lista de reproduccion usando como filtro su id
+     * @param idLista int que define el id de la lista de reproduccion que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de la clase ListaReproduccion si se encuentra una coincidencia
+     */
     public Optional<ListaReproduccion> findListaReproduccionById(int idLista) {
         return Optional.empty();
     }
 
     //Bibliotecas
+    /**
+     * Este método se usa para obtener una lista con todas las bibliotecas guardadas en la base de datos
+     * @return una lista con todas las bibliotecas guardadas en la base de datos
+     * @throws SQLException si no se puede conectar con la DB
+     */
     public List<Biblioteca> findBibliotecas() throws SQLException {
         Statement query = connection.createStatement();
         ResultSet result = query.executeQuery("SELECT * FROM bibliotecas");
@@ -189,6 +244,12 @@ public class RepositorioCancionesDAO {
 
         return Collections.unmodifiableList(listaBibliotecas);
     }
+    /**
+     * Este método se usa para buscar una biblioteca usando como filtro su id
+     * @param idBiblioteca int que define el id de la biblioteca que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de la clase Biblioteca si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la DB
+     */
     public Optional<Biblioteca> findBibliotecaByID(int idBiblioteca) throws SQLException {
         Statement query = connection.createStatement();
         ResultSet result = query.executeQuery(("SELECT * FROM bibliotecas WHERE idBiblioteca = " + idBiblioteca));

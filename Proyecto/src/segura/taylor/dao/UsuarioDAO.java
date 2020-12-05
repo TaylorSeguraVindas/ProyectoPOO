@@ -5,13 +5,16 @@ import segura.taylor.bl.entidades.Cliente;
 import segura.taylor.bl.entidades.Usuario;
 
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * La clase DAO se encarga de realizar la conexión, lectura y escritura en la base de datos
+ * @author Taylor Segura Vindas
+ * @version 1.0
+ */
 public class UsuarioDAO {
     private ArrayList<Usuario> usuarios = new ArrayList<>();
 
@@ -19,12 +22,21 @@ public class UsuarioDAO {
     private PaisDAO paisDAO;
     private RepositorioCancionesDAO repoCancionesDAO;
 
+    /**
+     * Método constructor
+     * @param connection instancia de la clase Connection que define la conexión con la DB
+     */
     public UsuarioDAO(Connection connection) {
         this.connection = connection;
         this.paisDAO = new PaisDAO(connection);
         this.repoCancionesDAO = new RepositorioCancionesDAO(connection);
     }
 
+    /**
+     * Este método se usa para escribir los datos de un nuevo usuario en la base de datos
+     * @param nuevoUsuario instancia de la clase Usuario que se desea guardar
+     * @return true si el registro es exitoso, false si ocurre algún error
+     */
     public boolean save(Usuario nuevoUsuario) {
         try {
             Statement query = connection.createStatement();
@@ -68,12 +80,18 @@ public class UsuarioDAO {
         return false;
     }
 
-    public boolean update(Usuario UsuarioActualizado) throws Exception {
+    /**
+     * Este método se usa para sobreescribir los datos de un usuario en la base de datos
+     * @param usuarioActualizado instancia de la clase Usuario con los cambios aplicados que se desean guardar
+     * @return true si la escritura es exitosa, false si ocurre algún error
+     * @throws Exception si no se puede conectar con la DB
+     */
+    public boolean update(Usuario usuarioActualizado) throws Exception {
         int indiceUsuario = -1;
         int cont = 0;
 
         for (Usuario Usuario : usuarios) {
-            if(Usuario.getId() == UsuarioActualizado.getId()) {
+            if(Usuario.getId() == usuarioActualizado.getId()) {
                 indiceUsuario = cont;
                 break;
             }
@@ -82,13 +100,19 @@ public class UsuarioDAO {
         }
 
         if(indiceUsuario != -1) {
-            usuarios.set(indiceUsuario, UsuarioActualizado);
+            usuarios.set(indiceUsuario, usuarioActualizado);
             return true;
         }
 
         throw new Exception("El Usuario que se desea actualizar no existe");
     }
 
+    /**
+     * Este método se usa para eliminar un usuario de la base de datos
+     * @param idUsuario int que define el id del usuario que se desea eliminar
+     * @return true si la eliminación es exitosa, false si ocurre algún error
+     * @throws Exception si no se puede conectar con la DB
+     */
     public boolean delete(int idUsuario) throws Exception {
         Optional<Usuario> UsuarioEncontrado = findByID(idUsuario);
 
@@ -100,6 +124,11 @@ public class UsuarioDAO {
         throw new Exception("El Usuario que se desea eliminar no existe");
     }
 
+    /**
+     * Este método se usa para obtener una lista con todos los usuarios guardados en la base de datos
+     * @return una lista con todos los usuarios guardados
+     * @throws SQLException si no se puede conectar con la DB
+     */
     public List<Usuario> findAll() throws SQLException {
         Statement query = connection.createStatement();
         ResultSet result = query.executeQuery("SELECT * FROM usuario_admin");
@@ -143,6 +172,13 @@ public class UsuarioDAO {
         return Collections.unmodifiableList(listaUsuarios);
     }
 
+    /**
+     * Este método se usa para buscar un usuario usando como filtro su id
+     * @param id int que define el id del usuario que se desea encontrar
+     * @return un objeto de tipo Optional que contiene una instancia de Usuario si se encuentra una coincidencia
+     * @see Optional
+     * @see Usuario
+     */
     public Optional<Usuario> findByID(int id) {
         for (Usuario Usuario : usuarios) {
             if(Usuario.getId() == id) {
@@ -153,6 +189,13 @@ public class UsuarioDAO {
         return Optional.empty();
     }
 
+    /**
+     * Este método se usa para buscar un usuario usando como filtro su id
+     * @param pCorreo String que define el correo del usuario que se desea encontrar
+     * @return un objeto de tipo Optional que contiene una instancia de Usuario si se encuentra una coincidencia
+     * @see Optional
+     * @see Usuario
+     */
     public Optional<Usuario> findByEmail(String pCorreo) {
         for (Usuario Usuario : usuarios) {
             if(Usuario.getCorreo().equals(pCorreo)) {

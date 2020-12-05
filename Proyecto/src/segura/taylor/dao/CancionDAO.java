@@ -9,6 +9,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * La clase DAO se encarga de realizar la conexión, lectura y escritura en la base de datos
+ * @author Taylor Segura Vindas
+ * @version 1.0
+ */
 public class CancionDAO {
     private ArrayList<Cancion> canciones = new ArrayList<>();
 
@@ -17,6 +22,10 @@ public class CancionDAO {
     private ArtistaDAO artistaDAO;
     private CompositorDAO compositorDAO;
 
+    /**
+     * Método constructor
+     * @param connection instancia de la clase Connection que define la conexión con la DB
+     */
     public CancionDAO(Connection connection) {
         this.connection = connection;
         this.generoDAO = new GeneroDAO(connection);
@@ -24,6 +33,12 @@ public class CancionDAO {
         this.compositorDAO = new CompositorDAO(connection);
     }
 
+    /**
+     * Este método se usa para escribir los datos de una nueva cancion en la base de datos
+     * @param nuevaCancion instancia de la clase Cancion que se desea guardar
+     * @return true si el registro es exitoso, false si ocurre algún error
+     * @throws Exception si no se puede conectar con la DB
+     */
     public boolean save(Cancion nuevaCancion) throws Exception {
         try {
             Statement query = connection.createStatement();
@@ -48,12 +63,18 @@ public class CancionDAO {
         return false;
     }
 
-    public boolean update(Cancion CancionActualizado) throws Exception {
+    /**
+     * Este método se usa para sobreescribir los datos de una cancion en la base de datos
+     * @param cancionActualizada instancia de la clase Compositor con los cambios aplicados que se desean guardar
+     * @return true si la escritura es exitosa, false si ocurre algún error
+     * @throws Exception si no se puede conectar con la DB
+     */
+    public boolean update(Cancion cancionActualizada) throws Exception {
         int indiceCancion = -1;
         int cont = 0;
 
         for (Cancion Cancion : canciones) {
-            if(Cancion.getId() == CancionActualizado.getId()) {
+            if(Cancion.getId() == cancionActualizada.getId()) {
                 indiceCancion = cont;
                 break;
             }
@@ -62,13 +83,19 @@ public class CancionDAO {
         }
 
         if(indiceCancion != -1) {
-            canciones.set(indiceCancion, CancionActualizado);
+            canciones.set(indiceCancion, cancionActualizada);
             return true;
         }
 
         throw new Exception("La cancion que se desea actualizar no existe");
     }
 
+    /**
+     * Este método se usa para eliminar una cancion de la base de datos
+     * @param idCancion int que define el id de la cancion que se desea eliminar
+     * @return true si la eliminación es exitosa, false si ocurre algún error
+     * @throws Exception si no se puede conectar con la DB
+     */
     public boolean delete(int idCancion) throws Exception {
         Optional<Cancion> CancionEncontrado = findByID(idCancion);
 
@@ -80,6 +107,11 @@ public class CancionDAO {
         throw new Exception("La cancion que se desea eliminar no existe");
     }
 
+    /**
+     * Este método se usa para obtener una lista con todas las canciones guardadas en la base de datos
+     * @return una lista con todas las canciones guardadas
+     * @throws SQLException si no se puede conectar con la DB
+     */
     public List<Cancion> findAll() throws SQLException {
         Statement query = connection.createStatement();
         ResultSet result = query.executeQuery("SELECT * FROM canciones");
@@ -108,6 +140,14 @@ public class CancionDAO {
         return Collections.unmodifiableList(listaCanciones);
     }
 
+    /**
+     * Este método se usa para buscar una cancion usando como filtro su id
+     * @param id int que define el id de la cancion que se desea encontrar
+     * @return un objeto de tipo Optional que contiene una instancia de Cancion si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la DB
+     * @see Optional
+     * @see Cancion
+     */
     public Optional<Cancion> findByID(int id) throws SQLException {
         Statement query = connection.createStatement();
         ResultSet result = query.executeQuery("SELECT * FROM canciones WHERE idCancion = " + id);

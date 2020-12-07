@@ -63,7 +63,6 @@ public class PaisDAO {
             update += "descripcion = '" + paisActualizado.getDescripcion() + "'";
             update += " WHERE idPais = " + paisActualizado.getId();
 
-            System.out.println("Ejecuto query: " + update);
             query.execute(update);
             return true;
         } catch (Exception e){

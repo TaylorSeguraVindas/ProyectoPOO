@@ -57,24 +57,19 @@ public class GeneroDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean update(Genero generoActualizado) throws Exception {
-        int indiceGenero = -1;
-        int cont = 0;
+        try {
+            Statement query = connection.createStatement();
+            String update = "UPDATE generos ";
+            update += "SET nombre = '" + generoActualizado.getNombre() + "',";
+            update += "descripcion = '" + generoActualizado.getDescripcion() + "'";
+            update += " WHERE idGenero = " + generoActualizado.getId();
 
-        for (Genero Genero : generos) {
-            if(Genero.getId() == generoActualizado.getId()) {
-                indiceGenero = cont;
-                break;
-            }
-
-            cont++;
-        }
-
-        if(indiceGenero != -1) {
-            generos.set(indiceGenero, generoActualizado);
+            query.execute(update);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("El Genero que se desea actualizar no existe");
+        return false;
     }
 
     /**
@@ -84,14 +79,17 @@ public class GeneroDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean delete(int idGenero) throws Exception {
-        Optional<Genero> GeneroEncontrado = findByID(idGenero);
+        try {
+            Statement query = connection.createStatement();
+            String insert = "DELETE FROM generos WHERE idGenero = " + idGenero;
 
-        if(GeneroEncontrado.isPresent()) {
-            generos.remove(GeneroEncontrado.get());
+            query.execute(insert);
             return true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        throw new Exception("El Genero que se desea eliminar no existe");
+        return false;
     }
 
     /**

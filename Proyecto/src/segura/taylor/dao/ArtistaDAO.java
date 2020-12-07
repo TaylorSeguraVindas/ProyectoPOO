@@ -19,6 +19,7 @@ public class ArtistaDAO {
     private Connection connection;
     private PaisDAO paisDAO;
     private GeneroDAO generoDAO;
+    private ArtistasAlbumDAO artistasAlbumDAO;
 
     /**
      * Método constructor
@@ -28,6 +29,7 @@ public class ArtistaDAO {
         this.connection = connection;
         this.paisDAO = new PaisDAO(connection);
         this.generoDAO = new GeneroDAO(connection);
+        this.artistasAlbumDAO = new ArtistasAlbumDAO(connection);
     }
 
     /**
@@ -170,5 +172,40 @@ public class ArtistaDAO {
         }
 
         return Optional.empty();
+    }
+
+    public List<Artista> findArtistasAlbum(int idAlbum) throws SQLException {
+        String idArtistas = artistasAlbumDAO.getIdArtistasAlbum(idAlbum);
+
+        if(idArtistas == "") {  //No hay artistas
+            return new ArrayList<>();
+        }
+
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM artistas WHERE idArtista IN (" + idArtistas + ")");
+
+        ArrayList<Artista> listaArtistas = new ArrayList<>();
+
+        while (result.next()) {
+            Artista artistaLeido = new Artista();
+            artistaLeido.setId(result.getInt("idArtista"));
+            artistaLeido.setNombre(result.getString("nombre"));
+            artistaLeido.setApellidos(result.getString("apellidos"));
+            artistaLeido.setNombreArtistico(result.getString("nombreArtistico"));
+            artistaLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
+
+            //Nulleable
+            Date fechaDefuncion = result.getDate("fechaDefuncion");
+            artistaLeido.setFechaDefuncion((fechaDefuncion != null) ? fechaDefuncion.toLocalDate() : null);
+
+            artistaLeido.setDescripcion(result.getString("descripcion"));
+
+            artistaLeido.setPaisNacimiento(paisDAO.findByID(result.getInt("idPais")).get());
+            artistaLeido.setGenero(generoDAO.findByID(result.getInt("idGenero")).get());
+
+            listaArtistas.add(artistaLeido);
+        }
+
+        return Collections.unmodifiableList(listaArtistas);
     }
 }

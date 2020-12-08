@@ -111,7 +111,7 @@ public class RepositorioCancionesDAO {
         return false;
     }
     public boolean delete(int idRepositorioCanciones) throws SQLException {
-        RepositorioCanciones repositorioCancionesEncontrado = findByID(idRepositorioCanciones);
+        RepositorioCanciones repositorioCancionesEncontrado = findByID(idRepositorioCanciones).get();
 
         if(repositorioCancionesEncontrado != null) {
             String delete = "";
@@ -152,20 +152,20 @@ public class RepositorioCancionesDAO {
      * @param idRepo int que define el id del repositorio de canciones que se desea encontrar
      * @return objeto de tipo Optional que contiene una instancia de la clase RepositorioCanciones si se encuentra una coincidencia
      */
-    public RepositorioCanciones findByID(int idRepo) throws SQLException {
+    public Optional<RepositorioCanciones> findByID(int idRepo) throws SQLException {
         Optional<Album> albumEncontrado = findAlbumById(idRepo);
         if(albumEncontrado.isPresent()) {
-            return albumEncontrado.get();
+            return Optional.of(albumEncontrado.get());
         }
 
         Optional<ListaReproduccion> listaEncontrada = findListaReproduccionById(idRepo);
         if(listaEncontrada.isPresent()) {
-            return listaEncontrada.get();
+            return Optional.of(listaEncontrada.get());
         }
 
         Optional<Biblioteca> bibliotecaEncontrada = findBibliotecaByID(idRepo);
         if(bibliotecaEncontrada.isPresent()) {
-            return bibliotecaEncontrada.get();
+            return Optional.of(bibliotecaEncontrada.get());
         }
 
         return null;

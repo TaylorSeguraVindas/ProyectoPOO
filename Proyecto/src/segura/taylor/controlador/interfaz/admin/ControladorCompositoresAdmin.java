@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import segura.taylor.bl.entidades.Compositor;
+import segura.taylor.bl.entidades.Genero;
 import segura.taylor.bl.entidades.Pais;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.compositor.ControladorRegistroCompositor;
@@ -127,6 +128,7 @@ public class ControladorCompositoresAdmin {
             TextField txtNombre = (TextField) root.lookup("#txtNombre");
             TextField txtApellidos = (TextField) root.lookup("#txtApellidos");
             ComboBox txtPais = (ComboBox) root.lookup("#txtPais");
+            ComboBox txtGenero = (ComboBox) root.lookup("#txtGenero");
             DatePicker txtFechaNacimiento = (DatePicker) root.lookup("#txtFechaNacimiento");
 
             //Actualizar campos
@@ -135,14 +137,18 @@ public class ControladorCompositoresAdmin {
 
             Pais paisCompositor = compositorSeleccionado.getPaisNacimiento();
             if(paisCompositor != null) {
-                txtPais.setValue(paisCompositor.getNombre());
+                txtPais.setValue(paisCompositor.toComboBoxItem());
             }
 
+            Genero generoCompositor = compositorSeleccionado.getGenero();
+            if(generoCompositor != null) {
+                txtGenero.setValue(generoCompositor.toComboBoxItem());
+            }
             txtFechaNacimiento.setValue(compositorSeleccionado.getFechaNacimiento());
 
             //Desactivar campos inmodificables
             txtPais.setDisable(true);
-            txtFechaNacimiento.setDisable(true);
+            txtGenero.setDisable(true);
 
             Scene escena = new Scene(root, 580, 440);
 

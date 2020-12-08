@@ -60,24 +60,19 @@ public class CompositorDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean update(Compositor compositorActualizado) throws Exception {
-        int indiceCompositor = -1;
-        int cont = 0;
+        try {
+            Statement query = connection.createStatement();
+            String update = "UPDATE compositores ";
+            update += "SET nombre = '" + compositorActualizado.getNombre() + "',";
+            update += "apellidos = '" + compositorActualizado.getApellidos() + "'";
+            update += " WHERE idCompositor = " + compositorActualizado.getId();
 
-        for (Compositor Compositor : compositores) {
-            if(Compositor.getId() == compositorActualizado.getId()) {
-                indiceCompositor = cont;
-                break;
-            }
-
-            cont++;
-        }
-
-        if(indiceCompositor != -1) {
-            compositores.set(indiceCompositor, compositorActualizado);
+            query.execute(update);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("El Compositor que se desea actualizar no existe");
+        return false;
     }
 
     /**
@@ -87,14 +82,16 @@ public class CompositorDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean delete(int idCompositor) throws Exception {
-        Optional<Compositor> CompositorEncontrado = findByID(idCompositor);
+        try {
+            Statement query = connection.createStatement();
+            String insert = "DELETE FROM compositores WHERE idCompositor = " + idCompositor;
 
-        if(CompositorEncontrado.isPresent()) {
-            compositores.remove(CompositorEncontrado.get());
+            query.execute(insert);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("El Compositor que se desea eliminar no existe");
+        return false;
     }
 
     /**

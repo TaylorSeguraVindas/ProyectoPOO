@@ -333,7 +333,7 @@ public class Gestor {
      * @return objeto de tipo Optiona que contiene una instancia de Album si se encuentra una coincidencia
      */
     public Optional<Album> buscarAlbumPorId(int pId) throws SQLException {
-        return Optional.of((Album) repoCancionesDAO.findByID(pId));
+        return repoCancionesDAO.findAlbumById(pId);
     }
 
     /**
@@ -552,7 +552,7 @@ public class Gestor {
      * @see ListaReproduccion
      */
     public Optional<ListaReproduccion> buscarListaReproduccionPorId(int pIdLista) throws SQLException {
-        return Optional.of((ListaReproduccion) repoCancionesDAO.findByID(pIdLista));
+        return repoCancionesDAO.findListaReproduccionById(pIdLista);
     }
 
 

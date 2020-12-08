@@ -46,8 +46,8 @@ public class ArtistaDAO {
             insert += nuevoArtista.getApellidos() + "','";
             insert += nuevoArtista.getNombreArtistico() + "','";
 
-            insert += Date.valueOf(nuevoArtista.getFechaNacimiento()) + "','";
-            insert += (nuevoArtista.getFechaNacimiento() != null) ? Date.valueOf(nuevoArtista.getFechaNacimiento()) + "','" : null;
+            insert += Date.valueOf(nuevoArtista.getFechaNacimiento()) + "',";
+            insert += (nuevoArtista.getFechaDefuncion() != null) ? "'" + Date.valueOf(nuevoArtista.getFechaDefuncion()) + "','" : null + ",'";
             insert += nuevoArtista.getDescripcion() + "',";
 
             insert += nuevoArtista.getPaisNacimiento().getId() + ",";
@@ -68,24 +68,23 @@ public class ArtistaDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean update(Artista artistaActualizado) throws Exception {
-        int indiceArtista = -1;
-        int cont = 0;
+        try {
+            Statement query = connection.createStatement();
+            String update = "UPDATE artistas ";
+            update += "SET nombre = '" + artistaActualizado.getNombre() + "',";
+            update += "apellidos = '" + artistaActualizado.getApellidos() + "',";
+            update += "nombreArtistico = '" + artistaActualizado.getNombreArtistico() + "',";
+            update += "fechaDefuncion = " + ((artistaActualizado.getFechaDefuncion() != null) ? "'" + Date.valueOf(artistaActualizado.getFechaDefuncion()) + "'," : null + ",");
+            update += "descripcion = '" + artistaActualizado.getDescripcion() + "'";
+            update += " WHERE idArtista = " + artistaActualizado.getId();
 
-        for (Artista artista : artistas) {
-            if(artista.getId() == artistaActualizado.getId()) {
-                indiceArtista = cont;
-                break;
-            }
-
-            cont++;
-        }
-
-        if(indiceArtista != -1) {
-            artistas.set(indiceArtista, artistaActualizado);
+            System.out.println("Ejecuto query: " + update);
+            query.execute(update);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("El artista que se desea actualizar no existe");
+        return false;
     }
 
     /**
@@ -95,14 +94,16 @@ public class ArtistaDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean delete(int idArtista) throws Exception {
-        Optional<Artista> artistaEncontrado = findByID(idArtista);
+        try {
+            Statement query = connection.createStatement();
+            String delete = "DELETE FROM artistas WHERE idArtista = " + idArtista;
 
-        if(artistaEncontrado.isPresent()) {
-            artistas.remove(artistaEncontrado.get());
+            query.execute(delete);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("El artista que se desea eliminar no existe");
+        return false;
     }
 
     /**

@@ -82,34 +82,59 @@ public class RepositorioCancionesDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean update(RepositorioCanciones RepositorioCancionesActualizado) throws Exception {
-        int indiceRepositorioCanciones = -1;
-        int cont = 0;
+        String update = "";
 
-        for (RepositorioCanciones RepositorioCanciones : repoCanciones) {
-            if(RepositorioCanciones.getId() == RepositorioCancionesActualizado.getId()) {
-                indiceRepositorioCanciones = cont;
-                break;
+        if (RepositorioCancionesActualizado.getTipoRepo().equals(TipoRepositorioCanciones.ALBUM)) {
+            Album nuevoAlbum = (Album) RepositorioCancionesActualizado;
+            update = "UPDATE albunes ";
+            update += "SET nombre = '" + nuevoAlbum.getNombre() + "',";
+            update += "imagen = '" + nuevoAlbum.getImagen() + "'";
+            update += " WHERE idAlbum = " + nuevoAlbum.getId();
+
+        } else if (RepositorioCancionesActualizado.getTipoRepo().equals(TipoRepositorioCanciones.LISTA_REPRODUCCION)) {
+            ListaReproduccion nuevaListaReproduccion = (ListaReproduccion) RepositorioCancionesActualizado;
+            update = "UPDATE listasreproduccion ";
+            update += "SET nombre = '" + nuevaListaReproduccion.getNombre() + "',";
+            update += "descripcion = '" + nuevaListaReproduccion.getDescripcion() + "',";
+            update += "imagen = '" + nuevaListaReproduccion.getImagen() + "'";
+            update += " WHERE idListaReproduccion = " + nuevaListaReproduccion.getId();
+        }
+
+        try {
+            Statement query = connection.createStatement();
+            query.execute(update);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    public boolean delete(int idRepositorioCanciones) throws SQLException {
+        RepositorioCanciones repositorioCancionesEncontrado = findByID(idRepositorioCanciones);
+
+        if(repositorioCancionesEncontrado != null) {
+            String delete = "";
+            RepositorioCanciones repoEliminar = repositorioCancionesEncontrado;
+
+            if(repoEliminar.getTipoRepo().equals(TipoRepositorioCanciones.ALBUM)) {
+                delete = "DELETE FROM albunes WHERE idAlbum = " + repoEliminar.getId();
+            } else if(repoEliminar.getTipoRepo().equals(TipoRepositorioCanciones.BIBLIOTECA)) {
+                delete = "DELETE FROM bibliotecas WHERE idBiblioteca = " + repoEliminar.getId();
+            } else if(repoEliminar.getTipoRepo().equals(TipoRepositorioCanciones.LISTA_REPRODUCCION)) {
+                delete = "DELETE FROM listasreproduccion WHERE idListaReproduccion = " + repoEliminar.getId();
             }
 
-            cont++;
+            try {
+                Statement query = connection.createStatement();
+                query.execute(delete);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-        if(indiceRepositorioCanciones != -1) {
-            repoCanciones.set(indiceRepositorioCanciones, RepositorioCancionesActualizado);
-            return true;
-        }
-
-        throw new Exception("El Repositorio de Canciones que se desea actualizar no existe");
-    }
-    public boolean delete(int idRepositorioCanciones) throws Exception {
-        Optional<RepositorioCanciones> RepositorioCancionesEncontrado = findByID(idRepositorioCanciones);
-
-        if(RepositorioCancionesEncontrado.isPresent()) {
-            repoCanciones.remove(RepositorioCancionesEncontrado.get());
-            return true;
-        }
-
-        throw new Exception("El Repositorio de Canciones que se desea eliminar no existe");
+        return false;
     }
 
 
@@ -124,17 +149,26 @@ public class RepositorioCancionesDAO {
 
     /**
      * Este método se usa para buscar un repositorio de canciones usando como filtro su id
-     * @param id int que define el id del repositorio de canciones que se desea encontrar
+     * @param idRepo int que define el id del repositorio de canciones que se desea encontrar
      * @return objeto de tipo Optional que contiene una instancia de la clase RepositorioCanciones si se encuentra una coincidencia
      */
-    public Optional<RepositorioCanciones> findByID(int id) {
-        for (RepositorioCanciones RepositorioCanciones : repoCanciones) {
-            if(RepositorioCanciones.getId() == id) {
-                return Optional.of(RepositorioCanciones);
-            }
+    public RepositorioCanciones findByID(int idRepo) throws SQLException {
+        Optional<Album> albumEncontrado = findAlbumById(idRepo);
+        if(albumEncontrado.isPresent()) {
+            return albumEncontrado.get();
         }
 
-        return Optional.empty();
+        Optional<ListaReproduccion> listaEncontrada = findListaReproduccionById(idRepo);
+        if(listaEncontrada.isPresent()) {
+            return listaEncontrada.get();
+        }
+
+        Optional<Biblioteca> bibliotecaEncontrada = findBibliotecaByID(idRepo);
+        if(bibliotecaEncontrada.isPresent()) {
+            return bibliotecaEncontrada.get();
+        }
+
+        return null;
     }
 
 
@@ -217,7 +251,21 @@ public class RepositorioCancionesDAO {
      * @param idLista int que define el id de la lista de reproduccion que se desea encontrar
      * @return objeto de tipo Optional que contiene una instancia de la clase ListaReproduccion si se encuentra una coincidencia
      */
-    public Optional<ListaReproduccion> findListaReproduccionById(int idLista) {
+    public Optional<ListaReproduccion> findListaReproduccionById(int idLista) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery(("SELECT * FROM listasreproduccion WHERE idListaReproduccion = " + idLista));
+
+        while (result.next()) {
+            ListaReproduccion listaReproduccionLeida = new ListaReproduccion();
+            listaReproduccionLeida.setId(result.getInt("idListaReproduccion"));
+            listaReproduccionLeida.setNombre(result.getString("nombre"));
+            listaReproduccionLeida.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
+            listaReproduccionLeida.setImagen(result.getString("imagen"));
+            listaReproduccionLeida.setDescripcion(result.getString("descripcion"));
+
+            return Optional.of(listaReproduccionLeida);
+        }
+
         return Optional.empty();
     }
 

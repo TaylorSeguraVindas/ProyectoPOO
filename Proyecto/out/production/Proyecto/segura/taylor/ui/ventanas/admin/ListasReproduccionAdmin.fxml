@@ -28,8 +28,8 @@
                                 <HBox alignment="TOP_RIGHT" minHeight="32.0" prefWidth="640.0" spacing="10.0">
                                     <children>
                                         <Button fx:id="btnAgregarListaReproduccion" mnemonicParsing="false" onAction="#agregarListaReproduccion" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
-                                        <Button fx:id="btnModificarListaReproduccion" disable="true" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarListaReproduccion" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
-                                        <Button fx:id="btnEliminarListaReproduccion" disable="true" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarListaReproduccion" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
+                                        <Button fx:id="btnModificarListaReproduccion" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarListaReproduccion" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
+                                        <Button fx:id="btnEliminarListaReproduccion" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarListaReproduccion" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
                                     </children>
                                     <VBox.margin>
                                         <Insets />

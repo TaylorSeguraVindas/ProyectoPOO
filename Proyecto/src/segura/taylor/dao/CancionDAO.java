@@ -78,24 +78,19 @@ public class CancionDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean update(Cancion cancionActualizada) throws Exception {
-        int indiceCancion = -1;
-        int cont = 0;
+        try {
+            Statement query = connection.createStatement();
+            String update = "UPDATE canciones ";
+            update += "SET nombre = '" + cancionActualizada.getNombre() + "',";
+            update += "precio = " + cancionActualizada.getPrecio() + "";
+            update += " WHERE idCancion = " + cancionActualizada.getId();
 
-        for (Cancion Cancion : canciones) {
-            if(Cancion.getId() == cancionActualizada.getId()) {
-                indiceCancion = cont;
-                break;
-            }
-
-            cont++;
-        }
-
-        if(indiceCancion != -1) {
-            canciones.set(indiceCancion, cancionActualizada);
+            query.execute(update);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("La cancion que se desea actualizar no existe");
+        return false;
     }
 
     /**
@@ -105,14 +100,16 @@ public class CancionDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean delete(int idCancion) throws Exception {
-        Optional<Cancion> CancionEncontrado = findByID(idCancion);
+        try {
+            Statement query = connection.createStatement();
+            String insert = "DELETE FROM canciones WHERE idCancion = " + idCancion;
 
-        if(CancionEncontrado.isPresent()) {
-            canciones.remove(CancionEncontrado.get());
+            query.execute(insert);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("La cancion que se desea eliminar no existe");
+        return false;
     }
 
     /**
@@ -183,7 +180,7 @@ public class CancionDAO {
     }
 
 
-    public List<Cancion> findCancionesAlbum(int idRepo, TipoRepositorioCanciones tipoRepo) throws SQLException {
+    public List<Cancion> findCancionesRepo(int idRepo, TipoRepositorioCanciones tipoRepo) throws SQLException {
         String idCanciones = "";
 
         if(TipoRepositorioCanciones.ALBUM.equals(tipoRepo)) {

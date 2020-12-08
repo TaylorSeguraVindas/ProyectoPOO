@@ -113,7 +113,7 @@ public class ControladorCancionesAdmin {
 
             if (cancionSeleccionada == null) {
                 AlertDialog alertDialog = new AlertDialog();
-                alertDialog.mostrar("Error", "No hay ningún Cancion seleccionado");
+                alertDialog.mostrar("Error", "No hay ninguna Cancion seleccionada");
                 return;
             }
 
@@ -192,7 +192,7 @@ public class ControladorCancionesAdmin {
 
             if (CancionSeleccionado == null) {
                 AlertDialog alertDialog = new AlertDialog();
-                alertDialog.mostrar("Error", "No hay ningún Cancion seleccionado");
+                alertDialog.mostrar("Error", "No hay ninguna Cancion seleccionada");
                 return;
             }
 
@@ -201,11 +201,11 @@ public class ControladorCancionesAdmin {
                 resultado = ControladorGeneral.instancia.getGestor().eliminarCancion(idCancion);
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
-                    alertDialog.mostrar("Exito", "Cancion eliminado correctamente");
+                    alertDialog.mostrar("Exito", "Cancion eliminada correctamente");
                     mostrarDatos();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
-                    alertDialog.mostrar("Error", "No se pudo eliminar el Cancion");
+                    alertDialog.mostrar("Error", "No se pudo eliminar la Cancion");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

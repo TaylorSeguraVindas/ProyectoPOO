@@ -180,7 +180,7 @@ public class CancionDAO {
     }
 
 
-    public List<Cancion> findCancionesRepo(int idRepo, TipoRepositorioCanciones tipoRepo) throws SQLException {
+    public ArrayList<Cancion> findCancionesRepo(int idRepo, TipoRepositorioCanciones tipoRepo) throws SQLException {
         String idCanciones = "";
 
         if(TipoRepositorioCanciones.ALBUM.equals(tipoRepo)) {
@@ -219,6 +219,6 @@ public class CancionDAO {
             listaCanciones.add(cancionLeida);
         }
 
-        return Collections.unmodifiableList(listaCanciones);
+        return listaCanciones;
     }
 }

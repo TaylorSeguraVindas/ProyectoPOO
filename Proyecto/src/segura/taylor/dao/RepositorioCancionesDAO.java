@@ -18,6 +18,8 @@ public class RepositorioCancionesDAO {
     private ArrayList<RepositorioCanciones> repoCanciones = new ArrayList<>();
 
     private Connection connection;
+    private CancionDAO cancionDAO;
+    private CancionesAlbumDAO cancionesAlbumDAO;
 
     /**
      * Método constructor
@@ -25,6 +27,8 @@ public class RepositorioCancionesDAO {
      */
     public RepositorioCancionesDAO(Connection connection) {
         this.connection = connection;
+        this.cancionDAO = new CancionDAO(connection);
+        this.cancionesAlbumDAO = new CancionesAlbumDAO(connection);
     }
 
     /**
@@ -192,6 +196,8 @@ public class RepositorioCancionesDAO {
             albumLeido.setFechaLanzamiento(result.getDate("fechaLanzamiento").toLocalDate());
             albumLeido.setImagen(result.getString("imagen"));
 
+            albumLeido.setCanciones(buscarCancionesAlbum(albumLeido.getId()));  //Agregar canciones al album
+
             listaAlbunes.add(albumLeido);
         }
 
@@ -221,6 +227,16 @@ public class RepositorioCancionesDAO {
         return Optional.empty();
     }
 
+    private ArrayList<Cancion> buscarCancionesAlbum(int pIdAlbum) {
+        try {
+            ArrayList<Cancion> canciones = cancionDAO.findCancionesRepo(pIdAlbum, TipoRepositorioCanciones.ALBUM);
+            return canciones;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
     //Listas de reproducción
     /**
      * Este método se usa para obtener una lista con todas las listas de reproduccion guardadas en la base de datos

@@ -145,7 +145,12 @@ public class ControladorAlbunesAdmin {
         ObservableList<Album> albunesFinal = FXCollections.observableArrayList();
 
         for(Album album : albunes) {
-            albunesFinal.addAll(album);
+            if(albumSeleccionado != null) {
+                if(albumSeleccionado.getId() == album.getId()) {
+                    albumSeleccionado = album;  //Actualizar info del album seleccionado.
+                }
+            }
+            albunesFinal.add(album);
         }
 
         return albunesFinal;
@@ -260,6 +265,7 @@ public class ControladorAlbunesAdmin {
                 if(resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Éxito", "Artista agregado correctamente!");
+                    mostrarDatos();
                     actualizarInfoAlbum();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
@@ -283,6 +289,7 @@ public class ControladorAlbunesAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Artista removido correctamente");
+                    mostrarDatos();
                     actualizarInfoAlbum();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
@@ -305,6 +312,7 @@ public class ControladorAlbunesAdmin {
                 if(resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Éxito", "Canción agregada correctamente!");
+                    mostrarDatos();
                     actualizarInfoAlbum();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
@@ -328,6 +336,7 @@ public class ControladorAlbunesAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Canción removida correctamente");
+                    mostrarDatos();
                     actualizarInfoAlbum();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();

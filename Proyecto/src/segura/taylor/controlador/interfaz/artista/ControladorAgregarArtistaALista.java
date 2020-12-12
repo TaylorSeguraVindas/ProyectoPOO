@@ -8,10 +8,10 @@ public class ControladorAgregarArtistaALista {
     public ComboBox txtArtista;
 
     public void initialize() {
-        actualizarComboBoxCanciones();
+        actualizarComboBoxArtistas();
     }
 
-    private void actualizarComboBoxCanciones() {
+    private void actualizarComboBoxArtistas() {
         txtArtista.getItems().clear();
 
         for (Artista artista : ControladorGeneral.instancia.getGestor().listarArtistas()) {

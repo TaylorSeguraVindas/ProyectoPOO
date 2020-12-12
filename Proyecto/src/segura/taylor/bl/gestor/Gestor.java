@@ -32,6 +32,8 @@ public class Gestor {
     private RepositorioCancionesDAO repoCancionesDAO;
     private UsuarioDAO usuarioDAO;
 
+    private CancionesAlbumDAO cancionesAlbumDAO;
+
     /**
      * Método constructor
      * Inicializa la conexión con la base de datos y los DAOs que posteriormente serán usados
@@ -45,6 +47,7 @@ public class Gestor {
                 Class.forName(driver).newInstance();
             } catch (Exception e) {
                 e.printStackTrace();
+                return;
             }
 
             System.out.println("LOADED DRIVER ---> " + driver);
@@ -52,13 +55,15 @@ public class Gestor {
             this.connection = DriverManager.getConnection(url, propertiesHandler.getUser(), propertiesHandler.getPwd());
             System.out.println("CONNECTED TO ---> "+ url);
 
-            artistaDAO = new ArtistaDAO(this.connection);
-            cancionDAO = new CancionDAO(this.connection);
-            compostorDAO = new CompositorDAO(this.connection);
-            generoDAO = new GeneroDAO(this.connection);
-            paisDAO = new PaisDAO(this.connection);
-            repoCancionesDAO = new RepositorioCancionesDAO(this.connection);
-            usuarioDAO = new UsuarioDAO(this.connection);
+            this.artistaDAO = new ArtistaDAO(this.connection);
+            this.cancionDAO = new CancionDAO(this.connection);
+            this.compostorDAO = new CompositorDAO(this.connection);
+            this.generoDAO = new GeneroDAO(this.connection);
+            this.paisDAO = new PaisDAO(this.connection);
+            this.repoCancionesDAO = new RepositorioCancionesDAO(this.connection);
+            this.usuarioDAO = new UsuarioDAO(this.connection);
+
+            cancionesAlbumDAO = new CancionesAlbumDAO(this.connection);
         } catch (Exception e) {
             System.out.println("CANT CONNECT TO DATABASE");
             e.printStackTrace();
@@ -339,23 +344,24 @@ public class Gestor {
     /**
      * Método usado para agregar una canción a un album
      * @param pIdAlbum int que define el id del album que se va a modificar
-     * @param idCancion int que define el id de la canción que se desea incluir
+     * @param pIdCancion int que define el id de la canción que se desea incluir
      * @return true si la agregación es exitosa, false si ocurre algún error
      * @throws Exception si no se puede conectar con la DB o si el album o la cancion no existe
      */
-    public boolean agregarCancionEnAlbum(int pIdAlbum, int idCancion) throws Exception {
+    public boolean agregarCancionEnAlbum(int pIdAlbum, int pIdCancion) throws Exception {
         Optional<Album> repoEncontrado = repoCancionesDAO.findAlbumById(pIdAlbum);
 
         //Busca album
         if(repoEncontrado.isPresent()){
-            Optional<Cancion> nuevaCancion = cancionDAO.findByID(idCancion);
+            Optional<Cancion> nuevaCancion = cancionDAO.findByID(pIdCancion);
 
             //Busca cancion
             if(nuevaCancion.isPresent())
             {
-                Album albumModifica = repoEncontrado.get();
-                albumModifica.agregarCancion(nuevaCancion.get());
-                return repoCancionesDAO.update(albumModifica);
+                //Album albumModifica = repoEncontrado.get();
+                //albumModifica.agregarCancion(nuevaCancion.get());
+                //return repoCancionesDAO.update(albumModifica);
+                return cancionesAlbumDAO.save(pIdAlbum, pIdCancion); //Modifica tabla intermedia
             }
         }
 
@@ -374,9 +380,10 @@ public class Gestor {
 
         //Busca album
         if(repoEncontrado.isPresent()){
-            Album albumModifica = (Album) repoEncontrado.get();
-            albumModifica.removerCancion(pIdCancion);
-            return repoCancionesDAO.update(albumModifica);
+            //Album albumModifica = (Album) repoEncontrado.get();
+            //albumModifica.removerCancion(pIdCancion);
+            //return repoCancionesDAO.update(albumModifica);
+            return cancionesAlbumDAO.delete(pIdAlbum, pIdCancion); //Modifica tabla intermedia
         }
 
         return false;

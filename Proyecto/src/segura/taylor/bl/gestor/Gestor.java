@@ -32,7 +32,9 @@ public class Gestor {
     private RepositorioCancionesDAO repoCancionesDAO;
     private UsuarioDAO usuarioDAO;
 
+    //Intermedias
     private CancionesAlbumDAO cancionesAlbumDAO;
+    private ArtistasAlbumDAO artistasAlbumDAO;
 
     /**
      * Método constructor
@@ -63,7 +65,8 @@ public class Gestor {
             this.repoCancionesDAO = new RepositorioCancionesDAO(this.connection);
             this.usuarioDAO = new UsuarioDAO(this.connection);
 
-            cancionesAlbumDAO = new CancionesAlbumDAO(this.connection);
+            this.cancionesAlbumDAO = new CancionesAlbumDAO(this.connection);
+            this.artistasAlbumDAO = new ArtistasAlbumDAO(this.connection);
         } catch (Exception e) {
             System.out.println("CANT CONNECT TO DATABASE");
             e.printStackTrace();
@@ -380,9 +383,6 @@ public class Gestor {
 
         //Busca album
         if(repoEncontrado.isPresent()){
-            //Album albumModifica = (Album) repoEncontrado.get();
-            //albumModifica.removerCancion(pIdCancion);
-            //return repoCancionesDAO.update(albumModifica);
             return cancionesAlbumDAO.delete(pIdAlbum, pIdCancion); //Modifica tabla intermedia
         }
 
@@ -402,11 +402,9 @@ public class Gestor {
 
         //Busca album
         if(repoEncontrado.isPresent()){
-            Album albumModifica = (Album) repoEncontrado.get();
-
             if(artistaEncontrado.isPresent()) {
-                albumModifica.agregarArtista(artistaEncontrado.get());
-                return repoCancionesDAO.update(albumModifica);
+                //albumModifica.agregarArtista(artistaEncontrado.get());
+                return artistasAlbumDAO.save(pIdAlbum, pIdArtista);
             }
         }
 
@@ -425,13 +423,7 @@ public class Gestor {
 
         //Busca album
         if(repoEncontrado.isPresent()){
-            Album albumModifica = (Album) repoEncontrado.get();
-            Optional<Artista> artistaEncontrado = albumModifica.buscarArtista(pIdArtista);  //Referencia al artista dentro del album
-
-            if(artistaEncontrado.isPresent()) {
-                albumModifica.removerArtista(artistaEncontrado.get());
-                return repoCancionesDAO.update(albumModifica);
-            }
+            return artistasAlbumDAO.delete(pIdAlbum, pIdArtista);
         }
 
         return false;

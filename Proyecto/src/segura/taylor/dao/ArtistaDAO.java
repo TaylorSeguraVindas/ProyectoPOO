@@ -175,7 +175,7 @@ public class ArtistaDAO {
         return Optional.empty();
     }
 
-    public List<Artista> findArtistasAlbum(int idAlbum) throws SQLException {
+    public ArrayList<Artista> findArtistasAlbum(int idAlbum) throws SQLException {
         String idArtistas = artistasAlbumDAO.getIdArtistasAlbum(idAlbum);
 
         if(idArtistas == "") {  //No hay artistas
@@ -207,6 +207,6 @@ public class ArtistaDAO {
             listaArtistas.add(artistaLeido);
         }
 
-        return Collections.unmodifiableList(listaArtistas);
+        return listaArtistas;
     }
 }

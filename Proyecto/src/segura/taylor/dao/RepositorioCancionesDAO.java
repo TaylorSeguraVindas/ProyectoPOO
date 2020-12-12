@@ -19,7 +19,7 @@ public class RepositorioCancionesDAO {
 
     private Connection connection;
     private CancionDAO cancionDAO;
-    private CancionesAlbumDAO cancionesAlbumDAO;
+    private ArtistaDAO artistaDAO;
 
     /**
      * Método constructor
@@ -28,7 +28,7 @@ public class RepositorioCancionesDAO {
     public RepositorioCancionesDAO(Connection connection) {
         this.connection = connection;
         this.cancionDAO = new CancionDAO(connection);
-        this.cancionesAlbumDAO = new CancionesAlbumDAO(connection);
+        this.artistaDAO = new ArtistaDAO(connection);
     }
 
     /**
@@ -197,7 +197,7 @@ public class RepositorioCancionesDAO {
             albumLeido.setImagen(result.getString("imagen"));
 
             albumLeido.setCanciones(buscarCancionesAlbum(albumLeido.getId()));  //Agregar canciones al album
-
+            albumLeido.setArtistas(buscarArtistasAlbum(albumLeido.getId()));    //Agregar artistas al album
             listaAlbunes.add(albumLeido);
         }
 
@@ -231,6 +231,17 @@ public class RepositorioCancionesDAO {
         try {
             ArrayList<Cancion> canciones = cancionDAO.findCancionesRepo(pIdAlbum, TipoRepositorioCanciones.ALBUM);
             return canciones;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
+    private ArrayList<Artista> buscarArtistasAlbum(int pIdAlbum) {
+        try {
+            ArrayList<Artista> artistas = artistaDAO.findArtistasAlbum(pIdAlbum);
+            return artistas;
         } catch (Exception e) {
             e.printStackTrace();
         }

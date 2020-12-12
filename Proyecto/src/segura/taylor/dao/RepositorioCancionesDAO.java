@@ -221,6 +221,8 @@ public class RepositorioCancionesDAO {
             albumLeido.setFechaLanzamiento(result.getDate("fechaLanzamiento").toLocalDate());
             albumLeido.setImagen(result.getString("imagen"));
 
+            albumLeido.setCanciones(buscarCancionesAlbum(albumLeido.getId()));  //Agregar canciones al album
+            albumLeido.setArtistas(buscarArtistasAlbum(albumLeido.getId()));    //Agregar artistas al album
             return Optional.of(albumLeido);
         }
 
@@ -268,6 +270,7 @@ public class RepositorioCancionesDAO {
             listaReproduccionLeida.setImagen(result.getString("imagen"));
             listaReproduccionLeida.setDescripcion(result.getString("descripcion"));
 
+            listaReproduccionLeida.setCanciones(buscarCancionesLista(listaReproduccionLeida.getId()));  //Agregar canciones a la lista
             listaListasReproduccion.add(listaReproduccionLeida);
         }
 
@@ -290,10 +293,22 @@ public class RepositorioCancionesDAO {
             listaReproduccionLeida.setImagen(result.getString("imagen"));
             listaReproduccionLeida.setDescripcion(result.getString("descripcion"));
 
+            listaReproduccionLeida.setCanciones(buscarCancionesLista(listaReproduccionLeida.getId()));  //Agregar canciones a la lista
             return Optional.of(listaReproduccionLeida);
         }
 
         return Optional.empty();
+    }
+
+    private ArrayList<Cancion> buscarCancionesLista(int pIdLista) {
+        try {
+            ArrayList<Cancion> canciones = cancionDAO.findCancionesRepo(pIdLista, TipoRepositorioCanciones.LISTA_REPRODUCCION);
+            return canciones;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 
     //Bibliotecas

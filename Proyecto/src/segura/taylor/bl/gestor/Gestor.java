@@ -35,6 +35,7 @@ public class Gestor {
     //Intermedias
     private CancionesAlbumDAO cancionesAlbumDAO;
     private ArtistasAlbumDAO artistasAlbumDAO;
+    private CancionesListaReproduccionDAO cancionesListaReproduccionDAO;
 
     /**
      * Método constructor
@@ -67,6 +68,7 @@ public class Gestor {
 
             this.cancionesAlbumDAO = new CancionesAlbumDAO(this.connection);
             this.artistasAlbumDAO = new ArtistasAlbumDAO(this.connection);
+            this.cancionesListaReproduccionDAO = new CancionesListaReproduccionDAO(this.connection);
         } catch (Exception e) {
             System.out.println("CANT CONNECT TO DATABASE");
             e.printStackTrace();
@@ -514,9 +516,7 @@ public class Gestor {
             //Busca cancion
             if(nuevaCancion.isPresent())
             {
-                ListaReproduccion listaModifica = repoEncontrado.get();
-                listaModifica.agregarCancion(nuevaCancion.get());
-                return repoCancionesDAO.update(listaModifica);
+                return cancionesListaReproduccionDAO.save(pIdLista, pIdCancion);
             }
         }
 
@@ -535,9 +535,7 @@ public class Gestor {
 
         //Busca lista de reproduccion
         if(repoEncontrado.isPresent()){
-            ListaReproduccion listaModifica = (ListaReproduccion) repoEncontrado.get();
-            listaModifica.removerCancion(pIdCancion);
-            return repoCancionesDAO.update(listaModifica);
+           return cancionesListaReproduccionDAO.delete(pIdLista, pIdCancion);
         }
 
         return false;

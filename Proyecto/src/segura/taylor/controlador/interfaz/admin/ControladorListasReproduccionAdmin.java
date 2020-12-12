@@ -124,6 +124,11 @@ public class ControladorListasReproduccionAdmin {
         ObservableList<ListaReproduccion> listasReproduccionFinal = FXCollections.observableArrayList();
 
         for(ListaReproduccion listaReproduccion : listasReproduccion) {
+            if(listaReproduccionSeleccionada != null) {
+                if(listaReproduccionSeleccionada.getId() == listaReproduccion.getId()) {
+                    listaReproduccionSeleccionada = listaReproduccion;  //Actualizar info de la lista seleccionada
+                }
+            }
             listasReproduccionFinal.addAll(listaReproduccion);
         }
 
@@ -236,6 +241,7 @@ public class ControladorListasReproduccionAdmin {
                 if(resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Éxito", "Canción agregada correctamente!");
+                    mostrarDatos();
                     actualizarInfoListaReproduccion();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
@@ -259,6 +265,7 @@ public class ControladorListasReproduccionAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Canción removida correctamente");
+                    mostrarDatos();
                     actualizarInfoListaReproduccion();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();

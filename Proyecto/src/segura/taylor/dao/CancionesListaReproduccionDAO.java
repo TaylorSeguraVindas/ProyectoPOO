@@ -15,7 +15,7 @@ public class CancionesListaReproduccionDAO {
     public boolean save(int idListaReproduccion, int idCancion) {
         try {
             Statement query = connection.createStatement();
-            String insert = "INSERT INTO canciones_lista_reproduccion (idListaReproduccion, idCancion) VALUES ";
+            String insert = "INSERT INTO canciones_listareproduccion (idListaReproduccion, idCancion) VALUES ";
             insert += "(" + idListaReproduccion + ",";
             insert += idCancion + ")";
 
@@ -30,7 +30,7 @@ public class CancionesListaReproduccionDAO {
     public boolean delete(int idListaReproduccion, int idCancion) {
         try {
             Statement query = connection.createStatement();
-            String insert = "DELETE FROM canciones_lista_reproduccion WHERE idListaReproduccion = " + idListaReproduccion + " and idCancion = " + idCancion;
+            String insert = "DELETE FROM canciones_listareproduccion WHERE idListaReproduccion = " + idListaReproduccion + " and idCancion = " + idCancion;
 
             query.execute(insert);
             return true;
@@ -42,7 +42,7 @@ public class CancionesListaReproduccionDAO {
 
     public String getIdCancionesListaReproduccion(int idListaReproduccion) throws SQLException {
         Statement query = connection.createStatement();
-        ResultSet result = query.executeQuery("SELECT * FROM canciones_lista_reproduccion WHERE idListaReproduccion = " + idListaReproduccion);
+        ResultSet result = query.executeQuery("SELECT * FROM canciones_listareproduccion WHERE idListaReproduccion = " + idListaReproduccion);
 
         String listaCanciones = "";
 

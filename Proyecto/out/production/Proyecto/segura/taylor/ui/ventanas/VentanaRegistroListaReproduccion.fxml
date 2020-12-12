@@ -24,7 +24,7 @@
                         <VBox alignment="TOP_CENTER" prefHeight="162.0" prefWidth="670.0">
                             <children>
                                 <Label text="Imagen" />
-                                <ImageView fitHeight="106.0" fitWidth="195.0" pickOnBounds="true" preserveRatio="true" />
+                                <ImageView fx:id="imagenFondo" fitHeight="106.0" fitWidth="195.0" pickOnBounds="true" preserveRatio="true" />
                                 <Button fx:id="btnSeleccionarImagen" mnemonicParsing="false" onAction="#seleccionarImagen" prefHeight="52.0" prefWidth="76.0" text="Seleccionar" />
                             </children>
                         </VBox>

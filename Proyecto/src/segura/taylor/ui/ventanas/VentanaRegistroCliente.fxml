@@ -44,8 +44,8 @@
                         <VBox alignment="CENTER">
                            <children>
                               <Label text="Foto de perfil" />
-                              <ImageView fitHeight="129.0" fitWidth="157.0" pickOnBounds="true" preserveRatio="true" />
-                              <Button mnemonicParsing="false" text="Seleccionar" />
+                              <ImageView fx:id="imagenPerfil" fitHeight="129.0" fitWidth="157.0" pickOnBounds="true" preserveRatio="true" />
+                              <Button fx:id="btnSeleccionarImagen" mnemonicParsing="false" onAction="#seleccionarImagen" text="Seleccionar" />
                            </children>
                         </VBox>
                      </children>

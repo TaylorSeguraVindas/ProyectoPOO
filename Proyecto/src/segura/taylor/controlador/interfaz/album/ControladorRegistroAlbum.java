@@ -1,11 +1,15 @@
 package segura.taylor.controlador.interfaz.album;
 
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.compositor.ControladorRegistroCompositor;
 import segura.taylor.ui.dialogos.AlertDialog;
 
+import java.io.File;
 import java.time.LocalDate;
 
 public class ControladorRegistroAlbum {
@@ -20,6 +24,9 @@ public class ControladorRegistroAlbum {
     public Button btnSeleccionarImagen;
 
     public Label lblTitulo;
+
+    public ImageView imagenFondo;
+    public String recursoImagenFondo = "";
 
     public void initialize() {
         if(ControladorRegistroAlbum.modificando) {
@@ -37,10 +44,9 @@ public class ControladorRegistroAlbum {
         String nombre = txtNombre.getText();
         LocalDate fechaCreacion = LocalDate.now();
         LocalDate fechaLanzamiento = txtFechaLanzamiento.getValue();
-        String imagen = "";
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().crearAlbum(nombre, fechaCreacion, fechaLanzamiento, imagen);
+            boolean resultado = ControladorGeneral.instancia.getGestor().crearAlbum(nombre, fechaCreacion, fechaLanzamiento, recursoImagenFondo);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Album registrado correctamente");
@@ -54,16 +60,21 @@ public class ControladorRegistroAlbum {
         }
     }
     public void seleccionarImagen() {
-        //TODO Funcionalidad para agregar una cancion
-        AlertDialog alertDialog = new AlertDialog();
-        alertDialog.mostrar("Prueba", "Aquí se mostraría un dropdown");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccione una imagen de fondo");
+        File selectedFile = fileChooser.showOpenDialog(ventana);
+
+        if(selectedFile != null) {
+            recursoImagenFondo = selectedFile.toURI().toString();
+            imagenFondo.setImage(new Image(recursoImagenFondo));
+        }
     }
+
     public void modificarAlbum() {
         String nombre = txtNombre.getText();
-        String imagen = "";
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().modificarAlbum(idAlbumSeleccionado, nombre, imagen);
+            boolean resultado = ControladorGeneral.instancia.getGestor().modificarAlbum(idAlbumSeleccionado, nombre, recursoImagenFondo);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Modificacion exitosa", "Album modificado correctamente");

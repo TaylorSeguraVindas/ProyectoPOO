@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -183,11 +185,15 @@ public class ControladorListasReproduccionAdmin {
             //Referencia a los campos
             TextField txtNombre = (TextField) root.lookup("#txtNombre");
             TextArea txtDescripcion = (TextArea) root.lookup("#txtDescripcion");
+            ImageView imagenFondo = (ImageView) root.lookup("#imagenFondo");
 
             //Actualizar campos
             txtNombre.setText(ListaReproduccionSeleccionada.getNombre());
             txtDescripcion.setText(listaReproduccionSeleccionada.getDescripcion());
-
+            if(!listaReproduccionSeleccionada.getImagen().equals("")) {
+                imagenFondo.setImage(new Image(listaReproduccionSeleccionada.getImagen()));
+            }
+            
             Scene escena = new Scene(root, 710, 550);
 
             ventanaRegistroAlbun.setScene(escena);

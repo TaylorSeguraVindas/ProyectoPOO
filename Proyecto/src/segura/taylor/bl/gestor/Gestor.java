@@ -857,6 +857,9 @@ public class Gestor {
      * @throws Exception si no se puede conectar con la DB o si el compositor ya existe
      */
     public boolean crearCompositor(String nombre, String apellidos, int idPaisNacimiento, int idGenero, LocalDate fechaNacimiento, int edad) throws Exception {
+        System.out.println("idGenero: " + idGenero);
+        System.out.println("idPais: " + idPaisNacimiento);
+
         Pais paisNacimiento = buscarPaisPorId(idPaisNacimiento).get();
         Genero genero = buscarGeneroPorId(idGenero).get();
 

@@ -122,7 +122,7 @@ public class ControladorRegistroCancion {
             ControladorRegistroArtista.ventana = ventanaRegistroArtista;
             ControladorRegistroArtista.modificando = false;
 
-            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroArtista.fxml"));
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroArtista.fxml"));
             Scene escena = new Scene(root, 580, 440);
 
             ventanaRegistroArtista.setScene(escena);
@@ -146,7 +146,7 @@ public class ControladorRegistroCancion {
             ControladorRegistroCompositor.ventana = ventanaRegistroArtista;
             ControladorRegistroCompositor.modificando = false;
 
-            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroCompositor.fxml"));
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroCompositor.fxml"));
             Scene escena = new Scene(root, 580, 440);
 
             ventanaRegistroArtista.setScene(escena);
@@ -170,7 +170,7 @@ public class ControladorRegistroCancion {
             ControladorRegistroGenero.ventana = ventanaRegistroArtista;
             ControladorRegistroGenero.modificando = false;
 
-            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroGenero.fxml"));
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroGenero.fxml"));
             Scene escena = new Scene(root, 580, 440);
 
             ventanaRegistroArtista.setScene(escena);

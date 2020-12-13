@@ -53,7 +53,7 @@ public class ControladorRegistroArtista {
         int paisNacimiento = Integer.parseInt(itemPais[0]);
 
         String[] itemGenero = txtGenero.getValue().toString().split("-");
-        int genero = Integer.parseInt(itemPais[0]);
+        int genero = Integer.parseInt(itemGenero[0]);
 
         int edad = ControladorGeneral.instancia.calcularEdad(fechaNacimiento);
         String descripcion = txtDescripcion.getText();

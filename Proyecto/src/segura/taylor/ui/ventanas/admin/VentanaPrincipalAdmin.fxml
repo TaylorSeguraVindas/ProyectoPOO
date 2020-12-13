@@ -63,7 +63,7 @@
                         <HBox alignment="TOP_CENTER" prefHeight="48.0" prefWidth="213.0">
                             <children>
                                 <Button mnemonicParsing="false" text="&lt;" />
-                                <Button mnemonicParsing="false" text="Play" />
+                                <Button fx:id="btnPausaReproducir" mnemonicParsing="false" onAction="#onPausaReproducirPressed" text="Play" />
                                 <Button mnemonicParsing="false" text="&gt;" />
                             </children>
                         </HBox>

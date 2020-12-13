@@ -82,6 +82,15 @@ public class ControladorCancionesAdmin {
         return CancionesFinal;
     }
 
+    public void reproducirCancion() {
+        Cancion cancionSeleccionada = (Cancion) tblCanciones.getSelectionModel().getSelectedItem();
+
+        if(cancionSeleccionada != null) {
+            ControladorGeneral.instancia.cargarCancion(cancionSeleccionada.getRecurso());
+            ControladorGeneral.instancia.reproducirCancion();
+        }
+    }
+
     public void agregarCancion() {
         try {
             Stage ventanaRegistroCancion = new Stage();
@@ -147,28 +156,22 @@ public class ControladorCancionesAdmin {
 
             Artista artistaCancion = cancionSeleccionada.getArtista();
             if(artistaCancion != null) {
-                txtArtista.setValue(artistaCancion.getNombreArtistico());
+                txtArtista.setValue(artistaCancion.toComboBoxItem());
             }
 
             Compositor compositorCancion = cancionSeleccionada.getCompositor();
             if(compositorCancion != null) {
-                txtCompositor.setValue(compositorCancion.getNombre());
+                txtCompositor.setValue(compositorCancion.toComboBoxItem());
             }
 
             Genero generoCancion = cancionSeleccionada.getGenero();
             if(generoCancion != null) {
-                txtGenero.setValue(generoCancion.getNombre());
+                txtGenero.setValue(generoCancion.toComboBoxItem());
             }
 
             txtPrecio.setText(String.valueOf(cancionSeleccionada.getPrecio()));
 
             //Desactivar campos inmodificables
-            txtRecurso.setDisable(true);
-            txtDuracion.setDisable(true);
-            txtFechaLanzamiento.setDisable(true);
-            txtArtista.setDisable(true);
-            txtCompositor.setDisable(true);
-            txtGenero.setDisable(true);
 
             Scene escena = new Scene(root, 580, 440);
 

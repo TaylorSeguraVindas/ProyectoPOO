@@ -3,7 +3,9 @@ package segura.taylor.controlador.interfaz.cancion;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import segura.taylor.bl.entidades.*;
@@ -15,6 +17,7 @@ import segura.taylor.controlador.interfaz.compositor.ControladorRegistroComposit
 import segura.taylor.controlador.interfaz.genero.ControladorRegistroGenero;
 import segura.taylor.ui.dialogos.AlertDialog;
 
+import java.io.File;
 import java.time.LocalDate;
 
 public class ControladorRegistroCancion {
@@ -65,9 +68,16 @@ public class ControladorRegistroCancion {
     }
 
     public void seleccionarRecurso() {
-        //TODO logica para seleccionar un archivo
-        AlertDialog alertDialog = new AlertDialog();
-        alertDialog.mostrar("Prueba", "Aquí seleccionaría el recurso");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccione una cancion");
+
+        //FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Audio files (*.mp3, *.wav, *.ogg)", ".mp3", ".wav", ".ogg");
+        //fileChooser.getExtensionFilters().add(extFilter);
+        File selectedFile = fileChooser.showOpenDialog(ventana);
+
+        if(selectedFile != null) {
+            txtRecurso.setText(selectedFile.toURI().toString());
+        }
     }
     public void crearArtista() {
         try {
@@ -179,9 +189,24 @@ public class ControladorRegistroCancion {
     public void modificarCancion() {
         try {
             String nombre = txtNombre.getText();
+            String recurso = txtRecurso.getText();
+            double duracion = Double.parseDouble(txtDuracion.getText());
+
+            //Combo boxes
+            String[] itemGenero = txtGenero.getValue().toString().split("-");
+            int genero = Integer.parseInt(itemGenero[0]);
+
+            String[] itemArtista = txtArtista.getValue().toString().split("-");
+            int artista = Integer.parseInt(itemArtista[0]);
+
+            String[] itemCompositor = txtCompositor.getValue().toString().split("-");
+            int compositor = Integer.parseInt(itemCompositor[0]);
+
+            LocalDate fechaLanzamiento = txtFechaLanzamiento.getValue();
             double precio = Double.parseDouble(txtPrecio.getText());
 
-            boolean resultado = ControladorGeneral.instancia.getGestor().modificarCancion(idCancionSeleccionada, nombre, precio);
+            boolean resultado = ControladorGeneral.instancia.getGestor().modificarCancion(idCancionSeleccionada, nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, precio);
+
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Modificacion exitosa", "Cancion modificado correctamente");

@@ -3,6 +3,7 @@ package segura.taylor.controlador.interfaz.admin;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
+import segura.taylor.controlador.ControladorGeneral;
 
 public class ControladorVentanaPrincipalAdmin {
     public VBox contenedorPrincipal;
@@ -11,6 +12,12 @@ public class ControladorVentanaPrincipalAdmin {
         contenedorPrincipal.getChildren().clear();
     }
 
+    //MUSICA
+    public void onPausaReproducirPressed() {
+        ControladorGeneral.instancia.alternarEstadoCancion();
+    }
+
+    //MENUS
     public void mostrarInicio() {
         limpiarPantalla();
         try {
@@ -20,11 +27,9 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarTienda() {
         limpiarPantalla();
     }
-
     public void mostrarUsuarios() {
         limpiarPantalla();
         try {
@@ -37,7 +42,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarAlbunes() {
         limpiarPantalla();
         try {
@@ -50,7 +54,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarArtistas() {
         limpiarPantalla();
         try {
@@ -63,7 +66,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarCompositores() {
         limpiarPantalla();
         try {
@@ -76,7 +78,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarGeneros() {
         limpiarPantalla();
         try {
@@ -101,7 +102,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarListasReproduccion() {
         limpiarPantalla();
         try {
@@ -114,7 +114,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarPaises() {
         limpiarPantalla();
         try {

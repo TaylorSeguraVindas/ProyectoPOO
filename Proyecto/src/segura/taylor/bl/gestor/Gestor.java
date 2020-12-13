@@ -679,21 +679,19 @@ public class Gestor {
         return cancionDAO.save(nuevaCancion);
     }
 
-    /**
-     * Método usado para modificar una cancion
-     * @param pIdCancion int que define el id de la cancion que se desea modificar
-     * @param pNombre String que define el nuevo nombre de la cancion
-     * @param pPrecio double que define el nuevo precio de la cancion
-     * @return true si la modificacion es exitosa, false si ocurre algun error
-     * @throws Exception si no se puede conectar con la DB o si la cancion no existe
-     */
-    public boolean modificarCancion(int pIdCancion, String pNombre, double pPrecio) throws Exception {
+    public boolean modificarCancion(int pIdCancion, String nombre, String recurso, double duracion, int idGenero, int idArtista, int idCompositor, LocalDate fechaLanzamiento, double precio) throws Exception {
         Optional<Cancion> cancionEncontrada = cancionDAO.findByID(pIdCancion);
 
         if(cancionEncontrada.isPresent()) {
             Cancion cancionModifica = cancionEncontrada.get();
-            cancionModifica.setNombre(pNombre);
-            cancionModifica.setPrecio(pPrecio);
+            cancionModifica.setNombre(nombre);
+            cancionModifica.setRecurso(recurso);
+            cancionModifica.setDuracion(duracion);
+            cancionModifica.setPrecio(precio);
+            cancionModifica.setFechaLanzamiento(fechaLanzamiento);
+            cancionModifica.setGenero(buscarGeneroPorId(idGenero).get());
+            cancionModifica.setArtista(buscarArtistaPorId(idArtista).get());
+            cancionModifica.setCompositor(buscarCompositorPorId(idCompositor).get());
 
             return cancionDAO.update(cancionModifica);
         }

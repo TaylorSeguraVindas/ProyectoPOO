@@ -193,7 +193,7 @@ public class ControladorListasReproduccionAdmin {
             if(!listaReproduccionSeleccionada.getImagen().equals("")) {
                 imagenFondo.setImage(new Image(listaReproduccionSeleccionada.getImagen()));
             }
-            
+
             Scene escena = new Scene(root, 710, 550);
 
             ventanaRegistroAlbun.setScene(escena);

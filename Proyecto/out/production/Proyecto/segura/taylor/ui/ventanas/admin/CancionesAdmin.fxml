@@ -23,6 +23,7 @@
             <children>
                 <HBox alignment="TOP_RIGHT" minHeight="32.0" prefWidth="640.0" spacing="10.0">
                     <children>
+                  <Button fx:id="btnReproducirCancion" layoutX="457.0" layoutY="10.0" mnemonicParsing="false" onAction="#reproducirCancion" prefHeight="32.0" prefWidth="148.0" text="Reproducir seleccionada" />
                         <Button fx:id="btnAgregarCancion" mnemonicParsing="false" onAction="#agregarCancion" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
                         <Button fx:id="btnModificarCancion" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarCancion" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
                         <Button fx:id="btnEliminarCancion" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarCancion" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />

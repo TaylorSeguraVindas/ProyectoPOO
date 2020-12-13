@@ -3,6 +3,8 @@ package segura.taylor.controlador;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.Media;
 import javafx.stage.Stage;
 import segura.taylor.bl.gestor.Gestor;
 
@@ -21,6 +23,11 @@ public class ControladorGeneral {
 
     //UI
     private Stage window;
+
+    //Reproductor
+    private MediaPlayer mediaPlayer;
+    private double volumen;
+    private boolean pausado = true;
 
     //Propiedades
     public Gestor getGestor() {
@@ -126,5 +133,48 @@ public class ControladorGeneral {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    //MUSICA
+    public void cargarCancion(String pRecurso) {
+        if(mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
+
+        Media media = new Media(pRecurso);
+        mediaPlayer = new MediaPlayer(media);
+    }
+
+    public void siguienteCancion() {
+        //TODO
+    }
+
+    public void cancionAnterior() {
+        //TODO
+    }
+
+    public void detenerCancion() {
+        mediaPlayer.stop();
+    }
+
+    public void alternarEstadoCancion() {
+        if (mediaPlayer != null) {
+            if(pausado) {
+                reproducirCancion();
+            } else {
+                pausarCancion();
+            }
+        }
+    }
+
+    public void pausarCancion() {
+        mediaPlayer.pause();
+        pausado = true;
+    }
+
+    public void reproducirCancion() {
+        mediaPlayer.play();
+        pausado = false;
     }
 }

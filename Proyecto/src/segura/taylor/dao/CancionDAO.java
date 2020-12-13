@@ -81,8 +81,15 @@ public class CancionDAO {
         try {
             Statement query = connection.createStatement();
             String update = "UPDATE canciones ";
-            update += "SET nombre = '" + cancionActualizada.getNombre() + "',";
-            update += "precio = " + cancionActualizada.getPrecio() + "";
+            update += "SET nombre = '" + cancionActualizada.getNombre() + "', ";
+            update += "recurso = '" + cancionActualizada.getRecurso() + "', ";
+            update += "duracion = " + cancionActualizada.getDuracion() + ", ";
+            update += "fechaLanzamiento = " + ( (cancionActualizada.getFechaLanzamiento() != null) ? "'" + Date.valueOf(cancionActualizada.getFechaLanzamiento()) + "'" : null) + ", ";
+            update += "precio = " + cancionActualizada.getPrecio() + ", ";
+            update += "idGenero = " + cancionActualizada.getGenero().getId() + ", ";
+            update += "idArtista = " + cancionActualizada.getArtista().getId() + ", ";
+            update += "idCompositor = " + cancionActualizada.getCompositor().getId() + "";
+
             update += " WHERE idCancion = " + cancionActualizada.getId();
 
             query.execute(update);

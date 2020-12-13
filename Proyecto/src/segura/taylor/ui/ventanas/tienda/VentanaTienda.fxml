@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.tienda.ControladorTienda">
+   <children>
+      <VBox>
+         <children>
+            <Label alignment="CENTER" prefHeight="64.0" prefWidth="600.0" text="Explorar">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <HBox>
+               <children>
+                  <Button mnemonicParsing="false" text="Canciones" />
+                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Listas de reproduccion" />
+                  <Button layoutX="130.0" layoutY="10.0" mnemonicParsing="false" text="Albumes" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+         <children>
+            <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
+               <content>
+                  <FlowPane fx:id="contenido" prefHeight="309.0" prefWidth="586.0" rowValignment="TOP" />
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </children>
+</VBox>

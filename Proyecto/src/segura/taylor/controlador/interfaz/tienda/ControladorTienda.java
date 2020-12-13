@@ -9,10 +9,16 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import segura.taylor.bl.entidades.ListaReproduccion;
 import segura.taylor.controlador.ControladorGeneral;
+import segura.taylor.controlador.interfaz.admin.ControladorVentanaPrincipalAdmin;
+import segura.taylor.controlador.interfaz.cliente.ControladorVentanaPrincipalCliente;
 
 import java.util.List;
 
 public class ControladorTienda {
+    //////////////////////////////////TODO HACER LA VENTANA PARA MOSTRAR LA INFO DE LISTA REPRODUCCION Y QUE PERMITA VOLVER A LA TIENDA
+    public static ControladorVentanaPrincipalAdmin refVentanaPrincipalAdmin;
+    public static ControladorVentanaPrincipalCliente refVentanaPrincipalCliente;
+
     public ScrollPane contenedorFlowPane;
     public FlowPane flowPaneContenido;
 
@@ -60,6 +66,11 @@ public class ControladorTienda {
     }
 
     private void mostrarDetalleListaReproduccion(int idLista) {
+        if(ControladorGeneral.instancia.getGestor().usuarioIngresadoEsAdmin()) {
+            refVentanaPrincipalAdmin.mostrarListasReproduccion();
+        } else {
+            //Hacer lo mismo pero para cliente
+        }
         System.out.println("Lista seleccionada: " + idLista);
     }
 }

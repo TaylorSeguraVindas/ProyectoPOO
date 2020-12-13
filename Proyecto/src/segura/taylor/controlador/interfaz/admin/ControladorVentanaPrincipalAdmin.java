@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
 import segura.taylor.controlador.ControladorGeneral;
+import segura.taylor.controlador.interfaz.tienda.ControladorTienda;
 
 public class ControladorVentanaPrincipalAdmin {
     public VBox contenedorPrincipal;
@@ -23,18 +24,6 @@ public class ControladorVentanaPrincipalAdmin {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/admin/InicioAdmin.fxml"));
             contenedorPrincipal.getChildren().add(root);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void mostrarTienda() {
-        limpiarPantalla();
-        try {
-            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/tienda/VentanaTienda.fxml"));
-            contenedorPrincipal.getChildren().add(root);
-            //Expandir
-            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
-            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,6 +116,21 @@ public class ControladorVentanaPrincipalAdmin {
         limpiarPantalla();
         try {
             VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/admin/PaisesAdmin.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            //Expandir
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void mostrarTienda() {
+        limpiarPantalla();
+        try {
+            ControladorTienda.refVentanaPrincipalAdmin = this;
+
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/tienda/VentanaTienda.fxml"));
             contenedorPrincipal.getChildren().add(root);
             //Expandir
             root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());

@@ -5,10 +5,9 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="257.0" prefWidth="224.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="257.0" prefWidth="224.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fx:id="imgFondo" fitHeight="182.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imgFondo" fitHeight="182.0" fitWidth="225.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" />
       <VBox prefHeight="83.0" prefWidth="224.0">
          <children>
             <Label fx:id="txtNombre" text="Nombre lista" />

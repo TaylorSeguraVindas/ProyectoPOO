@@ -2,6 +2,7 @@ package segura.taylor.controlador.interfaz.tienda;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -12,14 +13,17 @@ import segura.taylor.controlador.ControladorGeneral;
 import java.util.List;
 
 public class ControladorTienda {
-    public FlowPane contenido;
+    public ScrollPane contenedorFlowPane;
+    public FlowPane flowPaneContenido;
 
     public void initialize() {
         mostrarListasReproduccion();
+
+        flowPaneContenido.prefWidthProperty().bind(contenedorFlowPane.widthProperty()); //Expandir
     }
 
     private void mostrarListasReproduccion() {
-        contenido.getChildren().clear();    //Limpiar contenido
+        flowPaneContenido.getChildren().clear();    //Limpiar contenido
 
         List<ListaReproduccion> listasReproduccion = ControladorGeneral.instancia.getGestor().listarListasReproduccion();
 
@@ -49,7 +53,7 @@ public class ControladorTienda {
                 mostrarDetalleListaReproduccion(idLista);
             });
 
-            contenido.getChildren().add(nuevaCarta);
+            flowPaneContenido.getChildren().add(nuevaCarta);
         } catch (Exception e) {
             e.printStackTrace();
         }

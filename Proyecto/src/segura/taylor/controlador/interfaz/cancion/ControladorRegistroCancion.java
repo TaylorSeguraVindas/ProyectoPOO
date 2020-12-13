@@ -1,10 +1,14 @@
 package segura.taylor.controlador.interfaz.cancion;
 
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,6 +23,7 @@ import segura.taylor.ui.dialogos.AlertDialog;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.util.Map;
 
 public class ControladorRegistroCancion {
     public static int idCancionSeleccionada;
@@ -71,12 +76,40 @@ public class ControladorRegistroCancion {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccione una cancion");
 
-        //FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Audio files (*.mp3, *.wav, *.ogg)", ".mp3", ".wav", ".ogg");
+        //FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Audio files", "*.mp3", "*.wav", "*.ogg");
         //fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.setInitialDirectory(new File("C:/dev/"));
         File selectedFile = fileChooser.showOpenDialog(ventana);
 
-        if(selectedFile != null) {
+        if(selectedFile != null) {  //Actualizar campos
             txtRecurso.setText(selectedFile.toURI().toString());
+
+            Media media = new Media(txtRecurso.getText());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setOnReady(new Runnable() {
+                @Override
+                public void run() {
+                    txtDuracion.setText(String.valueOf(media.getDuration().toMinutes()));
+
+                    // display media's metadata
+                    for (Map.Entry<String, Object> entry : media.getMetadata().entrySet()){
+                        System.out.println(entry.getKey() + ": " + entry.getValue());
+
+                        if(entry.getKey().equals("artist")) {
+                            //TODO Hacer algo con el artista
+                        }
+                        if(entry.getKey().equals("album")) {
+                            //TODO Hacer algo con el album
+                        }
+                        if(entry.getKey().equals("genre")) {
+                            //TODO hacer algo con el genero
+                        }
+                        if(entry.getKey().equals("title")) {
+                            txtNombre.setText(entry.getValue().toString());
+                        }
+                    }
+                }
+            });
         }
     }
     public void crearArtista() {

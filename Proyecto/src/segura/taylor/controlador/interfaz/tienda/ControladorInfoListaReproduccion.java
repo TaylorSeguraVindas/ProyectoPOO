@@ -95,7 +95,6 @@ public class ControladorInfoListaReproduccion {
     }
 
     public void reproducirLista() {
-        //TODO reproducir lista
         ControladorGeneral.instancia.reproducirLista(idListaSeleccionada);
     }
 

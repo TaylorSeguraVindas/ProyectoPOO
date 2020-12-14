@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.Media;
 import javafx.stage.Stage;
+import segura.taylor.bl.entidades.Album;
+import segura.taylor.bl.entidades.Biblioteca;
 import segura.taylor.bl.entidades.ListaReproduccion;
 import segura.taylor.bl.entidades.RepositorioCanciones;
 import segura.taylor.bl.gestor.Gestor;
@@ -144,7 +146,6 @@ public class ControladorGeneral {
         }
     }
 
-
     //MUSICA
     public void reproducirLista(int idLista) {
         try {
@@ -152,18 +153,43 @@ public class ControladorGeneral {
 
             if(listaEncontrada.isPresent()) {
                 repoCancionesActual = listaEncontrada.get();
-                cargarCancion(repoCancionesActual.getCanciones().get(0).getRecurso());    //Reproduce la primer cancion
-                reproducirCancion();
+                reproducirRepoActual();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void cargarCancionDeLista(int posicion) {
+    public void reproducirAlbum(int idAlbum) {
+        try {
+            Optional<Album> albumEncontrado = gestor.buscarAlbumPorId(idAlbum);
+
+            if(albumEncontrado.isPresent()) {
+                repoCancionesActual = albumEncontrado.get();
+                reproducirRepoActual();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reproducirBibliotecaUsuarioIngresado() {
+        if(gestor.usuarioIngresadoEsAdmin()) return;    //El admin no tiene biblioteca
+
+        repoCancionesActual = gestor.getBibliotecaUsuarioIngresado();
+        reproducirRepoActual();
+    }
+
+    private void reproducirRepoActual() {
+        if(repoCancionesActual.getCanciones().size() > 0) {
+            cargarCancionDeRepo(0);    //Reproduce la primer cancion
+            reproducirCancion();
+        }
+    }
+    public void cargarCancionDeRepo(int posicion) {
         if(repoCancionesActual == null) return;
 
-        this.idCancionActual = repoCancionesActual.getCanciones().get(posicion).getId();
+        idCancionActual = repoCancionesActual.getCanciones().get(posicion).getId();
         cargarCancion(repoCancionesActual.getCanciones().get(posicion).getRecurso());
         reproducirCancion();
     }
@@ -183,10 +209,10 @@ public class ControladorGeneral {
         int siguienteCancion = repoCancionesActual.obtenerIndiceCancion(idCancionActual) + 1;
 
         if(siguienteCancion < repoCancionesActual.getCanciones().size()) {  //Reproduce la siguiente cancion
-            cargarCancionDeLista(siguienteCancion);
+            cargarCancionDeRepo(siguienteCancion);
             reproducirCancion();
         } else {    //Reproduce la ultima cancion
-            cargarCancionDeLista(repoCancionesActual.getCanciones().size() - 1);
+            cargarCancionDeRepo(repoCancionesActual.getCanciones().size() - 1);
             reproducirCancion();
         }
     }
@@ -197,10 +223,10 @@ public class ControladorGeneral {
         int cancionAnterior = repoCancionesActual.obtenerIndiceCancion(idCancionActual) - 1;
 
         if(cancionAnterior > 0) {  //Reproduce la siguiente cancion
-            cargarCancionDeLista(cancionAnterior);
+            cargarCancionDeRepo(cancionAnterior);
             reproducirCancion();
         } else {    //Reproduce la ultima cancion
-            cargarCancionDeLista(0);
+            cargarCancionDeRepo(0);
             reproducirCancion();
         }
     }

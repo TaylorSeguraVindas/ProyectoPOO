@@ -90,6 +90,7 @@ public class ControladorInfoAlbum {
 
     public void reproducirAlbum() {
         //TODO reproducir album
+        ControladorGeneral.instancia.reproducirAlbum(idAlbumSeleccionado);
     }
 
     public void guardarEnLista() {

@@ -100,6 +100,14 @@ public class Gestor {
         return usuarioIngresado.getId();
     }
 
+    /**
+     * Método usado para obtener la biblioteca del cliente ingresado.
+     * @return instancia de la clase Biblioteca que corresponde a la que le pertenece al cliente ingresado
+     */
+    public Biblioteca getBibliotecaUsuarioIngresado() {
+        Cliente clienteIngresado = (Cliente) usuarioIngresado;
+        return clienteIngresado.getBiblioteca();
+    }
 
     //*******General**********
     /**

@@ -12,6 +12,7 @@ import segura.taylor.bl.enums.TipoCancion;
 import segura.taylor.controlador.ControladorGeneral;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ControladorVistaCanciones {
     public TableView tblCanciones;
@@ -21,7 +22,7 @@ public class ControladorVistaCanciones {
 
     public void initialize() {
         inicializarTabla();
-        mostrarDatos();
+        mostrarDatos(false);
     }
 
     public void inicializarTabla() {
@@ -58,23 +59,59 @@ public class ControladorVistaCanciones {
         tblCanciones.getColumns().addAll(columnaNombre, columnaDuracion, columnaFechaLanzamiento, columnaArtista, columnaCompositor, columnaPrecio);
 
     }
-    private void mostrarDatos() {
+    private void mostrarDatos(boolean usandoFiltro) {
         tblCanciones.getItems().clear();
-        tblCanciones.setItems(obtenerCanciones());
+        tblCanciones.setItems(obtenerCanciones(usandoFiltro));
     }
 
-    public ObservableList<Cancion> obtenerCanciones() {
+    public ObservableList<Cancion> obtenerCanciones(boolean usandoFiltro) {
         List<Cancion> Canciones = ControladorGeneral.instancia.getGestor().listarCanciones();
 
         ObservableList<Cancion> CancionesFinal = FXCollections.observableArrayList();
 
         for(Cancion cancion : Canciones) {
             if(cancion.getTipoCancion().equals(TipoCancion.PARA_TIENDA)) {  //Muestra solo canciones que sean para la tienda
-                CancionesFinal.add(cancion);
+                if(usandoFiltro) {
+                    if(cancionCoincideConBusqueda(cancion)) {
+                        CancionesFinal.add(cancion);
+                    }
+                } else {
+                    CancionesFinal.add(cancion);
+                }
             }
         }
 
         return CancionesFinal;
+    }
+
+    private boolean cancionCoincideConBusqueda(Cancion cancion) {
+        String textoBusqueda = txtBusqueda.getText().trim().toUpperCase(Locale.ROOT);
+
+        //NOMBRE
+        String nombreCancion = cancion.getNombre().trim().toUpperCase(Locale.ROOT);
+        if(nombreCancion.equals(textoBusqueda) || nombreCancion.contains(textoBusqueda)) {
+            return true;
+        }
+
+        //GENERO
+        String generoCancion = cancion.getGenero().getNombre().trim().toUpperCase(Locale.ROOT);
+        if(generoCancion.equals(textoBusqueda) || generoCancion.contains(textoBusqueda)) {
+            return true;
+        }
+
+        //ARTISTA
+        String artistaCancion = cancion.getArtista().getNombreArtistico().trim().toUpperCase(Locale.ROOT);
+        if(artistaCancion.equals(textoBusqueda) || artistaCancion.contains(textoBusqueda)) {
+            return true;
+        }
+
+        //COMPOSITOR
+        String compositorCancion = cancion.getCompositor().getNombre().trim().toUpperCase(Locale.ROOT);
+        if(compositorCancion.equals(textoBusqueda) || compositorCancion.contains(textoBusqueda)) {
+            return true;
+        }
+
+        return false;
     }
 
     public void abrirFiltros() {
@@ -87,5 +124,6 @@ public class ControladorVistaCanciones {
 
     public void buscar() {
         //Actualizar lista
+        mostrarDatos(true);
     }
 }

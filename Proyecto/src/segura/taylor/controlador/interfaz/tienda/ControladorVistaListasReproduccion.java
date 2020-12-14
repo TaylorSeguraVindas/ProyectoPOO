@@ -67,4 +67,8 @@ public class ControladorVistaListasReproduccion {
             //TODO Hacer lo mismo pero para cliente
         }
     }
+
+    public void buscar() {
+        //Actualizar lista
+    }
 }

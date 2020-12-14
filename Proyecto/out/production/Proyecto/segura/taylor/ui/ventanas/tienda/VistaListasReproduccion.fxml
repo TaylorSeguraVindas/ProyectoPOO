@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.geometry.Insets?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.tienda.ControladorVistaListasReproduccion">
     <children>
+      <HBox maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="600.0">
+         <children>
+             <TextField fx:id="txtBusqueda" prefHeight="36.0" prefWidth="228.0" promptText="Buscar" />
+             <Button fx:id="btnBuscar" layoutX="499.0" layoutY="10.0" mnemonicParsing="false" onAction="#buscar" prefHeight="36.0" prefWidth="78.0" text="Buscar" />
+         </children></HBox>
         <ScrollPane fx:id="contenedorFlowPane" hbarPolicy="NEVER" prefHeight="472.0" prefWidth="640.0" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
             <content>
                 <FlowPane fx:id="flowPaneContenido" hgap="5.0" prefHeight="309.0" prefWidth="641.0" rowValignment="TOP" vgap="5.0">

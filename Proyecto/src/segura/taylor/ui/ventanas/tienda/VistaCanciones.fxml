@@ -8,10 +8,13 @@
     <children>
         <VBox alignment="TOP_CENTER" prefHeight="316.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
             <children>
-                <HBox alignment="TOP_RIGHT" minHeight="32.0" prefHeight="36.0" prefWidth="734.0" spacing="10.0">
+                <HBox alignment="TOP_RIGHT" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="734.0">
                     <children>
-                  <Button fx:id="btnFiltros" layoutX="587.0" layoutY="10.0" mnemonicParsing="false" onAction="#abrirFiltros" prefHeight="45.0" prefWidth="78.0" text="Filtros" />
-                        <Button fx:id="btnInfoDetalladaCancion" layoutX="457.0" layoutY="10.0" mnemonicParsing="false" onAction="#abrirInfoDetallada" prefHeight="47.0" prefWidth="157.0" text="Ver informacion detallada" />
+                  <TextField fx:id="txtBusqueda" prefHeight="36.0" prefWidth="228.0" promptText="Buscar" />
+                  <Button fx:id="btnBuscar" layoutX="499.0" layoutY="10.0" mnemonicParsing="false" onAction="#buscar" prefHeight="45.0" prefWidth="78.0" text="Buscar" />
+                  <Region prefHeight="36.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnFiltros" layoutX="587.0" layoutY="10.0" mnemonicParsing="false" onAction="#abrirFiltros" prefHeight="36.0" prefWidth="59.0" text="Filtros" />
+                        <Button fx:id="btnInfoDetalladaCancion" layoutX="457.0" layoutY="10.0" mnemonicParsing="false" onAction="#abrirInfoDetallada" prefHeight="36.0" prefWidth="116.0" text="Abrir seleccionada" />
                     </children>
                     <VBox.margin>
                         <Insets />

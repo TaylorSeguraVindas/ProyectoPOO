@@ -65,4 +65,8 @@ public class ControladorVistaAlbumes {
             //TODO Hacer lo mismo pero para cliente
         }
     }
+
+    public void buscar() {
+        //Actualizar lista
+    }
 }

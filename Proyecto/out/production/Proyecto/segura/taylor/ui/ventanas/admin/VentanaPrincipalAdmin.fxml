@@ -62,9 +62,9 @@
                     <children>
                         <HBox alignment="TOP_CENTER" prefHeight="48.0" prefWidth="213.0">
                             <children>
-                                <Button mnemonicParsing="false" text="&lt;" />
+                                <Button mnemonicParsing="false" onAction="#onCancionAnteriorPressed" text="&lt;" />
                                 <Button fx:id="btnPausaReproducir" mnemonicParsing="false" onAction="#onPausaReproducirPressed" text="Play" />
-                                <Button mnemonicParsing="false" text="&gt;" />
+                                <Button mnemonicParsing="false" onAction="#onSiguienteCancionPressed" text="&gt;" />
                             </children>
                         </HBox>
                         <VBox alignment="BOTTOM_RIGHT" prefHeight="200.0" prefWidth="100.0">

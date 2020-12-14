@@ -6,6 +6,8 @@ import javafx.scene.layout.VBox;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.tienda.ControladorTienda;
 
+import javax.naming.ldap.Control;
+
 public class ControladorVentanaPrincipalAdmin {
     public VBox contenedorPrincipal;
 
@@ -20,6 +22,12 @@ public class ControladorVentanaPrincipalAdmin {
     //MUSICA
     public void onPausaReproducirPressed() {
         ControladorGeneral.instancia.alternarEstadoCancion();
+    }
+    public void onSiguienteCancionPressed() {
+        ControladorGeneral.instancia.siguienteCancion();
+    }
+    public void onCancionAnteriorPressed() {
+        ControladorGeneral.instancia.cancionAnterior();
     }
 
     //MENUS

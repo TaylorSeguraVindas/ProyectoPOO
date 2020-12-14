@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.Media;
 import javafx.stage.Stage;
+import segura.taylor.bl.entidades.ListaReproduccion;
+import segura.taylor.bl.entidades.RepositorioCanciones;
 import segura.taylor.bl.gestor.Gestor;
 
 import segura.taylor.controlador.interfaz.admin.ControladorVentanaPrincipalAdmin;
@@ -15,6 +17,7 @@ import segura.taylor.ui.dialogos.*;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public class ControladorGeneral {
     //Referencia estatica
@@ -29,6 +32,8 @@ public class ControladorGeneral {
     private Stage window;
 
     //Reproductor
+    private int idCancionActual = 0;
+    private RepositorioCanciones repoCancionesActual;   //La lista que siempre va a estar sonando
     private MediaPlayer mediaPlayer;
     private double volumen;
     private boolean pausado = true;
@@ -141,6 +146,28 @@ public class ControladorGeneral {
 
 
     //MUSICA
+    public void reproducirLista(int idLista) {
+        try {
+            Optional<ListaReproduccion> listaEncontrada = gestor.buscarListaReproduccionPorId(idLista);
+
+            if(listaEncontrada.isPresent()) {
+                repoCancionesActual = listaEncontrada.get();
+                cargarCancion(repoCancionesActual.getCanciones().get(0).getRecurso());    //Reproduce la primer cancion
+                reproducirCancion();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void cargarCancionDeLista(int posicion) {
+        if(repoCancionesActual == null) return;
+
+        this.idCancionActual = repoCancionesActual.getCanciones().get(posicion).getId();
+        cargarCancion(repoCancionesActual.getCanciones().get(posicion).getRecurso());
+        reproducirCancion();
+    }
+
     public void cargarCancion(String pRecurso) {
         if(mediaPlayer != null) {
             mediaPlayer.stop();
@@ -151,11 +178,31 @@ public class ControladorGeneral {
     }
 
     public void siguienteCancion() {
-        //TODO
+        if(repoCancionesActual == null) return;
+
+        int siguienteCancion = repoCancionesActual.obtenerIndiceCancion(idCancionActual) + 1;
+
+        if(siguienteCancion < repoCancionesActual.getCanciones().size()) {  //Reproduce la siguiente cancion
+            cargarCancionDeLista(siguienteCancion);
+            reproducirCancion();
+        } else {    //Reproduce la ultima cancion
+            cargarCancionDeLista(repoCancionesActual.getCanciones().size() - 1);
+            reproducirCancion();
+        }
     }
 
     public void cancionAnterior() {
-        //TODO
+        if(repoCancionesActual == null) return;
+
+        int cancionAnterior = repoCancionesActual.obtenerIndiceCancion(idCancionActual) - 1;
+
+        if(cancionAnterior > 0) {  //Reproduce la siguiente cancion
+            cargarCancionDeLista(cancionAnterior);
+            reproducirCancion();
+        } else {    //Reproduce la ultima cancion
+            cargarCancionDeLista(0);
+            reproducirCancion();
+        }
     }
 
     public void detenerCancion() {

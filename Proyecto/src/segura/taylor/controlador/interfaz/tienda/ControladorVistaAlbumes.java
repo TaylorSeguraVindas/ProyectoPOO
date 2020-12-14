@@ -3,6 +3,7 @@ package segura.taylor.controlador.interfaz.tienda;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -12,24 +13,44 @@ import segura.taylor.bl.entidades.ListaReproduccion;
 import segura.taylor.controlador.ControladorGeneral;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ControladorVistaAlbumes {
     public ScrollPane contenedorFlowPane;
     public FlowPane flowPaneContenido;
 
+    public TextField txtBusqueda;
+
     public void initialize() {
-        mostrarListasReproduccion();
+        mostrarAlbumes(false);
         flowPaneContenido.prefWidthProperty().bind(contenedorFlowPane.widthProperty()); //Expandir
     }
 
-    private void mostrarListasReproduccion() {
+    private void mostrarAlbumes(boolean usandoFiltro) {
         flowPaneContenido.getChildren().clear();    //Limpiar contenido
 
         List<Album> albumes = ControladorGeneral.instancia.getGestor().listarAlbunes();
 
         for (Album album : albumes) {
-            crearCartaListaReproduccion(album.getId(), album.getImagen(), album.getNombre());
+            if(usandoFiltro) {
+                if(albumCoincideConBusqueda(album)) {
+                    crearCartaListaReproduccion(album.getId(), album.getImagen(), album.getNombre());
+                }
+            } else {
+                crearCartaListaReproduccion(album.getId(), album.getImagen(), album.getNombre());
+            }
         }
+    }
+
+    private boolean albumCoincideConBusqueda(Album album) {
+        String textoBusqueda = txtBusqueda.getText().trim().toUpperCase(Locale.ROOT);
+
+        String nombreAlbum = album.getNombre().trim().toUpperCase(Locale.ROOT);
+        if(nombreAlbum.equals(textoBusqueda) || nombreAlbum.contains(textoBusqueda)) {
+            return true;
+        }
+
+        return false;
     }
 
     private void crearCartaListaReproduccion(int idAlbum, String imagen, String nombre) {
@@ -68,5 +89,6 @@ public class ControladorVistaAlbumes {
 
     public void buscar() {
         //Actualizar lista
+        mostrarAlbumes(true);
     }
 }

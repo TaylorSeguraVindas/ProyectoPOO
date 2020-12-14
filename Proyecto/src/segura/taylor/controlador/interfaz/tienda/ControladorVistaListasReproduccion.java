@@ -3,6 +3,7 @@ package segura.taylor.controlador.interfaz.tienda;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -11,26 +12,46 @@ import segura.taylor.bl.entidades.ListaReproduccion;
 import segura.taylor.controlador.ControladorGeneral;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ControladorVistaListasReproduccion {
     public ScrollPane contenedorFlowPane;
     public FlowPane flowPaneContenido;
 
+    public TextField txtBusqueda;
+
     public void initialize() {
-        mostrarListasReproduccion();
+        mostrarListasReproduccion(false);
         flowPaneContenido.prefWidthProperty().bind(contenedorFlowPane.widthProperty()); //Expandir
     }
 
-    private void mostrarListasReproduccion() {
+    private void mostrarListasReproduccion(boolean usandoFiltro) {
         flowPaneContenido.getChildren().clear();    //Limpiar contenido
 
         List<ListaReproduccion> listasReproduccion = ControladorGeneral.instancia.getGestor().listarListasReproduccion();
 
         for (ListaReproduccion listaReproduccion : listasReproduccion) {
-            crearCartaListaReproduccion(listaReproduccion.getId(), listaReproduccion.getImagen(), listaReproduccion.getNombre(), listaReproduccion.getDescripcion());
+            if(usandoFiltro) {
+                if(listaCoincideConBusqueda(listaReproduccion)) {
+                    crearCartaListaReproduccion(listaReproduccion.getId(), listaReproduccion.getImagen(), listaReproduccion.getNombre(), listaReproduccion.getDescripcion());
+                }
+            } else {
+                crearCartaListaReproduccion(listaReproduccion.getId(), listaReproduccion.getImagen(), listaReproduccion.getNombre(), listaReproduccion.getDescripcion());
+            }
+
         }
     }
 
+    private boolean listaCoincideConBusqueda(ListaReproduccion lista) {
+        String textoBusqueda = txtBusqueda.getText().trim().toUpperCase(Locale.ROOT);
+
+        String nombreLista = lista.getNombre().trim().toUpperCase(Locale.ROOT);
+        if(nombreLista.equals(textoBusqueda) || nombreLista.contains(textoBusqueda)) {
+            return true;
+        }
+
+        return false;
+    }
     private void crearCartaListaReproduccion(int idLista, String imagen, String nombre, String descripcion) {
         try {
             VBox nuevaCarta = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/tienda/ElementoListaReproduccion.fxml"));
@@ -70,5 +91,6 @@ public class ControladorVistaListasReproduccion {
 
     public void buscar() {
         //Actualizar lista
+        mostrarListasReproduccion(true);
     }
 }

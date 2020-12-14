@@ -57,10 +57,10 @@ public class ControladorVistaAlbumes {
     }
 
     private void mostrarDetalleAlbum(int idAlbum) {
-        ControladorInfoListaReproduccion.idListaSeleccionada = idAlbum;
+        ControladorInfoAlbum.idAlbumSeleccionado = idAlbum;
 
         if(ControladorGeneral.instancia.getGestor().usuarioIngresadoEsAdmin()) {
-            //ControladorGeneral.refVentanaPrincipalAdmin.mostrarInfoListaReproduccion();
+            ControladorGeneral.refVentanaPrincipalAdmin.mostrarInfoAlbum();
         } else {
             //TODO Hacer lo mismo pero para cliente
         }

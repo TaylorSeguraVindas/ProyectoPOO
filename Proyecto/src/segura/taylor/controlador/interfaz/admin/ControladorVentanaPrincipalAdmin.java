@@ -153,4 +153,16 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
+    public void mostrarInfoAlbum() {
+        limpiarPantalla();
+        try {
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/tienda/VentanaInfoAlbum.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            //Expandir
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

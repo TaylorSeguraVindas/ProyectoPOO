@@ -35,15 +35,6 @@ CREATE TABLE `canciones_biblioteca` (
   CONSTRAINT `fk_cancionAgrBiblioteca` FOREIGN KEY (`idCancion`) REFERENCES `canciones` (`idCancion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `canciones_biblioteca`
---
-
-LOCK TABLES `canciones_biblioteca` WRITE;
-/*!40000 ALTER TABLE `canciones_biblioteca` DISABLE KEYS */;
-/*!40000 ALTER TABLE `canciones_biblioteca` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -54,4 +45,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-04 12:28:50
+-- Dump completed on 2020-12-14 15:52:05

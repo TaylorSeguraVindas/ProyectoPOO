@@ -1,5 +1,6 @@
 package segura.taylor.controlador.interfaz.usuarios;
 
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,7 +18,7 @@ public class ControladorRegistroAdmin {
     private String recursoImagenPerfil = "";
 
     public TextField txtCorreo;
-    public TextField txtContrasenna;
+    public PasswordField txtContrasenna;
     public TextField txtNombre;
     public TextField txtApellidos;
     public TextField txtNombreUsuario;

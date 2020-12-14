@@ -1,4 +1,5 @@
 package segura.taylor.controlador.interfaz.usuarios;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.ui.dialogos.AlertDialog;
@@ -7,7 +8,7 @@ public class ControladorLogin {
     private boolean ingresadoCorrectamente = false;
 
     public TextField txtCorreo;
-    public TextField txtContrasenna;
+    public PasswordField txtContrasenna;
 
     public boolean mostrar() {
         return ingresadoCorrectamente;

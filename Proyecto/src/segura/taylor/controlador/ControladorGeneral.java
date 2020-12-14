@@ -8,6 +8,8 @@ import javafx.scene.media.Media;
 import javafx.stage.Stage;
 import segura.taylor.bl.gestor.Gestor;
 
+import segura.taylor.controlador.interfaz.admin.ControladorVentanaPrincipalAdmin;
+import segura.taylor.controlador.interfaz.cliente.ControladorVentanaPrincipalCliente;
 import segura.taylor.ui.dialogos.*;
 
 import java.time.LocalDate;
@@ -17,6 +19,8 @@ import java.time.format.DateTimeFormatter;
 public class ControladorGeneral {
     //Referencia estatica
     public static ControladorGeneral instancia;
+    public static ControladorVentanaPrincipalAdmin refVentanaPrincipalAdmin;
+    public static ControladorVentanaPrincipalCliente refVentanaPrincipalCliente;
 
     //BL
     private Gestor gestor = new Gestor();

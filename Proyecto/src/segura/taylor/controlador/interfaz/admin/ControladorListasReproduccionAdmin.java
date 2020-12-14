@@ -52,9 +52,9 @@ public class ControladorListasReproduccionAdmin {
         columnaNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
 
         //Fecha creación
-        TableColumn<ListaReproduccion, String> columnaFechaCreacion = new TableColumn("Fecha lanzamiento");
+        TableColumn<ListaReproduccion, String> columnaFechaCreacion = new TableColumn("Fecha creacion");
         columnaFechaCreacion.setMinWidth(100);
-        columnaFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("fechaLanzamiento"));
+        columnaFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
 
         //Calificación
         TableColumn<ListaReproduccion, String> columnaCalificacion = new TableColumn("Calificación");

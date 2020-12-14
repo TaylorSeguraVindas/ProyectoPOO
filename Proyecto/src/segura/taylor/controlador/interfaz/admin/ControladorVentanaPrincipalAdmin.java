@@ -13,6 +13,10 @@ public class ControladorVentanaPrincipalAdmin {
         contenedorPrincipal.getChildren().clear();
     }
 
+    public void initialize() {
+        ControladorGeneral.instancia.refVentanaPrincipalAdmin = this;
+    }
+
     //MUSICA
     public void onPausaReproducirPressed() {
         ControladorGeneral.instancia.alternarEstadoCancion();
@@ -128,9 +132,19 @@ public class ControladorVentanaPrincipalAdmin {
     public void mostrarTienda() {
         limpiarPantalla();
         try {
-            ControladorTienda.refVentanaPrincipalAdmin = this;
-
             VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/tienda/VentanaTienda.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            //Expandir
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void mostrarInfoListaReproduccion() {
+        limpiarPantalla();
+        try {
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/tienda/VentanaInfoListaReproduccion.fxml"));
             contenedorPrincipal.getChildren().add(root);
             //Expandir
             root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());

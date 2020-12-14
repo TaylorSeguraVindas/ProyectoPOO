@@ -41,6 +41,15 @@ public class ControladorTienda {
     }
 
     public void mostrarCanciones() {
-        //TODO mostrar canciones
+        limpiarPantalla();
+        try {
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/tienda/VistaCanciones.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            //Expandir
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

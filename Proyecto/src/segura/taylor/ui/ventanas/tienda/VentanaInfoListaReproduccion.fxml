@@ -31,7 +31,7 @@
                                 <children>
                               <Region prefHeight="22.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                     <Button fx:id="btnReproducir" mnemonicParsing="false" onAction="#reproducirLista" prefHeight="40.0" prefWidth="89.0" text="Reproducir" />
-                              <Button fx:id="btnGuardar" layoutX="447.0" layoutY="10.0" mnemonicParsing="false" onAction="#guardarLista" prefHeight="40.0" prefWidth="89.0" text="Guardar" />
+                              <Button fx:id="btnGuardarLista" layoutX="447.0" layoutY="10.0" mnemonicParsing="false" onAction="#guardarLista" prefHeight="40.0" prefWidth="89.0" text="Guardar" />
                                 </children>
                                 <VBox.margin>
                                     <Insets />

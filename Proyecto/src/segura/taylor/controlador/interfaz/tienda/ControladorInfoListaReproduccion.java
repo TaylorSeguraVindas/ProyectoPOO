@@ -2,6 +2,7 @@ package segura.taylor.controlador.interfaz.tienda;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -11,8 +12,6 @@ import javafx.scene.image.ImageView;
 import segura.taylor.bl.entidades.Cancion;
 import segura.taylor.bl.entidades.ListaReproduccion;
 import segura.taylor.controlador.ControladorGeneral;
-import segura.taylor.controlador.interfaz.admin.ControladorVentanaPrincipalAdmin;
-import segura.taylor.controlador.interfaz.cliente.ControladorVentanaPrincipalCliente;
 
 import java.util.Optional;
 
@@ -25,9 +24,15 @@ public class ControladorInfoListaReproduccion {
     public Label lblDescripcion;
     public Label lblFechaCreacion;
 
+    public Button btnGuardarLista;
+
     public void initialize() {
         inicializarTablaCanciones();
         actualizarInfoListaReproduccion();
+
+        if(ControladorGeneral.instancia.getGestor().usuarioIngresadoEsAdmin()) {
+            btnGuardarLista.setDisable(true);
+        }
     }
 
     public void inicializarTablaCanciones() {

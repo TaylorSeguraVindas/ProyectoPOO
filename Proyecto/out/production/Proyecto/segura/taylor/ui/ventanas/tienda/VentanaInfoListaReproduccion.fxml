@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox fx:id="ventanaPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="320.0" minWidth="640.0" prefHeight="441.0" prefWidth="734.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.tienda.ControladorInfoListaReproduccion">
+<VBox fx:id="ventanaPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="320.0" minWidth="640.0" prefHeight="441.0" prefWidth="785.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.tienda.ControladorInfoListaReproduccion">
     <children>
       <Button fx:id="btnVolver" mnemonicParsing="false" onAction="#volver" text="Volver">
          <VBox.margin>
@@ -15,10 +15,10 @@
       </Button>
       <VBox prefHeight="113.0" prefWidth="714.0">
          <children>
-            <HBox prefHeight="217.0" prefWidth="734.0">
+            <HBox prefHeight="172.0" prefWidth="765.0">
                <children>
                   <ImageView fx:id="imgFondo" fitHeight="172.0" fitWidth="188.0" pickOnBounds="true" preserveRatio="true" />
-                    <VBox>
+                    <VBox prefHeight="172.0" prefWidth="586.0" HBox.hgrow="ALWAYS">
                         <children>
                             <Label fx:id="lblNombre" text="Nombre lista">
                                 <font>
@@ -31,7 +31,7 @@
                                 <children>
                               <Region prefHeight="22.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                     <Button fx:id="btnReproducir" mnemonicParsing="false" onAction="#reproducirLista" prefHeight="40.0" prefWidth="89.0" text="Reproducir" />
-                              <Button fx:id="btnGuardar" layoutX="447.0" layoutY="10.0" mnemonicParsing="false" onAction="#guardarLista" prefHeight="40.0" prefWidth="89.0" text="Guardar" />
+                              <Button fx:id="btnGuardarLista" layoutX="447.0" layoutY="10.0" mnemonicParsing="false" onAction="#guardarLista" prefHeight="40.0" prefWidth="89.0" text="Guardar" />
                                 </children>
                                 <VBox.margin>
                                     <Insets />

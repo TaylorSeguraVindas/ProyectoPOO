@@ -155,6 +155,7 @@ public class RepositorioCancionesDAO {
      * Este método se usa para buscar un repositorio de canciones usando como filtro su id
      * @param idRepo int que define el id del repositorio de canciones que se desea encontrar
      * @return objeto de tipo Optional que contiene una instancia de la clase RepositorioCanciones si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la DB o el album no existe
      */
     public Optional<RepositorioCanciones> findByID(int idRepo) throws SQLException {
         Optional<Album> albumEncontrado = findAlbumById(idRepo);
@@ -280,6 +281,7 @@ public class RepositorioCancionesDAO {
      * Este método se usa para buscar una lista de reproduccion usando como filtro su id
      * @param idLista int que define el id de la lista de reproduccion que se desea encontrar
      * @return objeto de tipo Optional que contiene una instancia de la clase ListaReproduccion si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la DB o el album no existe
      */
     public Optional<ListaReproduccion> findListaReproduccionById(int idLista) throws SQLException {
         Statement query = connection.createStatement();

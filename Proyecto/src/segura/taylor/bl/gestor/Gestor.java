@@ -349,6 +349,7 @@ public class Gestor {
      * Método usado para buscar un album usando como filtro su id
      * @param pId int que define el id del album que se desea encontrar
      * @return objeto de tipo Optiona que contiene una instancia de Album si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la DB o el album no existe
      */
     public Optional<Album> buscarAlbumPorId(int pId) throws SQLException {
         return repoCancionesDAO.findAlbumById(pId);
@@ -555,6 +556,7 @@ public class Gestor {
      * @return objeto de tipo Optional que contiene una instancia de ListaReproduccion si se encuentra una coincidencia
      * @see Optional
      * @see ListaReproduccion
+     * @throws SQLException si no se puede conectar con la DB o el album no existe
      */
     public Optional<ListaReproduccion> buscarListaReproduccionPorId(int pIdLista) throws SQLException {
         return repoCancionesDAO.findListaReproduccionById(pIdLista);
@@ -784,6 +786,7 @@ public class Gestor {
      * Método usado para obtener una lista con las canciones almacenadas en la biblioteca de un usuario
      * @param pIdCliente int que define el id del que se desea conocer sus canciones
      * @return lista con las canciones almacenadas en la biblioteca del usuario
+     * @throws SQLException si no se puede conectar con la DB o el album no existe
      */
     public List<Cancion> listarCancionesDeBibliotecaUsuario(int pIdCliente) throws SQLException {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
@@ -808,6 +811,7 @@ public class Gestor {
      * @return objeto de tipo Optional que contiene una instancia de una Cancion si se encuentra una coincidencia
      * @see Optional
      * @see Cancion
+     * @throws SQLException si no se puede conectar con la DB o el album no existe
      */
     public Optional<Cancion> buscarCancionEnBibliotecaUsuario(int pIdCliente, int pIdCancion) throws SQLException {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);

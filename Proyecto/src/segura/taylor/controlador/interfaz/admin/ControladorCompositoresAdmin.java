@@ -18,14 +18,18 @@ import segura.taylor.ui.dialogos.AlertDialog;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ControladorCompositoresAdmin {
     public TableView tblCompositores;
     public VBox ventanaPrincipal;
 
+    public TextField txtBusqueda;
+
+
     public void initialize() {
         inicializarTabla();
-        mostrarDatos();
+        mostrarDatos(false);
     }
 
     public void inicializarTabla() {
@@ -62,23 +66,44 @@ public class ControladorCompositoresAdmin {
         tblCompositores.getColumns().addAll(columnaNombre, columnaApellidos, columnaFechaNacimiento, columnaEdad, columnaPais, columnaGenero);
 
     }
-    private void mostrarDatos() {
+    private void mostrarDatos(boolean usandoFiltro) {
         tblCompositores.getItems().clear();
-        tblCompositores.setItems(obtenerCompositores());
+        tblCompositores.setItems(obtenerCompositores(usandoFiltro));
     }
 
-    public ObservableList<Compositor> obtenerCompositores() {
+    public ObservableList<Compositor> obtenerCompositores(boolean usandoFiltro) {
         List<Compositor> compositores = ControladorGeneral.instancia.getGestor().listarCompositores();
 
         ObservableList<Compositor> compositoresFinal = FXCollections.observableArrayList();
 
         for(Compositor compositor : compositores) {
-            compositoresFinal.addAll(compositor);
+            if(usandoFiltro) {
+                if(compositorCoincideConBusqueda(compositor)) {
+                    compositoresFinal.addAll(compositor);
+                }
+            } else {
+                compositoresFinal.addAll(compositor);
+            }
         }
 
         return compositoresFinal;
     }
 
+    private boolean compositorCoincideConBusqueda(Compositor compositor) {
+        String textoBusqueda = txtBusqueda.getText().trim().toUpperCase(Locale.ROOT);
+
+        String nombreCompositor = compositor.getNombre().trim().toUpperCase(Locale.ROOT);
+        if(nombreCompositor.equals(textoBusqueda) || nombreCompositor.contains(textoBusqueda)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void buscar() {
+        mostrarDatos(true);
+    }
+    
     public void agregarCompositor() {
         try {
             Stage ventanaRegistroCompositor = new Stage();
@@ -97,7 +122,7 @@ public class ControladorCompositoresAdmin {
             ventanaRegistroCompositor.setResizable(false);
             ventanaRegistroCompositor.showAndWait();
 
-            mostrarDatos(); //Actualizar tabla
+            mostrarDatos(false); //Actualizar tabla
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -157,7 +182,7 @@ public class ControladorCompositoresAdmin {
             ventanaRegistroCompositor.setResizable(false);
             ventanaRegistroCompositor.showAndWait();
 
-            mostrarDatos(); //Actualizar tabla
+            mostrarDatos(false); //Actualizar tabla
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -182,7 +207,7 @@ public class ControladorCompositoresAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Compositor eliminado correctamente");
-                    mostrarDatos();
+                    mostrarDatos(false);
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Error", "No se pudo eliminar el Compositor");

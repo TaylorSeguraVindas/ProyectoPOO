@@ -10,17 +10,27 @@ import javafx.scene.layout.VBox;
 import segura.taylor.bl.entidades.Cancion;
 import segura.taylor.bl.enums.TipoCancion;
 import segura.taylor.controlador.ControladorGeneral;
+import segura.taylor.ui.dialogos.VentanaFiltrosCanciones;
 
 import java.util.List;
 import java.util.Locale;
 
 public class ControladorVistaCanciones {
+    public static boolean filtrandoPorNombre = true;
+    public static boolean filtrandoPorArtista = false;
+    public static boolean filtrandoPorGenero = false;
+
     public TableView tblCanciones;
     public VBox ventanaPrincipal;
 
     public TextField txtBusqueda;
 
     public void initialize() {
+        //Reiniciar filtros
+        filtrandoPorNombre = true;
+        filtrandoPorArtista = false;
+        filtrandoPorGenero = false;
+
         inicializarTabla();
         mostrarDatos(false);
     }
@@ -51,12 +61,17 @@ public class ControladorVistaCanciones {
         columnaCompositor.setMinWidth(100);
         columnaCompositor.setCellValueFactory(new PropertyValueFactory<>("nombreCompositor"));
 
+        //Genero
+        TableColumn<Cancion, String> columnaGenero = new TableColumn("Genero");
+        columnaGenero.setMinWidth(100);
+        columnaGenero.setCellValueFactory(new PropertyValueFactory<>("nombreGenero"));
+
         //Precio
         TableColumn<Cancion, String> columnaPrecio = new TableColumn("Precio");
         columnaPrecio.setMinWidth(100);
         columnaPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
 
-        tblCanciones.getColumns().addAll(columnaNombre, columnaDuracion, columnaFechaLanzamiento, columnaArtista, columnaCompositor, columnaPrecio);
+        tblCanciones.getColumns().addAll(columnaNombre, columnaDuracion, columnaFechaLanzamiento, columnaArtista, columnaCompositor, columnaGenero, columnaPrecio);
 
     }
     private void mostrarDatos(boolean usandoFiltro) {
@@ -88,27 +103,27 @@ public class ControladorVistaCanciones {
         String textoBusqueda = txtBusqueda.getText().trim().toUpperCase(Locale.ROOT);
 
         //NOMBRE
-        String nombreCancion = cancion.getNombre().trim().toUpperCase(Locale.ROOT);
-        if(nombreCancion.equals(textoBusqueda) || nombreCancion.contains(textoBusqueda)) {
-            return true;
+        if(filtrandoPorNombre) {
+            String nombreCancion = cancion.getNombre().trim().toUpperCase(Locale.ROOT);
+            if(nombreCancion.equals(textoBusqueda) || nombreCancion.contains(textoBusqueda)) {
+                return true;
+            }
         }
 
         //GENERO
-        String generoCancion = cancion.getGenero().getNombre().trim().toUpperCase(Locale.ROOT);
-        if(generoCancion.equals(textoBusqueda) || generoCancion.contains(textoBusqueda)) {
-            return true;
+        if(filtrandoPorGenero) {
+            String generoCancion = cancion.getGenero().getNombre().trim().toUpperCase(Locale.ROOT);
+            if(generoCancion.equals(textoBusqueda) || generoCancion.contains(textoBusqueda)) {
+                return true;
+            }
         }
 
         //ARTISTA
-        String artistaCancion = cancion.getArtista().getNombreArtistico().trim().toUpperCase(Locale.ROOT);
-        if(artistaCancion.equals(textoBusqueda) || artistaCancion.contains(textoBusqueda)) {
-            return true;
-        }
-
-        //COMPOSITOR
-        String compositorCancion = cancion.getCompositor().getNombre().trim().toUpperCase(Locale.ROOT);
-        if(compositorCancion.equals(textoBusqueda) || compositorCancion.contains(textoBusqueda)) {
-            return true;
+        if (filtrandoPorArtista) {
+            String artistaCancion = cancion.getArtista().getNombreArtistico().trim().toUpperCase(Locale.ROOT);
+            if(artistaCancion.equals(textoBusqueda) || artistaCancion.contains(textoBusqueda)) {
+                return true;
+            }
         }
 
         return false;
@@ -116,6 +131,8 @@ public class ControladorVistaCanciones {
 
     public void abrirFiltros() {
         //Mostrar filtros
+        VentanaFiltrosCanciones ventanaFiltros = new VentanaFiltrosCanciones();
+        ventanaFiltros.mostrar();
     }
 
     public void abrirInfoDetallada() {

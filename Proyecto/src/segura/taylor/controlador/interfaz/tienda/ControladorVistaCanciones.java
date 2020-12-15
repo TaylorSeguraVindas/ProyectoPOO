@@ -32,7 +32,7 @@ public class ControladorVistaCanciones {
         filtrandoPorGenero = false;
 
         inicializarTabla();
-        mostrarDatos(false);
+        mostrarDatos();
     }
 
     public void inicializarTabla() {
@@ -74,9 +74,9 @@ public class ControladorVistaCanciones {
         tblCanciones.getColumns().addAll(columnaNombre, columnaDuracion, columnaFechaLanzamiento, columnaArtista, columnaCompositor, columnaGenero, columnaPrecio);
 
     }
-    private void mostrarDatos(boolean usandoFiltro) {
+    private void mostrarDatos() {
         tblCanciones.getItems().clear();
-        tblCanciones.setItems(obtenerCanciones(usandoFiltro));
+        tblCanciones.setItems(obtenerCanciones(!txtBusqueda.getText().trim().equals("")));   //Usa filtro si el texto de búsqueda no está vacío
     }
 
     public ObservableList<Cancion> obtenerCanciones(boolean usandoFiltro) {
@@ -137,7 +137,7 @@ public class ControladorVistaCanciones {
 
     public void buscar() {
         //Actualizar lista
-        mostrarDatos(true);
+        mostrarDatos();
     }
 
     public void abrirInfoDetallada() {

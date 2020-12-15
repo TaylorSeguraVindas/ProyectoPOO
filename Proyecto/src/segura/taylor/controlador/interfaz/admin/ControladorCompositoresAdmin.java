@@ -29,7 +29,7 @@ public class ControladorCompositoresAdmin {
 
     public void initialize() {
         inicializarTabla();
-        mostrarDatos(false);
+        mostrarDatos();
     }
 
     public void inicializarTabla() {
@@ -66,9 +66,9 @@ public class ControladorCompositoresAdmin {
         tblCompositores.getColumns().addAll(columnaNombre, columnaApellidos, columnaFechaNacimiento, columnaEdad, columnaPais, columnaGenero);
 
     }
-    private void mostrarDatos(boolean usandoFiltro) {
+    private void mostrarDatos() {
         tblCompositores.getItems().clear();
-        tblCompositores.setItems(obtenerCompositores(usandoFiltro));
+        tblCompositores.setItems(obtenerCompositores(!txtBusqueda.getText().trim().equals("")));   //Usa filtro si el texto de búsqueda no está vacío
     }
 
     public ObservableList<Compositor> obtenerCompositores(boolean usandoFiltro) {
@@ -101,7 +101,7 @@ public class ControladorCompositoresAdmin {
     }
 
     public void buscar() {
-        mostrarDatos(true);
+        mostrarDatos();
     }
 
     public void agregarCompositor() {
@@ -122,7 +122,7 @@ public class ControladorCompositoresAdmin {
             ventanaRegistroCompositor.setResizable(false);
             ventanaRegistroCompositor.showAndWait();
 
-            mostrarDatos(false); //Actualizar tabla
+            mostrarDatos(); //Actualizar tabla
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -182,7 +182,7 @@ public class ControladorCompositoresAdmin {
             ventanaRegistroCompositor.setResizable(false);
             ventanaRegistroCompositor.showAndWait();
 
-            mostrarDatos(false); //Actualizar tabla
+            mostrarDatos(); //Actualizar tabla
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -207,7 +207,7 @@ public class ControladorCompositoresAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Compositor eliminado correctamente");
-                    mostrarDatos(false);
+                    mostrarDatos();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Error", "No se pudo eliminar el Compositor");

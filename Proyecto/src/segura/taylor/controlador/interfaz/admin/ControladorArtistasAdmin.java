@@ -18,10 +18,17 @@ import segura.taylor.ui.dialogos.AlertDialog;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ControladorArtistasAdmin {
+    public static boolean filtrandoPorNombre;
+    public static boolean filtrandoPorAlias;
+    public static boolean filtrandoPorNacionalidad;
+
     public TableView tblArtistas;
     public VBox ventanaPrincipal;
+
+    public TextField txtBusqueda;
 
     public void initialize() {
         inicializarTabla();
@@ -79,19 +86,65 @@ public class ControladorArtistasAdmin {
     }
     private void mostrarDatos() {
         tblArtistas.getItems().clear();
-        tblArtistas.setItems(obtenerArtistas());
+        tblArtistas.setItems(obtenerArtistas(!txtBusqueda.getText().trim().equals("")));   //Usa filtro si el texto de búsqueda no está vacío
     }
 
-    public ObservableList<Artista> obtenerArtistas() {
+    public ObservableList<Artista> obtenerArtistas(boolean usandoFiltro) {
         List<Artista> artistas = ControladorGeneral.instancia.getGestor().listarArtistas();
 
         ObservableList<Artista> artistasFinal = FXCollections.observableArrayList();
 
         for(Artista artista : artistas) {
-            artistasFinal.addAll(artista);
+            if(usandoFiltro) {
+                if(artistaCoincideConBusqueda(artista)) {
+                    artistasFinal.addAll(artista);
+                }
+            } else {
+                artistasFinal.addAll(artista);
+            }
         }
 
         return artistasFinal;
+    }
+
+    private boolean artistaCoincideConBusqueda(Artista artista) {
+        String textoBusqueda = txtBusqueda.getText().trim().toUpperCase(Locale.ROOT);
+
+        //NOMBRE
+        if(filtrandoPorNombre) {
+            String nombreArtista = artista.getNombre().trim().toUpperCase(Locale.ROOT);
+
+            if(nombreArtista.equals(textoBusqueda) || nombreArtista.contains(textoBusqueda)) {
+                return true;
+            }
+        }
+
+        //ALIAS
+        if(filtrandoPorAlias) {
+            String nombreArtistico = artista.getNombreArtistico().trim().toUpperCase(Locale.ROOT);
+
+            if(nombreArtistico.equals(textoBusqueda) || nombreArtistico.contains(textoBusqueda)) {
+                return true;
+            }
+        }
+
+        //NACIONALIDAD
+        if(filtrandoPorNombre) {
+            String paisArtista = artista.getNombrePais().trim().toUpperCase(Locale.ROOT);
+
+            if(paisArtista.equals(textoBusqueda) || paisArtista.contains(textoBusqueda)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public void buscar() {
+        mostrarDatos();
+    }
+
+    public void abrirFiltros() {
+
     }
 
     public void agregarArtista() {

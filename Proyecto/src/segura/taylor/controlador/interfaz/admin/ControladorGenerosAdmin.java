@@ -81,7 +81,7 @@ public class ControladorGenerosAdmin {
     public void buscar() {
         mostrarDatos(true);
     }
-    
+
     public void agregarGenero() {
         try {
             Stage ventanaRegistroGenero = new Stage();

@@ -2,6 +2,7 @@ package segura.taylor.dao;
 
 import segura.taylor.bl.entidades.Cancion;
 import segura.taylor.bl.enums.TipoCancion;
+import segura.taylor.bl.enums.TipoRepositorioCanciones;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,6 +23,10 @@ public class CancionDAO {
     private ArtistaDAO artistaDAO;
     private CompositorDAO compositorDAO;
 
+    private CancionesAlbumDAO cancionesAlbumDAO;
+    private CancionesListaReproduccionDAO cancionesListaReproduccionDAO;
+    private CancionesBibliotecaDAO cancionesBibliotecaDAO;
+
     /**
      * Método constructor
      * @param connection instancia de la clase Connection que define la conexión con la DB
@@ -31,6 +36,9 @@ public class CancionDAO {
         this.generoDAO = new GeneroDAO(connection);
         this.artistaDAO = new ArtistaDAO(connection);
         this.compositorDAO = new CompositorDAO(connection);
+        this.cancionesAlbumDAO = new CancionesAlbumDAO(connection);
+        this.cancionesListaReproduccionDAO = new CancionesListaReproduccionDAO(connection);
+        this.cancionesBibliotecaDAO = new CancionesBibliotecaDAO(connection);
     }
 
     /**
@@ -70,24 +78,26 @@ public class CancionDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean update(Cancion cancionActualizada) throws Exception {
-        int indiceCancion = -1;
-        int cont = 0;
+        try {
+            Statement query = connection.createStatement();
+            String update = "UPDATE canciones ";
+            update += "SET nombre = '" + cancionActualizada.getNombre() + "', ";
+            update += "recurso = '" + cancionActualizada.getRecurso() + "', ";
+            update += "duracion = " + cancionActualizada.getDuracion() + ", ";
+            update += "fechaLanzamiento = " + ( (cancionActualizada.getFechaLanzamiento() != null) ? "'" + Date.valueOf(cancionActualizada.getFechaLanzamiento()) + "'" : null) + ", ";
+            update += "precio = " + cancionActualizada.getPrecio() + ", ";
+            update += "idGenero = " + cancionActualizada.getGenero().getId() + ", ";
+            update += "idArtista = " + cancionActualizada.getArtista().getId() + ", ";
+            update += "idCompositor = " + cancionActualizada.getCompositor().getId() + "";
 
-        for (Cancion Cancion : canciones) {
-            if(Cancion.getId() == cancionActualizada.getId()) {
-                indiceCancion = cont;
-                break;
-            }
+            update += " WHERE idCancion = " + cancionActualizada.getId();
 
-            cont++;
-        }
-
-        if(indiceCancion != -1) {
-            canciones.set(indiceCancion, cancionActualizada);
+            query.execute(update);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("La cancion que se desea actualizar no existe");
+        return false;
     }
 
     /**
@@ -97,14 +107,16 @@ public class CancionDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean delete(int idCancion) throws Exception {
-        Optional<Cancion> CancionEncontrado = findByID(idCancion);
+        try {
+            Statement query = connection.createStatement();
+            String insert = "DELETE FROM canciones WHERE idCancion = " + idCancion;
 
-        if(CancionEncontrado.isPresent()) {
-            canciones.remove(CancionEncontrado.get());
+            query.execute(insert);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("La cancion que se desea eliminar no existe");
+        return false;
     }
 
     /**
@@ -172,5 +184,48 @@ public class CancionDAO {
         }
 
         return Optional.empty();
+    }
+
+
+    public ArrayList<Cancion> findCancionesRepo(int idRepo, TipoRepositorioCanciones tipoRepo) throws SQLException {
+        String idCanciones = "";
+
+        if(TipoRepositorioCanciones.ALBUM.equals(tipoRepo)) {
+            idCanciones = cancionesAlbumDAO.getIdCancionesAlbum(idRepo);
+        } else if(TipoRepositorioCanciones.LISTA_REPRODUCCION.equals(tipoRepo)) {
+            idCanciones = cancionesListaReproduccionDAO.getIdCancionesListaReproduccion(idRepo);
+        } else if(TipoRepositorioCanciones.BIBLIOTECA.equals(tipoRepo)) {
+            idCanciones = cancionesBibliotecaDAO.getIdCancionesBiblioteca(idRepo);
+        }
+
+        if(idCanciones == "") { //No hay canciones
+            return new ArrayList<>();
+        }
+
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM canciones WHERE idCancion IN (" + idCanciones + ")");
+
+        ArrayList<Cancion> listaCanciones = new ArrayList<>();
+
+        while (result.next()) {
+            Cancion cancionLeida = new Cancion();
+            cancionLeida.setId(result.getInt("idCancion"));
+            cancionLeida.setTipoCancion(TipoCancion.valueOf(result.getString("tipoCancion")));
+
+            cancionLeida.setNombre(result.getString("nombre"));
+            cancionLeida.setRecurso(result.getString("recurso"));
+
+            cancionLeida.setDuracion(result.getDouble("duracion"));
+            cancionLeida.setFechaLanzamiento(result.getDate("fechaLanzamiento").toLocalDate());
+            cancionLeida.setPrecio(result.getDouble("precio"));
+
+            cancionLeida.setGenero(generoDAO.findByID(result.getInt("idGenero")).get());
+            cancionLeida.setArtista(artistaDAO.findByID(result.getInt("idArtista")).get());
+            cancionLeida.setCompositor(compositorDAO.findByID(result.getInt("idCompositor")).get());
+
+            listaCanciones.add(cancionLeida);
+        }
+
+        return listaCanciones;
     }
 }

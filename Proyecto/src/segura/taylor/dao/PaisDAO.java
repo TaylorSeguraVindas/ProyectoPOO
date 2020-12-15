@@ -56,24 +56,19 @@ public class PaisDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean update(Pais paisActualizado) throws Exception {
-        int indicePais = -1;
-        int cont = 0;
+        try {
+            Statement query = connection.createStatement();
+            String update = "UPDATE paises ";
+            update += "SET nombre = '" + paisActualizado.getNombre() + "',";
+            update += "descripcion = '" + paisActualizado.getDescripcion() + "'";
+            update += " WHERE idPais = " + paisActualizado.getId();
 
-        for (Pais Pais : paises) {
-            if(Pais.getId() == paisActualizado.getId()) {
-                indicePais = cont;
-                break;
-            }
-
-            cont++;
-        }
-
-        if(indicePais != -1) {
-            paises.set(indicePais, paisActualizado);
+            query.execute(update);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("El Pais que se desea actualizar no existe");
+        return false;
     }
 
     /**
@@ -83,14 +78,16 @@ public class PaisDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean delete(int idPais) throws Exception {
-        Optional<Pais> PaisEncontrado = findByID(idPais);
+        try {
+            Statement query = connection.createStatement();
+            String insert = "DELETE FROM paises WHERE idPais = " + idPais;
 
-        if(PaisEncontrado.isPresent()) {
-            paises.remove(PaisEncontrado.get());
+            query.execute(insert);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("El Pais que se desea eliminar no existe");
+        return false;
     }
 
     /**

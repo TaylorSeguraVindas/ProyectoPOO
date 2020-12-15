@@ -2,6 +2,7 @@ package segura.taylor.bl.gestor;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -31,6 +32,11 @@ public class Gestor {
     private RepositorioCancionesDAO repoCancionesDAO;
     private UsuarioDAO usuarioDAO;
 
+    //Intermedias
+    private CancionesAlbumDAO cancionesAlbumDAO;
+    private ArtistasAlbumDAO artistasAlbumDAO;
+    private CancionesListaReproduccionDAO cancionesListaReproduccionDAO;
+
     /**
      * Método constructor
      * Inicializa la conexión con la base de datos y los DAOs que posteriormente serán usados
@@ -44,6 +50,7 @@ public class Gestor {
                 Class.forName(driver).newInstance();
             } catch (Exception e) {
                 e.printStackTrace();
+                return;
             }
 
             System.out.println("LOADED DRIVER ---> " + driver);
@@ -51,13 +58,17 @@ public class Gestor {
             this.connection = DriverManager.getConnection(url, propertiesHandler.getUser(), propertiesHandler.getPwd());
             System.out.println("CONNECTED TO ---> "+ url);
 
-            artistaDAO = new ArtistaDAO(this.connection);
-            cancionDAO = new CancionDAO(this.connection);
-            compostorDAO = new CompositorDAO(this.connection);
-            generoDAO = new GeneroDAO(this.connection);
-            paisDAO = new PaisDAO(this.connection);
-            repoCancionesDAO = new RepositorioCancionesDAO(this.connection);
-            usuarioDAO = new UsuarioDAO(this.connection);
+            this.artistaDAO = new ArtistaDAO(this.connection);
+            this.cancionDAO = new CancionDAO(this.connection);
+            this.compostorDAO = new CompositorDAO(this.connection);
+            this.generoDAO = new GeneroDAO(this.connection);
+            this.paisDAO = new PaisDAO(this.connection);
+            this.repoCancionesDAO = new RepositorioCancionesDAO(this.connection);
+            this.usuarioDAO = new UsuarioDAO(this.connection);
+
+            this.cancionesAlbumDAO = new CancionesAlbumDAO(this.connection);
+            this.artistasAlbumDAO = new ArtistasAlbumDAO(this.connection);
+            this.cancionesListaReproduccionDAO = new CancionesListaReproduccionDAO(this.connection);
         } catch (Exception e) {
             System.out.println("CANT CONNECT TO DATABASE");
             e.printStackTrace();
@@ -89,6 +100,14 @@ public class Gestor {
         return usuarioIngresado.getId();
     }
 
+    /**
+     * Método usado para obtener la biblioteca del cliente ingresado.
+     * @return instancia de la clase Biblioteca que corresponde a la que le pertenece al cliente ingresado
+     */
+    public Biblioteca getBibliotecaUsuarioIngresado() {
+        Cliente clienteIngresado = (Cliente) usuarioIngresado;
+        return clienteIngresado.getBiblioteca();
+    }
 
     //*******General**********
     /**
@@ -288,10 +307,10 @@ public class Gestor {
      * @throws Exception si no se puede hacer la conexion con la DB o si el album no existe
      */
     public boolean modificarAlbum(int pId, String pNombre, String pImagen) throws Exception {
-        Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pId);
+        Optional<Album> albumEncontrado = repoCancionesDAO.findAlbumById(pId);
 
-        if(repoEncontrado.isPresent()){
-            Album albumModifica = (Album) repoEncontrado.get();
+        if(albumEncontrado.isPresent()){
+            Album albumModifica = albumEncontrado.get();
             albumModifica.setNombre(pNombre);
             albumModifica.setImagen(pImagen);
 
@@ -330,31 +349,33 @@ public class Gestor {
      * Método usado para buscar un album usando como filtro su id
      * @param pId int que define el id del album que se desea encontrar
      * @return objeto de tipo Optiona que contiene una instancia de Album si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la DB o el album no existe
      */
-    public Optional<Album> buscarAlbumPorId(int pId){
-        return Optional.of((Album) repoCancionesDAO.findByID(pId).get());
+    public Optional<Album> buscarAlbumPorId(int pId) throws SQLException {
+        return repoCancionesDAO.findAlbumById(pId);
     }
 
     /**
      * Método usado para agregar una canción a un album
      * @param pIdAlbum int que define el id del album que se va a modificar
-     * @param idCancion int que define el id de la canción que se desea incluir
+     * @param pIdCancion int que define el id de la canción que se desea incluir
      * @return true si la agregación es exitosa, false si ocurre algún error
      * @throws Exception si no se puede conectar con la DB o si el album o la cancion no existe
      */
-    public boolean agregarCancionEnAlbum(int pIdAlbum, int idCancion) throws Exception {
-        Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
+    public boolean agregarCancionEnAlbum(int pIdAlbum, int pIdCancion) throws Exception {
+        Optional<Album> repoEncontrado = repoCancionesDAO.findAlbumById(pIdAlbum);
 
         //Busca album
         if(repoEncontrado.isPresent()){
-            Optional<Cancion> nuevaCancion = cancionDAO.findByID(idCancion);
+            Optional<Cancion> nuevaCancion = cancionDAO.findByID(pIdCancion);
 
             //Busca cancion
             if(nuevaCancion.isPresent())
             {
-                Album albumModifica = (Album) repoEncontrado.get();
-                albumModifica.agregarCancion(nuevaCancion.get());
-                return repoCancionesDAO.update(albumModifica);
+                //Album albumModifica = repoEncontrado.get();
+                //albumModifica.agregarCancion(nuevaCancion.get());
+                //return repoCancionesDAO.update(albumModifica);
+                return cancionesAlbumDAO.save(pIdAlbum, pIdCancion); //Modifica tabla intermedia
             }
         }
 
@@ -369,13 +390,11 @@ public class Gestor {
      * @throws Exception si no se puede conectar con la DB o si el album o la cancion no existe
      */
     public boolean removerCancionDeAlbum(int pIdAlbum, int pIdCancion) throws Exception {
-        Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
+        Optional<Album> repoEncontrado = repoCancionesDAO.findAlbumById(pIdAlbum);
 
         //Busca album
         if(repoEncontrado.isPresent()){
-            Album albumModifica = (Album) repoEncontrado.get();
-            albumModifica.removerCancion(pIdCancion);
-            return repoCancionesDAO.update(albumModifica);
+            return cancionesAlbumDAO.delete(pIdAlbum, pIdCancion); //Modifica tabla intermedia
         }
 
         return false;
@@ -389,16 +408,14 @@ public class Gestor {
      * @throws Exception si no se puede conectar con la DB o si el album o artista no existe
      */
     public boolean agregarArtistaEnAlbum(int pIdAlbum, int pIdArtista) throws Exception {
-        Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
+        Optional<Album> repoEncontrado = repoCancionesDAO.findAlbumById(pIdAlbum);
         Optional<Artista> artistaEncontrado = artistaDAO.findByID(pIdArtista);
 
         //Busca album
         if(repoEncontrado.isPresent()){
-            Album albumModifica = (Album) repoEncontrado.get();
-
             if(artistaEncontrado.isPresent()) {
-                albumModifica.agregarArtista(artistaEncontrado.get());
-                return repoCancionesDAO.update(albumModifica);
+                //albumModifica.agregarArtista(artistaEncontrado.get());
+                return artistasAlbumDAO.save(pIdAlbum, pIdArtista);
             }
         }
 
@@ -413,17 +430,11 @@ public class Gestor {
      * @throws Exception si no se puede conectar con la DB o si el album o artista no existe
      */
     public boolean removerArtistaDeAlbum(int pIdAlbum, int pIdArtista) throws Exception {
-        Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdAlbum);
+        Optional<Album> repoEncontrado = repoCancionesDAO.findAlbumById(pIdAlbum);
 
         //Busca album
         if(repoEncontrado.isPresent()){
-            Album albumModifica = (Album) repoEncontrado.get();
-            Optional<Artista> artistaEncontrado = albumModifica.buscarArtista(pIdArtista);  //Referencia al artista dentro del album
-
-            if(artistaEncontrado.isPresent()) {
-                albumModifica.removerArtista(artistaEncontrado.get());
-                return repoCancionesDAO.update(albumModifica);
-            }
+            return artistasAlbumDAO.delete(pIdAlbum, pIdArtista);
         }
 
         return false;
@@ -457,10 +468,10 @@ public class Gestor {
      * @throws Exception si no se puede conectar con la DB o si la lista de reproduccion no existe
      */
     public boolean modificarListaReproduccion(int pIdLista, String pNombre, String pImagen, String pDescripcion) throws Exception {
-        Optional<RepositorioCanciones> listaEncontrada = repoCancionesDAO.findByID(pIdLista);
+        Optional<ListaReproduccion> listaEncontrada = repoCancionesDAO.findListaReproduccionById(pIdLista);
 
         if(listaEncontrada.isPresent()) {
-            ListaReproduccion listaModifica = (ListaReproduccion) listaEncontrada.get();
+            ListaReproduccion listaModifica = listaEncontrada.get();
             listaModifica.setNombre(pNombre);
             listaModifica.setImagen(pImagen);
             listaModifica.setDescripcion(pDescripcion);
@@ -505,7 +516,7 @@ public class Gestor {
      * @throws Exception si no se logra conectar con la DB o si la lista de reproduccion o cancion no existe
      */
     public boolean agregarCancionALista(int pIdLista, int pIdCancion) throws Exception {
-        Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdLista);
+        Optional<ListaReproduccion> repoEncontrado = repoCancionesDAO.findListaReproduccionById(pIdLista);
 
         //Busca lista de reproduccion
         if(repoEncontrado.isPresent()){
@@ -514,9 +525,7 @@ public class Gestor {
             //Busca cancion
             if(nuevaCancion.isPresent())
             {
-                ListaReproduccion listaModifica = (ListaReproduccion) repoEncontrado.get();
-                listaModifica.agregarCancion(nuevaCancion.get());
-                return repoCancionesDAO.update(listaModifica);
+                return cancionesListaReproduccionDAO.save(pIdLista, pIdCancion);
             }
         }
 
@@ -531,13 +540,11 @@ public class Gestor {
      * @throws Exception si no se logra conectar con la DB o si la lista de reproduccion o cancion no existe
      */
     public boolean removerCancionDeLista(int pIdLista, int pIdCancion) throws Exception {
-        Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(pIdLista);
+        Optional<ListaReproduccion> repoEncontrado = repoCancionesDAO.findListaReproduccionById(pIdLista);
 
         //Busca lista de reproduccion
         if(repoEncontrado.isPresent()){
-            ListaReproduccion listaModifica = (ListaReproduccion) repoEncontrado.get();
-            listaModifica.removerCancion(pIdCancion);
-            return repoCancionesDAO.update(listaModifica);
+           return cancionesListaReproduccionDAO.delete(pIdLista, pIdCancion);
         }
 
         return false;
@@ -549,9 +556,10 @@ public class Gestor {
      * @return objeto de tipo Optional que contiene una instancia de ListaReproduccion si se encuentra una coincidencia
      * @see Optional
      * @see ListaReproduccion
+     * @throws SQLException si no se puede conectar con la DB o el album no existe
      */
-    public Optional<ListaReproduccion> buscarListaReproduccionPorId(int pIdLista){
-        return Optional.of((ListaReproduccion) repoCancionesDAO.findByID(pIdLista).get());
+    public Optional<ListaReproduccion> buscarListaReproduccionPorId(int pIdLista) throws SQLException {
+        return repoCancionesDAO.findListaReproduccionById(pIdLista);
     }
 
 
@@ -681,21 +689,19 @@ public class Gestor {
         return cancionDAO.save(nuevaCancion);
     }
 
-    /**
-     * Método usado para modificar una cancion
-     * @param pIdCancion int que define el id de la cancion que se desea modificar
-     * @param pNombre String que define el nuevo nombre de la cancion
-     * @param pPrecio double que define el nuevo precio de la cancion
-     * @return true si la modificacion es exitosa, false si ocurre algun error
-     * @throws Exception si no se puede conectar con la DB o si la cancion no existe
-     */
-    public boolean modificarCancion(int pIdCancion, String pNombre, double pPrecio) throws Exception {
+    public boolean modificarCancion(int pIdCancion, String nombre, String recurso, double duracion, int idGenero, int idArtista, int idCompositor, LocalDate fechaLanzamiento, double precio) throws Exception {
         Optional<Cancion> cancionEncontrada = cancionDAO.findByID(pIdCancion);
 
         if(cancionEncontrada.isPresent()) {
             Cancion cancionModifica = cancionEncontrada.get();
-            cancionModifica.setNombre(pNombre);
-            cancionModifica.setPrecio(pPrecio);
+            cancionModifica.setNombre(nombre);
+            cancionModifica.setRecurso(recurso);
+            cancionModifica.setDuracion(duracion);
+            cancionModifica.setPrecio(precio);
+            cancionModifica.setFechaLanzamiento(fechaLanzamiento);
+            cancionModifica.setGenero(buscarGeneroPorId(idGenero).get());
+            cancionModifica.setArtista(buscarArtistaPorId(idArtista).get());
+            cancionModifica.setCompositor(buscarCompositorPorId(idCompositor).get());
 
             return cancionDAO.update(cancionModifica);
         }
@@ -762,7 +768,7 @@ public class Gestor {
             Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
             int idBiblioteca = clienteModifica.getBiblioteca().getId();
 
-            Optional<RepositorioCanciones> bibliotecaEncontrada = repoCancionesDAO.findByID(idBiblioteca);
+            Optional<Biblioteca> bibliotecaEncontrada = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
             if(bibliotecaEncontrada.isPresent()) {  //Luego verifica si la biblioteca de ese usuario existe
                 Optional<Cancion> cancionEncontrada = cancionDAO.findByID(pIdCancion);
 
@@ -780,14 +786,15 @@ public class Gestor {
      * Método usado para obtener una lista con las canciones almacenadas en la biblioteca de un usuario
      * @param pIdCliente int que define el id del que se desea conocer sus canciones
      * @return lista con las canciones almacenadas en la biblioteca del usuario
+     * @throws SQLException si no se puede conectar con la DB o el album no existe
      */
-    public List<Cancion> listarCancionesDeBibliotecaUsuario(int pIdCliente){
+    public List<Cancion> listarCancionesDeBibliotecaUsuario(int pIdCliente) throws SQLException {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
 
         if(usuarioEncontrado.isPresent()) {  //Primero verifica que el usuario exista
             Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
             int idBiblioteca = clienteModifica.getBiblioteca().getId();
-            Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(idBiblioteca);
+            Optional<Biblioteca> repoEncontrado = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
 
             if(repoEncontrado.isPresent()) {    //Luego verifica que la biblioteca exista
                 return Collections.unmodifiableList(repoEncontrado.get().getCanciones());
@@ -804,14 +811,15 @@ public class Gestor {
      * @return objeto de tipo Optional que contiene una instancia de una Cancion si se encuentra una coincidencia
      * @see Optional
      * @see Cancion
+     * @throws SQLException si no se puede conectar con la DB o el album no existe
      */
-    public Optional<Cancion> buscarCancionEnBibliotecaUsuario(int pIdCliente, int pIdCancion){
+    public Optional<Cancion> buscarCancionEnBibliotecaUsuario(int pIdCliente, int pIdCancion) throws SQLException {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
 
         if(usuarioEncontrado.isPresent()) {  //Primero verifica que el usuario exista
             Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
             int idBiblioteca = clienteModifica.getBiblioteca().getId();
-            Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(idBiblioteca);
+            Optional<Biblioteca> repoEncontrado = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
 
             if(repoEncontrado.isPresent()) {    //Luego verifica que la biblioteca exista
                 return repoEncontrado.get().buscarCancion(pIdCancion);
@@ -834,7 +842,7 @@ public class Gestor {
         if(usuarioEncontrado.isPresent()) {  //Primero verifica que el usuario exista
             Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
             int idBiblioteca = clienteModifica.getBiblioteca().getId();
-            Optional<RepositorioCanciones> repoEncontrado = repoCancionesDAO.findByID(idBiblioteca);
+            Optional<Biblioteca> repoEncontrado = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
 
             if(repoEncontrado.isPresent()) {    //Luego verifica que la biblioteca exista
                 Biblioteca bibliotecaModifica = (Biblioteca) repoEncontrado.get();
@@ -861,6 +869,9 @@ public class Gestor {
      * @throws Exception si no se puede conectar con la DB o si el compositor ya existe
      */
     public boolean crearCompositor(String nombre, String apellidos, int idPaisNacimiento, int idGenero, LocalDate fechaNacimiento, int edad) throws Exception {
+        System.out.println("idGenero: " + idGenero);
+        System.out.println("idPais: " + idPaisNacimiento);
+
         Pais paisNacimiento = buscarPaisPorId(idPaisNacimiento).get();
         Genero genero = buscarGeneroPorId(idGenero).get();
 

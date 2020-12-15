@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -145,7 +147,12 @@ public class ControladorAlbunesAdmin {
         ObservableList<Album> albunesFinal = FXCollections.observableArrayList();
 
         for(Album album : albunes) {
-            albunesFinal.addAll(album);
+            if(albumSeleccionado != null) {
+                if(albumSeleccionado.getId() == album.getId()) {
+                    albumSeleccionado = album;  //Actualizar info del album seleccionado.
+                }
+            }
+            albunesFinal.add(album);
         }
 
         return albunesFinal;
@@ -178,9 +185,9 @@ public class ControladorAlbunesAdmin {
     public void modificarAlbum() {
         try {
             //Referencias para el controlador
-            Album AlbumSeleccionado = (Album) tblAlbunes.getSelectionModel().getSelectedItem();
+            Album albumSeleccionado = (Album) tblAlbunes.getSelectionModel().getSelectedItem();
 
-            if (AlbumSeleccionado == null) {
+            if (albumSeleccionado == null) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Error", "No hay ningún Albun seleccionado");
                 return;
@@ -191,7 +198,7 @@ public class ControladorAlbunesAdmin {
             ventanaRegistroAlbun.initModality(Modality.APPLICATION_MODAL);
 
             ControladorRegistroAlbum.ventana = ventanaRegistroAlbun;
-            ControladorRegistroAlbum.idAlbumSeleccionado = AlbumSeleccionado.getId();
+            ControladorRegistroAlbum.idAlbumSeleccionado = albumSeleccionado.getId();
             ControladorRegistroAlbum.modificando = true;
 
             VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroAlbum.fxml"));
@@ -199,10 +206,15 @@ public class ControladorAlbunesAdmin {
             //Referencia a los campos
             TextField txtNombre = (TextField) root.lookup("#txtNombre");
             DatePicker txtFechaLanzamiento = (DatePicker) root.lookup("#txtFechaLanzamiento");
+            ImageView imgFondo = (ImageView) root.lookup("#imagenFondo");
 
             //Actualizar campos
-            txtNombre.setText(AlbumSeleccionado.getNombre());
-            txtFechaLanzamiento.setValue(AlbumSeleccionado.getFechaLanzamiento());
+            txtNombre.setText(albumSeleccionado.getNombre());
+            txtFechaLanzamiento.setValue(albumSeleccionado.getFechaLanzamiento());
+            System.out.println("Imagen: " + albumSeleccionado.getImagen());
+            if(!albumSeleccionado.getImagen().equals("")) {
+                imgFondo.setImage(new Image(albumSeleccionado.getImagen()));
+            }
 
             //Desactivar campos inmodificables
             txtFechaLanzamiento.setDisable(true);
@@ -260,6 +272,7 @@ public class ControladorAlbunesAdmin {
                 if(resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Éxito", "Artista agregado correctamente!");
+                    mostrarDatos();
                     actualizarInfoAlbum();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
@@ -283,6 +296,7 @@ public class ControladorAlbunesAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Artista removido correctamente");
+                    mostrarDatos();
                     actualizarInfoAlbum();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
@@ -305,6 +319,7 @@ public class ControladorAlbunesAdmin {
                 if(resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Éxito", "Canción agregada correctamente!");
+                    mostrarDatos();
                     actualizarInfoAlbum();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
@@ -328,6 +343,7 @@ public class ControladorAlbunesAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Canción removida correctamente");
+                    mostrarDatos();
                     actualizarInfoAlbum();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();

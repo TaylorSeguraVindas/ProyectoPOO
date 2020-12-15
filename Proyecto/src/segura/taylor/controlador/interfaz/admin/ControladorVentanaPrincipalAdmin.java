@@ -3,6 +3,10 @@ package segura.taylor.controlador.interfaz.admin;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
+import segura.taylor.controlador.ControladorGeneral;
+import segura.taylor.controlador.interfaz.tienda.ControladorTienda;
+
+import javax.naming.ldap.Control;
 
 public class ControladorVentanaPrincipalAdmin {
     public VBox contenedorPrincipal;
@@ -11,6 +15,22 @@ public class ControladorVentanaPrincipalAdmin {
         contenedorPrincipal.getChildren().clear();
     }
 
+    public void initialize() {
+        ControladorGeneral.instancia.refVentanaPrincipalAdmin = this;
+    }
+
+    //MUSICA
+    public void onPausaReproducirPressed() {
+        ControladorGeneral.instancia.alternarEstadoCancion();
+    }
+    public void onSiguienteCancionPressed() {
+        ControladorGeneral.instancia.siguienteCancion();
+    }
+    public void onCancionAnteriorPressed() {
+        ControladorGeneral.instancia.cancionAnterior();
+    }
+
+    //MENUS
     public void mostrarInicio() {
         limpiarPantalla();
         try {
@@ -20,11 +40,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
-    public void mostrarTienda() {
-        limpiarPantalla();
-    }
-
     public void mostrarUsuarios() {
         limpiarPantalla();
         try {
@@ -37,7 +52,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarAlbunes() {
         limpiarPantalla();
         try {
@@ -50,7 +64,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarArtistas() {
         limpiarPantalla();
         try {
@@ -63,7 +76,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarCompositores() {
         limpiarPantalla();
         try {
@@ -76,7 +88,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarGeneros() {
         limpiarPantalla();
         try {
@@ -101,7 +112,6 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarListasReproduccion() {
         limpiarPantalla();
         try {
@@ -114,11 +124,47 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
-
     public void mostrarPaises() {
         limpiarPantalla();
         try {
             VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/admin/PaisesAdmin.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            //Expandir
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void mostrarTienda() {
+        limpiarPantalla();
+        try {
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/tienda/VentanaTienda.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            //Expandir
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void mostrarInfoListaReproduccion() {
+        limpiarPantalla();
+        try {
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/tienda/VentanaInfoListaReproduccion.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            //Expandir
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void mostrarInfoAlbum() {
+        limpiarPantalla();
+        try {
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/tienda/VentanaInfoAlbum.fxml"));
             contenedorPrincipal.getChildren().add(root);
             //Expandir
             root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());

@@ -28,8 +28,8 @@
                             <HBox alignment="TOP_RIGHT" minHeight="32.0" prefWidth="640.0" spacing="10.0">
                                 <children>
                                     <Button fx:id="btnAgregarAlbum" mnemonicParsing="false" onAction="#agregarAlbum" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
-                                    <Button fx:id="btnModificarAlbum" disable="true" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarAlbum" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
-                                    <Button fx:id="btnEliminarAlbum" disable="true" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarAlbum" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
+                                    <Button fx:id="btnModificarAlbum" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarAlbum" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
+                                    <Button fx:id="btnEliminarAlbum" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarAlbum" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
                                 </children>
                                 <VBox.margin>
                                     <Insets />
@@ -50,8 +50,8 @@
                                  <children>
                                     <Label prefHeight="41.0" prefWidth="81.0" text="Artistas" />
                                     <Region prefHeight="32.0" prefWidth="162.0" HBox.hgrow="ALWAYS" />
-                                    <Button fx:id="btnAgregaArtista" disable="true" mnemonicParsing="false" onAction="#agregarArtista" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
-                                    <Button fx:id="btnRemoverArtista" disable="true" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#removerArtista" prefHeight="40.0" prefWidth="89.0" text="Remover" />
+                                    <Button fx:id="btnAgregaArtista" mnemonicParsing="false" onAction="#agregarArtista" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
+                                    <Button fx:id="btnRemoverArtista" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#removerArtista" prefHeight="40.0" prefWidth="89.0" text="Remover" />
                                  </children>
                                  <VBox.margin>
                                     <Insets left="10.0" />
@@ -70,8 +70,8 @@
                                  <children>
                                     <Label prefHeight="40.0" prefWidth="91.0" text="Canciones" />
                                     <Region prefHeight="32.0" prefWidth="149.0" HBox.hgrow="ALWAYS" />
-                                    <Button fx:id="btnAgregarCancion" disable="true" mnemonicParsing="false" onAction="#agregarCancion" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
-                                    <Button fx:id="btnRemoverCancion" disable="true" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#removerCancion" prefHeight="40.0" prefWidth="89.0" text="Remover" />
+                                    <Button fx:id="btnAgregarCancion" mnemonicParsing="false" onAction="#agregarCancion" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
+                                    <Button fx:id="btnRemoverCancion" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#removerCancion" prefHeight="40.0" prefWidth="89.0" text="Remover" />
                                  </children>
                                  <VBox.margin>
                                     <Insets />

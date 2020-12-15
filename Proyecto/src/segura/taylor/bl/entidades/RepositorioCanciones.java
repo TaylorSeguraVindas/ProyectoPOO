@@ -153,4 +153,21 @@ public abstract class RepositorioCanciones {
         }
         return false;
     }
+
+    /**
+     * Método usado para obtener el indice o posicion en la lista de reproduccion de una cancion
+     * @param idCancion int que define el id de la cancion de la que se desea conocer su posicion
+     * @return int que contiene la posicion de la cancion, -1 si no existe
+     */
+    public int obtenerIndiceCancion(int idCancion) {
+        int cont = 0;
+        for (Cancion cancion : canciones) {
+            if(cancion.getId() == idCancion) {
+                return cont;
+            }
+            cont++;
+        }
+
+        return -1;
+    }
 }

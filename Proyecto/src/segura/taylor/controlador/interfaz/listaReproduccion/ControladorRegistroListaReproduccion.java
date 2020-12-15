@@ -1,11 +1,15 @@
 package segura.taylor.controlador.interfaz.listaReproduccion;
 
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.compositor.ControladorRegistroCompositor;
 import segura.taylor.ui.dialogos.AlertDialog;
 
+import java.io.File;
 import java.time.LocalDate;
 
 public class ControladorRegistroListaReproduccion {
@@ -21,6 +25,9 @@ public class ControladorRegistroListaReproduccion {
 
     public Label lblTitulo;
 
+    public ImageView imagenFondo;
+    private String recursoImagenFondo = "";
+
     public void initialize() {
         if(ControladorRegistroListaReproduccion.modificando) {
             lblTitulo.setText("Modificar ListaReproduccion");
@@ -33,14 +40,24 @@ public class ControladorRegistroListaReproduccion {
         }
     }
 
+    public void seleccionarImagen() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccione una imagen de fondo");
+        File selectedFile = fileChooser.showOpenDialog(ventana);
+
+        if(selectedFile != null) {
+            recursoImagenFondo = selectedFile.toURI().toString();
+            imagenFondo.setImage(new Image(recursoImagenFondo));
+        }
+    }
+
     public void registrarListaReproduccion() {
         String nombre = txtNombre.getText();
         LocalDate fechaCreacion = LocalDate.now();
-        String imagen = "";
         String descripcion = txtDescripcion.getText();
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().crearListaReproduccion(nombre, fechaCreacion, imagen, descripcion);
+            boolean resultado = ControladorGeneral.instancia.getGestor().crearListaReproduccion(nombre, fechaCreacion, recursoImagenFondo, descripcion);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Lista de Reproduccion registrada correctamente");
@@ -53,18 +70,13 @@ public class ControladorRegistroListaReproduccion {
             e.printStackTrace();
         }
     }
-    public void seleccionarImagen() {
-        //TODO Funcionalidad para agregar una cancion
-        AlertDialog alertDialog = new AlertDialog();
-        alertDialog.mostrar("Prueba", "Aquí seleccionaría una imagen");
-    }
+
     public void modificarListaReproduccion() {
         String nombre = txtNombre.getText();
-        String imagen = "";
         String descripcion = txtDescripcion.getText();
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().modificarListaReproduccion(idListaReproduccionSeleccionada, nombre, imagen, descripcion);
+            boolean resultado = ControladorGeneral.instancia.getGestor().modificarListaReproduccion(idListaReproduccionSeleccionada, nombre, recursoImagenFondo, descripcion);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Modificacion exitosa", "Lista de Reproduccion modificada correctamente");

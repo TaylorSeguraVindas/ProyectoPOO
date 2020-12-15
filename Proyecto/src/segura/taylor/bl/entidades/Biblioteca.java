@@ -9,15 +9,15 @@ import java.util.Optional;
 
 public class Biblioteca extends RepositorioCanciones {
     //Variables
-    ArrayList<Cancion> cancionesEnCola;
+    ArrayList<Cancion> cancionesGuardadas;
     ArrayList<ListaReproduccion> listasDeReproduccion;
 
     //Propiedades
-    public ArrayList<Cancion> getCancionesEnCola() {
-        return cancionesEnCola;
+    public ArrayList<Cancion> getCancionesGuardadas() {
+        return cancionesGuardadas;
     }
-    public void setCancionesEnCola(ArrayList<Cancion> cancionesEnCola) {
-        this.cancionesEnCola = cancionesEnCola;
+    public void setCancionesGuardadas(ArrayList<Cancion> cancionesGuardadas) {
+        this.cancionesGuardadas = cancionesGuardadas;
     }
 
     public ArrayList<ListaReproduccion> getListasDeReproduccion() {
@@ -34,7 +34,7 @@ public class Biblioteca extends RepositorioCanciones {
      */
     public Biblioteca() {
         this.tipoRepo = TipoRepositorioCanciones.BIBLIOTECA;
-        this.cancionesEnCola = new ArrayList<>();
+        this.cancionesGuardadas = new ArrayList<>();
         this.listasDeReproduccion = new ArrayList<>();
     }
 
@@ -43,13 +43,13 @@ public class Biblioteca extends RepositorioCanciones {
      * @param nombre String que define el nombre
      * @param fechaCreacion LocalDate que define la fecha de creacion
      * @param canciones ArrayList que define las canciones que pertenecen a esta biblioteca
-     * @param cancionesEnCola ArrayList que define las canciones en cola
+     * @param cancionesGuardadas ArrayList que define las canciones en cola
      * @param listasDeReproduccion ArrayList que define las listas de reproduccion que pertenecen a esta biblioteca
      */
-    public Biblioteca(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, ArrayList<Cancion> cancionesEnCola, ArrayList<ListaReproduccion> listasDeReproduccion) {
+    public Biblioteca(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, ArrayList<Cancion> cancionesGuardadas, ArrayList<ListaReproduccion> listasDeReproduccion) {
         super(nombre, fechaCreacion, canciones);
         this.tipoRepo = TipoRepositorioCanciones.BIBLIOTECA;
-        this.cancionesEnCola = cancionesEnCola;
+        this.cancionesGuardadas = cancionesGuardadas;
         this.listasDeReproduccion = listasDeReproduccion;
     }
 
@@ -61,7 +61,7 @@ public class Biblioteca extends RepositorioCanciones {
                 ", nombre='" + nombre + '\'' +
                 ", fechaCreacion='" + fechaCreacion + '\'' +
                 ", canciones=" + canciones +
-                ", cancionesEnCola=" + cancionesEnCola +
+                ", cancionesGuardadas=" + cancionesGuardadas +
                 '}';
     }
 
@@ -71,13 +71,13 @@ public class Biblioteca extends RepositorioCanciones {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Biblioteca that = (Biblioteca) o;
-        return Objects.equals(cancionesEnCola, that.cancionesEnCola) &&
+        return Objects.equals(cancionesGuardadas, that.cancionesGuardadas) &&
                 Objects.equals(listasDeReproduccion, that.listasDeReproduccion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), cancionesEnCola, listasDeReproduccion);
+        return Objects.hash(super.hashCode(), cancionesGuardadas, listasDeReproduccion);
     }
 
     /**
@@ -86,9 +86,9 @@ public class Biblioteca extends RepositorioCanciones {
      * @return true si la agregacion es exitosa, false si la cancion ya ha sido agregada
      * @see Cancion
      */
-    public boolean agregarACola(Cancion cancion){
-        if(!existeEnCola(cancion.getId())){
-            cancionesEnCola.add(cancion);
+    public boolean agregarABiblioteca(Cancion cancion){
+        if(!existeEnBiblioteca(cancion.getId())){
+            cancionesGuardadas.add(cancion);
             return true;
         }
         return false;
@@ -99,9 +99,9 @@ public class Biblioteca extends RepositorioCanciones {
      * @param cancion instancia de la clase Cancion que se desea remover
      * @return true si la eliminacion es exitosa, false si la cancion no existe
      */
-    public boolean removerDeCola(Cancion cancion){
-        if(existeEnCola(cancion.getId())){
-            cancionesEnCola.remove(cancion);
+    public boolean removerDeBiblioteca(Cancion cancion){
+        if(existeEnBiblioteca(cancion.getId())){
+            cancionesGuardadas.remove(cancion);
             return true;
         }
         return false;
@@ -112,8 +112,8 @@ public class Biblioteca extends RepositorioCanciones {
      * @param pIdCancion int que define el id de la cancion que se desea encontrar
      * @return objeto de tipo Optional que contiene una instancia de Cancion si se encuentra una coincidencia
      */
-    public Optional<Cancion> buscarEnCola(int pIdCancion){
-        for (Cancion objCancion: cancionesEnCola) {
+    public Optional<Cancion> buscarEnBiblioteca(int pIdCancion){
+        for (Cancion objCancion: cancionesGuardadas) {
             if(objCancion.getId() == pIdCancion){
                 return Optional.of(objCancion);
             }
@@ -126,8 +126,8 @@ public class Biblioteca extends RepositorioCanciones {
      * @param id int que define el id de al cancion que se desea encontrar
      * @return true si existe en la cola, false si no
      */
-    public boolean existeEnCola(int id){
-        for (Cancion objCancion: cancionesEnCola) {
+    public boolean existeEnBiblioteca(int id){
+        for (Cancion objCancion: cancionesGuardadas) {
             if(id == objCancion.getId()){
                 return true;
             }

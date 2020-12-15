@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -50,9 +52,9 @@ public class ControladorListasReproduccionAdmin {
         columnaNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
 
         //Fecha creación
-        TableColumn<ListaReproduccion, String> columnaFechaCreacion = new TableColumn("Fecha lanzamiento");
+        TableColumn<ListaReproduccion, String> columnaFechaCreacion = new TableColumn("Fecha creacion");
         columnaFechaCreacion.setMinWidth(100);
-        columnaFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("fechaLanzamiento"));
+        columnaFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
 
         //Calificación
         TableColumn<ListaReproduccion, String> columnaCalificacion = new TableColumn("Calificación");
@@ -124,6 +126,11 @@ public class ControladorListasReproduccionAdmin {
         ObservableList<ListaReproduccion> listasReproduccionFinal = FXCollections.observableArrayList();
 
         for(ListaReproduccion listaReproduccion : listasReproduccion) {
+            if(listaReproduccionSeleccionada != null) {
+                if(listaReproduccionSeleccionada.getId() == listaReproduccion.getId()) {
+                    listaReproduccionSeleccionada = listaReproduccion;  //Actualizar info de la lista seleccionada
+                }
+            }
             listasReproduccionFinal.addAll(listaReproduccion);
         }
 
@@ -178,10 +185,14 @@ public class ControladorListasReproduccionAdmin {
             //Referencia a los campos
             TextField txtNombre = (TextField) root.lookup("#txtNombre");
             TextArea txtDescripcion = (TextArea) root.lookup("#txtDescripcion");
+            ImageView imagenFondo = (ImageView) root.lookup("#imagenFondo");
 
             //Actualizar campos
             txtNombre.setText(ListaReproduccionSeleccionada.getNombre());
             txtDescripcion.setText(listaReproduccionSeleccionada.getDescripcion());
+            if(!listaReproduccionSeleccionada.getImagen().equals("")) {
+                imagenFondo.setImage(new Image(listaReproduccionSeleccionada.getImagen()));
+            }
 
             Scene escena = new Scene(root, 710, 550);
 
@@ -236,6 +247,7 @@ public class ControladorListasReproduccionAdmin {
                 if(resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Éxito", "Canción agregada correctamente!");
+                    mostrarDatos();
                     actualizarInfoListaReproduccion();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
@@ -259,6 +271,7 @@ public class ControladorListasReproduccionAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Canción removida correctamente");
+                    mostrarDatos();
                     actualizarInfoListaReproduccion();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();

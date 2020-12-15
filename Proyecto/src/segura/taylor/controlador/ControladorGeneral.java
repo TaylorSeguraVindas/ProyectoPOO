@@ -3,24 +3,42 @@ package segura.taylor.controlador;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.Media;
 import javafx.stage.Stage;
+import segura.taylor.bl.entidades.Album;
+import segura.taylor.bl.entidades.Biblioteca;
+import segura.taylor.bl.entidades.ListaReproduccion;
+import segura.taylor.bl.entidades.RepositorioCanciones;
 import segura.taylor.bl.gestor.Gestor;
 
+import segura.taylor.controlador.interfaz.admin.ControladorVentanaPrincipalAdmin;
+import segura.taylor.controlador.interfaz.cliente.ControladorVentanaPrincipalCliente;
 import segura.taylor.ui.dialogos.*;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public class ControladorGeneral {
     //Referencia estatica
     public static ControladorGeneral instancia;
+    public static ControladorVentanaPrincipalAdmin refVentanaPrincipalAdmin;
+    public static ControladorVentanaPrincipalCliente refVentanaPrincipalCliente;
 
     //BL
     private Gestor gestor = new Gestor();
 
     //UI
     private Stage window;
+
+    //Reproductor
+    private int idCancionActual = 0;
+    private RepositorioCanciones repoCancionesActual;   //La lista que siempre va a estar sonando
+    private MediaPlayer mediaPlayer;
+    private double volumen;
+    private boolean pausado = true;
 
     //Propiedades
     public Gestor getGestor() {
@@ -126,5 +144,114 @@ public class ControladorGeneral {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //MUSICA
+    public void reproducirLista(int idLista) {
+        try {
+            Optional<ListaReproduccion> listaEncontrada = gestor.buscarListaReproduccionPorId(idLista);
+
+            if(listaEncontrada.isPresent()) {
+                repoCancionesActual = listaEncontrada.get();
+                reproducirRepoActual();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reproducirAlbum(int idAlbum) {
+        try {
+            Optional<Album> albumEncontrado = gestor.buscarAlbumPorId(idAlbum);
+
+            if(albumEncontrado.isPresent()) {
+                repoCancionesActual = albumEncontrado.get();
+                reproducirRepoActual();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reproducirBibliotecaUsuarioIngresado() {
+        if(gestor.usuarioIngresadoEsAdmin()) return;    //El admin no tiene biblioteca
+
+        repoCancionesActual = gestor.getBibliotecaUsuarioIngresado();
+        reproducirRepoActual();
+    }
+
+    private void reproducirRepoActual() {
+        if(repoCancionesActual.getCanciones().size() > 0) {
+            cargarCancionDeRepo(0);    //Reproduce la primer cancion
+            reproducirCancion();
+        }
+    }
+    public void cargarCancionDeRepo(int posicion) {
+        if(repoCancionesActual == null) return;
+
+        idCancionActual = repoCancionesActual.getCanciones().get(posicion).getId();
+        cargarCancion(repoCancionesActual.getCanciones().get(posicion).getRecurso());
+        reproducirCancion();
+    }
+
+    public void cargarCancion(String pRecurso) {
+        if(mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
+
+        Media media = new Media(pRecurso);
+        mediaPlayer = new MediaPlayer(media);
+    }
+
+    public void siguienteCancion() {
+        if(repoCancionesActual == null) return;
+
+        int siguienteCancion = repoCancionesActual.obtenerIndiceCancion(idCancionActual) + 1;
+
+        if(siguienteCancion < repoCancionesActual.getCanciones().size()) {  //Reproduce la siguiente cancion
+            cargarCancionDeRepo(siguienteCancion);
+            reproducirCancion();
+        } else {    //Reproduce la ultima cancion
+            cargarCancionDeRepo(repoCancionesActual.getCanciones().size() - 1);
+            reproducirCancion();
+        }
+    }
+
+    public void cancionAnterior() {
+        if(repoCancionesActual == null) return;
+
+        int cancionAnterior = repoCancionesActual.obtenerIndiceCancion(idCancionActual) - 1;
+
+        if(cancionAnterior > 0) {  //Reproduce la siguiente cancion
+            cargarCancionDeRepo(cancionAnterior);
+            reproducirCancion();
+        } else {    //Reproduce la ultima cancion
+            cargarCancionDeRepo(0);
+            reproducirCancion();
+        }
+    }
+
+    public void detenerCancion() {
+        mediaPlayer.stop();
+    }
+
+    public void alternarEstadoCancion() {
+        if (mediaPlayer != null) {
+            if(pausado) {
+                reproducirCancion();
+            } else {
+                pausarCancion();
+            }
+        }
+    }
+
+    public void pausarCancion() {
+        mediaPlayer.pause();
+        pausado = true;
+    }
+
+    public void reproducirCancion() {
+        mediaPlayer.play();
+        pausado = false;
     }
 }

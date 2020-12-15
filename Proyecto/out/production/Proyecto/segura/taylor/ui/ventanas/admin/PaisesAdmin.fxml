@@ -24,8 +24,8 @@
                 <HBox alignment="TOP_RIGHT" minHeight="32.0" prefWidth="640.0" spacing="10.0">
                     <children>
                         <Button fx:id="btnAgregarPais" mnemonicParsing="false" onAction="#agregarPais" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
-                        <Button fx:id="btnModificarPais" disable="true" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarPais" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
-                        <Button fx:id="btnEliminarPais" disable="true" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarPais" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
+                        <Button fx:id="btnModificarPais" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarPais" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
+                        <Button fx:id="btnEliminarPais" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarPais" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
                     </children>
                     <VBox.margin>
                         <Insets />

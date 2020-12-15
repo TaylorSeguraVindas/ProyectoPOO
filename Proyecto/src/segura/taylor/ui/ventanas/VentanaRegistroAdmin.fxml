@@ -26,7 +26,7 @@
                                 <Label text="Correo electrónico" />
                                 <TextField fx:id="txtCorreo" promptText="Correo" />
                                 <Label layoutX="10.0" layoutY="10.0" text="Contrasenna" />
-                                <TextField fx:id="txtContrasenna" layoutX="10.0" layoutY="10.0" promptText="Contrasenna" />
+                                <PasswordField fx:id="txtContrasenna" layoutX="10.0" layoutY="10.0" promptText="Contrasenna" />
                                 <Label layoutX="10.0" layoutY="52.0" text="Nombre" />
                                 <TextField fx:id="txtNombre" layoutX="10.0" layoutY="35.0" promptText="Nombre" />
                                 <Label layoutX="10.0" layoutY="94.0" text="Apellidos" />
@@ -40,8 +40,8 @@
                                 <VBox alignment="CENTER">
                                     <children>
                                         <Label text="Foto de perfil" />
-                                        <ImageView fitHeight="129.0" fitWidth="157.0" pickOnBounds="true" preserveRatio="true" />
-                                        <Button mnemonicParsing="false" text="Seleccionar" />
+                                        <ImageView fx:id="imagenPerfil" fitHeight="129.0" fitWidth="157.0" pickOnBounds="true" preserveRatio="true" />
+                                        <Button fx:id="btnSeleccionarImagen" mnemonicParsing="false" onAction="#seleccionarImagen" text="Seleccionar" />
                                     </children>
                                 </VBox>
                             </children>

@@ -1,9 +1,15 @@
 package segura.taylor.controlador.interfaz.cancion;
 
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import segura.taylor.bl.entidades.*;
@@ -15,7 +21,9 @@ import segura.taylor.controlador.interfaz.compositor.ControladorRegistroComposit
 import segura.taylor.controlador.interfaz.genero.ControladorRegistroGenero;
 import segura.taylor.ui.dialogos.AlertDialog;
 
+import java.io.File;
 import java.time.LocalDate;
+import java.util.Map;
 
 public class ControladorRegistroCancion {
     public static int idCancionSeleccionada;
@@ -65,9 +73,44 @@ public class ControladorRegistroCancion {
     }
 
     public void seleccionarRecurso() {
-        //TODO logica para seleccionar un archivo
-        AlertDialog alertDialog = new AlertDialog();
-        alertDialog.mostrar("Prueba", "Aquí seleccionaría el recurso");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccione una cancion");
+
+        //FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Audio files", "*.mp3", "*.wav", "*.ogg");
+        //fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.setInitialDirectory(new File("C:/dev/"));
+        File selectedFile = fileChooser.showOpenDialog(ventana);
+
+        if(selectedFile != null) {  //Actualizar campos
+            txtRecurso.setText(selectedFile.toURI().toString());
+
+            Media media = new Media(txtRecurso.getText());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setOnReady(new Runnable() {
+                @Override
+                public void run() {
+                    txtDuracion.setText(String.valueOf(media.getDuration().toMinutes()));
+
+                    // display media's metadata
+                    for (Map.Entry<String, Object> entry : media.getMetadata().entrySet()){
+                        System.out.println(entry.getKey() + ": " + entry.getValue());
+
+                        if(entry.getKey().equals("artist")) {
+                            //TODO Hacer algo con el artista
+                        }
+                        if(entry.getKey().equals("album")) {
+                            //TODO Hacer algo con el album
+                        }
+                        if(entry.getKey().equals("genre")) {
+                            //TODO hacer algo con el genero
+                        }
+                        if(entry.getKey().equals("title")) {
+                            txtNombre.setText(entry.getValue().toString());
+                        }
+                    }
+                }
+            });
+        }
     }
     public void crearArtista() {
         try {
@@ -79,7 +122,7 @@ public class ControladorRegistroCancion {
             ControladorRegistroArtista.ventana = ventanaRegistroArtista;
             ControladorRegistroArtista.modificando = false;
 
-            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroArtista.fxml"));
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroArtista.fxml"));
             Scene escena = new Scene(root, 580, 440);
 
             ventanaRegistroArtista.setScene(escena);
@@ -103,7 +146,7 @@ public class ControladorRegistroCancion {
             ControladorRegistroCompositor.ventana = ventanaRegistroArtista;
             ControladorRegistroCompositor.modificando = false;
 
-            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroCompositor.fxml"));
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroCompositor.fxml"));
             Scene escena = new Scene(root, 580, 440);
 
             ventanaRegistroArtista.setScene(escena);
@@ -127,7 +170,7 @@ public class ControladorRegistroCancion {
             ControladorRegistroGenero.ventana = ventanaRegistroArtista;
             ControladorRegistroGenero.modificando = false;
 
-            VBox root = FXMLLoader.load(getClass().getResource("../../ui/ventanas/VentanaRegistroGenero.fxml"));
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroGenero.fxml"));
             Scene escena = new Scene(root, 580, 440);
 
             ventanaRegistroArtista.setScene(escena);
@@ -179,9 +222,24 @@ public class ControladorRegistroCancion {
     public void modificarCancion() {
         try {
             String nombre = txtNombre.getText();
+            String recurso = txtRecurso.getText();
+            double duracion = Double.parseDouble(txtDuracion.getText());
+
+            //Combo boxes
+            String[] itemGenero = txtGenero.getValue().toString().split("-");
+            int genero = Integer.parseInt(itemGenero[0]);
+
+            String[] itemArtista = txtArtista.getValue().toString().split("-");
+            int artista = Integer.parseInt(itemArtista[0]);
+
+            String[] itemCompositor = txtCompositor.getValue().toString().split("-");
+            int compositor = Integer.parseInt(itemCompositor[0]);
+
+            LocalDate fechaLanzamiento = txtFechaLanzamiento.getValue();
             double precio = Double.parseDouble(txtPrecio.getText());
 
-            boolean resultado = ControladorGeneral.instancia.getGestor().modificarCancion(idCancionSeleccionada, nombre, precio);
+            boolean resultado = ControladorGeneral.instancia.getGestor().modificarCancion(idCancionSeleccionada, nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, precio);
+
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Modificacion exitosa", "Cancion modificado correctamente");

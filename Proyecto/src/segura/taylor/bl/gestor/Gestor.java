@@ -93,6 +93,14 @@ public class Gestor {
     }
 
     /**
+     * Método usado para conocer el usuario ingresado.
+     * @return
+     */
+    public Usuario getUsuarioIngresado() {
+        return usuarioIngresado;
+    }
+
+    /**
      * Metodo usado para conocer el id del usuario que está usando la aplicación
      * @return id del usuario que está usando la aplicación
      */
@@ -214,27 +222,43 @@ public class Gestor {
      * @param id int que define el id del usuario que se va a modificar
      * @param pNombreUsuario String que define el nuevo nombre de usuario
      * @param pImagenPerfil String que define la nueva ruta de la imagen de perfil del usuario
-     * @param pContrasenna Strinq que define la nueva contraseña del usuario
      * @param pNombre String que define el nuevo nombre del usuario
      * @param pApellidos String que define los nuevos apellidos del usuario
      * @return true si la modificación es existosa, false si ocurre algún error
      * @throws Exception si no se puede realizar la conexión con la DB o si el usuario no existe
      */
-    public boolean modificarUsuario(int id, String pNombreUsuario, String pImagenPerfil, String pContrasenna, String pNombre, String pApellidos) throws Exception {
+    public boolean modificarUsuario(int id, String correo, String pNombreUsuario, String pImagenPerfil, String pNombre, String pApellidos) throws Exception {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(id);
 
         if(usuarioEncontrado.isPresent()){
+
             Usuario usuarioModifica = usuarioEncontrado.get();
+
+            usuarioModifica.setCorreo(correo);
             usuarioModifica.setNombreUsuario(pNombreUsuario);
             usuarioModifica.setImagenPerfil(pImagenPerfil);
-            usuarioModifica.setContrasenna(pContrasenna);
             usuarioModifica.setNombre(pNombre);
             usuarioModifica.setApellidos(pApellidos);
+
+            if(usuarioIngresado.getId() == usuarioModifica.getId()) {
+                usuarioIngresado = usuarioModifica; //Actualizar info del usuario ingresado.
+            }
 
             return usuarioDAO.update(usuarioModifica);
         }
 
         return false;
+    }
+
+    /**
+     * Método usado para modificar la contraseña de un usuario
+     * @param idUsuario int que define el id del usuario que se va a modificar su contraseña
+     * @param nuevaContrasenna String que define la nueva contraseña
+     * @return true si la modificacion es exitosa, false si ocurre algun error
+     */
+    public boolean modificarContrasennaUsuario(int idUsuario, String nuevaContrasenna) {
+        //TODO
+        return true;
     }
 
     /**
@@ -268,16 +292,28 @@ public class Gestor {
      * @param pId int que define el id del usuario que se desea buscar
      * @return instancia de la clase Usuario si se encuentra alguno, null si no hay coincidencias
      */
-    public Usuario buscarUsuarioPorId(int pId){
-        return usuarioDAO.findByID(pId).get();
+    public Optional<Usuario> buscarUsuarioPorId(int pId){
+        try {
+            return usuarioDAO.findByID(pId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
     /**
      * Método usado para buscar un usuario por correo
      * @param pCorreo String que define el correo del usuario que se desea buscar
      * @return instancia de la clase Usuario si se encuentra alguno, null si no hay coincidencias
      */
-    public Usuario buscarUsuarioPorCorreo(String pCorreo){
-        return usuarioDAO.findByEmail(pCorreo).get();
+    public Optional<Usuario> buscarUsuarioPorCorreo(String pCorreo){
+        try {
+            return usuarioDAO.findByEmail(pCorreo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 
 

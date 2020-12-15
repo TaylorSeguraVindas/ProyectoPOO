@@ -2,11 +2,19 @@ package segura.taylor.controlador.interfaz.admin;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import segura.taylor.bl.entidades.Admin;
 import segura.taylor.controlador.ControladorGeneral;
-import segura.taylor.controlador.interfaz.tienda.ControladorTienda;
+import segura.taylor.controlador.interfaz.usuarios.ControladorRegistroAdmin;
+import segura.taylor.ui.dialogos.AlertDialog;
 
-import javax.naming.ldap.Control;
 
 public class ControladorVentanaPrincipalAdmin {
     public VBox contenedorPrincipal;
@@ -169,6 +177,65 @@ public class ControladorVentanaPrincipalAdmin {
             //Expandir
             root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
             root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void modificarAdmin() {
+        if(!ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) return;
+
+        try {
+            //Referencias para el controlador
+            Admin usuarioIngresado = (Admin) ControladorGeneral.instancia.getUsuarioIngresado();
+
+            if (usuarioIngresado == null) {
+                AlertDialog alertDialog = new AlertDialog();
+                alertDialog.mostrar("Error", "No se pudo verificar el usuario ingresado");
+                return;
+            }
+
+            Stage ventanaRegistroAdmin = new Stage();
+            //This locks previous window interacivity until this one is closed.
+            ventanaRegistroAdmin.initModality(Modality.APPLICATION_MODAL);
+
+            ControladorRegistroAdmin.ventana = ventanaRegistroAdmin;
+            ControladorRegistroAdmin.idAdmin = usuarioIngresado.getId();
+            ControladorRegistroAdmin.modificando = true;
+
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroAdmin.fxml"));
+
+            //Referencia a los campos
+            TextField txtCorreo = (TextField) root.lookup("#txtCorreo");
+            PasswordField txtContrasenna = (PasswordField) root.lookup("#txtContrasenna");
+            TextField txtNombre = (TextField) root.lookup("#txtNombre");
+            TextField txtApellidos = (TextField) root.lookup("#txtApellidos");
+            TextField txtNombreUsuario = (TextField) root.lookup("#txtNombreUsuario");
+            ImageView imagenPerfil = (ImageView) root.lookup("#imagenPerfil");
+
+            //Actualizar campos
+            txtCorreo.setText(usuarioIngresado.getCorreo());
+            txtContrasenna.setText(usuarioIngresado.getContrasenna());
+            txtNombre.setText(usuarioIngresado.getNombre());
+            txtApellidos.setText(usuarioIngresado.getApellidos());
+            txtNombreUsuario.setText(usuarioIngresado.getNombreUsuario());
+
+            ControladorRegistroAdmin.urlImagenPerfil = "";
+
+            if(!usuarioIngresado.getImagenPerfil().equals("")) {
+                ControladorRegistroAdmin.urlImagenPerfil = usuarioIngresado.getImagenPerfil();
+                imagenPerfil.setImage(new Image(usuarioIngresado.getImagenPerfil()));
+            }
+
+            //Desactivar campos inmodificables
+            txtContrasenna.setDisable(true);
+
+            Scene escena = new Scene(root, 580, 440);
+
+            ventanaRegistroAdmin.setScene(escena);
+            ventanaRegistroAdmin.setTitle("Modificación de admin");
+            ventanaRegistroAdmin.setResizable(false);
+            ventanaRegistroAdmin.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }

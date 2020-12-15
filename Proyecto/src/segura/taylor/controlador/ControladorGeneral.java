@@ -6,10 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.Media;
 import javafx.stage.Stage;
-import segura.taylor.bl.entidades.Album;
-import segura.taylor.bl.entidades.Biblioteca;
-import segura.taylor.bl.entidades.ListaReproduccion;
-import segura.taylor.bl.entidades.RepositorioCanciones;
+import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.gestor.Gestor;
 
 import segura.taylor.controlador.interfaz.admin.ControladorVentanaPrincipalAdmin;
@@ -43,6 +40,20 @@ public class ControladorGeneral {
     //Propiedades
     public Gestor getGestor() {
         return gestor;
+    }
+
+    public Usuario getUsuarioIngresado() {
+        return gestor.getUsuarioIngresado();
+    }
+    public int getIdUsuarioIngresado() {
+        return gestor.getIdUsuarioIngresado();
+    }
+    public Biblioteca getBibliotecaUsuarioIngresado() {
+        return gestor.getBibliotecaUsuarioIngresado();
+    }
+
+    public boolean usuarioIngresadoEsAdmin() {
+        return gestor.usuarioIngresadoEsAdmin();
     }
 
     public ControladorGeneral() {

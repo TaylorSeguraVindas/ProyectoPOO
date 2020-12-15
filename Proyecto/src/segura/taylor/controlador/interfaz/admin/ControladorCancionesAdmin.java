@@ -13,17 +13,30 @@ import segura.taylor.bl.entidades.*;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.cancion.ControladorRegistroCancion;
 import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.VentanaFiltroCancionesAdmin;
+import segura.taylor.ui.dialogos.VentanaFiltrosCancionesTienda;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ControladorCancionesAdmin {
+    public static boolean filtrandoPorNombre = true;
+    public static boolean filtrandoPorArtista = false;
+    public static boolean filtrandoPorGenero = false;
+
     public TableView tblCanciones;
     public VBox ventanaPrincipal;
+    public TextField txtBusqueda;
 
     public void initialize() {
+        //Reiniciar filtros
+        filtrandoPorNombre = true;
+        filtrandoPorArtista = false;
+        filtrandoPorGenero = false;
+
         inicializarTabla();
-        mostrarDatos();
+        mostrarDatos(false);
     }
 
     public void inicializarTabla() {
@@ -70,21 +83,68 @@ public class ControladorCancionesAdmin {
         tblCanciones.getColumns().addAll(columnaRecurso, columnaNombre, columnaDuracion, columnaFechaLanzamiento, columnaArtista, columnaCompositor, columnaGenero, columnaPrecio);
 
     }
-    private void mostrarDatos() {
+    private void mostrarDatos(boolean usandoFiltros) {
         tblCanciones.getItems().clear();
-        tblCanciones.setItems(obtenerCanciones());
+        tblCanciones.setItems(obtenerCanciones(usandoFiltros));
     }
 
-    public ObservableList<Cancion> obtenerCanciones() {
-        List<Cancion> Canciones = ControladorGeneral.instancia.getGestor().listarCanciones();
+    public ObservableList<Cancion> obtenerCanciones(boolean usandoFiltros) {
+        List<Cancion> canciones = ControladorGeneral.instancia.getGestor().listarCanciones();
 
-        ObservableList<Cancion> CancionesFinal = FXCollections.observableArrayList();
+        ObservableList<Cancion> cancionesFinal = FXCollections.observableArrayList();
 
-        for(Cancion Cancion : Canciones) {
-            CancionesFinal.addAll(Cancion);
+        for(Cancion cancion : canciones) {
+            if(usandoFiltros) {
+                if(cancionCoincideConBusqueda(cancion)) {
+                    cancionesFinal.addAll(cancion);
+                }
+            } else {
+                cancionesFinal.addAll(cancion);
+            }
         }
 
-        return CancionesFinal;
+        return cancionesFinal;
+    }
+
+    private boolean cancionCoincideConBusqueda(Cancion cancion) {
+        String textoBusqueda = txtBusqueda.getText().trim().toUpperCase(Locale.ROOT);
+
+        //NOMBRE
+        if(filtrandoPorNombre) {
+            String nombreCancion = cancion.getNombre().trim().toUpperCase(Locale.ROOT);
+            if(nombreCancion.equals(textoBusqueda) || nombreCancion.contains(textoBusqueda)) {
+                return true;
+            }
+        }
+
+        //GENERO
+        if(filtrandoPorGenero) {
+            String generoCancion = cancion.getGenero().getNombre().trim().toUpperCase(Locale.ROOT);
+            if(generoCancion.equals(textoBusqueda) || generoCancion.contains(textoBusqueda)) {
+                return true;
+            }
+        }
+
+        //ARTISTA
+        if (filtrandoPorArtista) {
+            String artistaCancion = cancion.getArtista().getNombreArtistico().trim().toUpperCase(Locale.ROOT);
+            if(artistaCancion.equals(textoBusqueda) || artistaCancion.contains(textoBusqueda)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void abrirFiltros() {
+        //Mostrar filtros
+        VentanaFiltroCancionesAdmin ventanaFiltros = new VentanaFiltroCancionesAdmin();
+        ventanaFiltros.mostrar();
+    }
+
+    public void buscar() {
+        //Actualizar lista
+        mostrarDatos(true);
     }
 
     public void reproducirCancion() {
@@ -114,7 +174,7 @@ public class ControladorCancionesAdmin {
             ventanaRegistroCancion.setResizable(false);
             ventanaRegistroCancion.showAndWait();
 
-            mostrarDatos(); //Actualizar tabla
+            mostrarDatos(false); //Actualizar tabla
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -185,7 +245,7 @@ public class ControladorCancionesAdmin {
             ventanaRegistroCancion.setResizable(false);
             ventanaRegistroCancion.showAndWait();
 
-            mostrarDatos(); //Actualizar tabla
+            mostrarDatos(false); //Actualizar tabla
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -210,7 +270,7 @@ public class ControladorCancionesAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Cancion eliminada correctamente");
-                    mostrarDatos();
+                    mostrarDatos(false);
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Error", "No se pudo eliminar la Cancion");

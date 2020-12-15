@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="219.0" prefWidth="307.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.tienda.ControladorFiltroCanciones">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="219.0" prefWidth="307.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER" prefHeight="60.0" prefWidth="600.0">
          <children>
@@ -18,9 +18,9 @@
       </VBox>
       <VBox prefHeight="131.0" prefWidth="307.0" spacing="10.0">
          <children>
-            <CheckBox fx:id="chbFiltroNombre" mnemonicParsing="false" onAction="#cambioFiltroNombre" text="Filtrar por nombre" />
-            <CheckBox fx:id="chbFiltroArtista" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#cambioFiltroArtista" text="Filtrar por artista" />
-            <CheckBox fx:id="chbFiltroGenero" layoutX="10.0" layoutY="27.0" mnemonicParsing="false" onAction="#cambioFiltroGenero" text="Filtrar por genero" />
+            <CheckBox fx:id="chbFiltroNombre" mnemonicParsing="false" text="Filtrar por nombre" />
+            <CheckBox fx:id="chbFiltroArtista" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Filtrar por artista" />
+            <CheckBox fx:id="chbFiltroGenero" layoutX="10.0" layoutY="27.0" mnemonicParsing="false" text="Filtrar por genero" />
          </children>
          <padding>
             <Insets left="20.0" top="20.0" />

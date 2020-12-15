@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 import segura.taylor.bl.entidades.Cancion;
 import segura.taylor.bl.enums.TipoCancion;
 import segura.taylor.controlador.ControladorGeneral;
-import segura.taylor.ui.dialogos.VentanaFiltrosCanciones;
+import segura.taylor.ui.dialogos.VentanaFiltrosCancionesTienda;
 
 import java.util.List;
 import java.util.Locale;
@@ -131,16 +131,16 @@ public class ControladorVistaCanciones {
 
     public void abrirFiltros() {
         //Mostrar filtros
-        VentanaFiltrosCanciones ventanaFiltros = new VentanaFiltrosCanciones();
+        VentanaFiltrosCancionesTienda ventanaFiltros = new VentanaFiltrosCancionesTienda();
         ventanaFiltros.mostrar();
-    }
-
-    public void abrirInfoDetallada() {
-        //Abrir info detallada de la cancion
     }
 
     public void buscar() {
         //Actualizar lista
         mostrarDatos(true);
+    }
+
+    public void abrirInfoDetallada() {
+        //Abrir info detallada de la cancion
     }
 }

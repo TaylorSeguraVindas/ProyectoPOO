@@ -15,15 +15,16 @@ import segura.taylor.bl.entidades.Pais;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.artista.ControladorRegistroArtista;
 import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.VentanaFiltroArtistasAdmin;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.util.List;
 import java.util.Locale;
 
 public class ControladorArtistasAdmin {
-    public static boolean filtrandoPorNombre;
-    public static boolean filtrandoPorAlias;
-    public static boolean filtrandoPorNacionalidad;
+    public static boolean filtrandoPorNombre = true;
+    public static boolean filtrandoPorAlias = false;
+    public static boolean filtrandoPorNacionalidad = false;
 
     public TableView tblArtistas;
     public VBox ventanaPrincipal;
@@ -31,6 +32,11 @@ public class ControladorArtistasAdmin {
     public TextField txtBusqueda;
 
     public void initialize() {
+        //Reiniciar filtros
+        filtrandoPorNombre = true;
+        filtrandoPorAlias = false;
+        filtrandoPorNacionalidad = false;
+
         inicializarTabla();
         mostrarDatos();
     }
@@ -144,7 +150,8 @@ public class ControladorArtistasAdmin {
     }
 
     public void abrirFiltros() {
-
+        VentanaFiltroArtistasAdmin ventanaFiltros = new VentanaFiltroArtistasAdmin();
+        ventanaFiltros.mostrar();
     }
 
     public void agregarArtista() {

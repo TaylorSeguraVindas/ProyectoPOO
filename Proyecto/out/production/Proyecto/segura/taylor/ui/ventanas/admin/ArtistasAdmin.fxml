@@ -21,11 +21,15 @@
       </VBox>
       <VBox alignment="TOP_CENTER" prefHeight="316.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
          <children>
-            <HBox alignment="TOP_RIGHT" minHeight="32.0" prefWidth="640.0" spacing="10.0">
+            <HBox alignment="TOP_RIGHT" minHeight="32.0" prefWidth="640.0">
                <children>
-                  <Button fx:id="btnAgregarArtista" mnemonicParsing="false" onAction="#agregarArtista" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
-                  <Button fx:id="btnModificarArtista" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarArtista" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
-                  <Button fx:id="btnEliminarArtista" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarArtista" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />
+                  <TextField fx:id="txtBusqueda" prefHeight="32.0" prefWidth="214.0" promptText="Buscar" />
+                  <Button fx:id="btnBuscar" layoutX="532.0" layoutY="10.0" mnemonicParsing="false" onAction="#buscar" prefHeight="32.0" prefWidth="61.0" text="Buscar" />
+                  <Button fx:id="btnFiltros" layoutX="303.0" layoutY="10.0" mnemonicParsing="false" onAction="#abrirFiltros" prefHeight="32.0" prefWidth="61.0" text="Filtros" />
+                  <Region prefHeight="32.0" prefWidth="61.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnAgregarArtista" mnemonicParsing="false" onAction="#agregarArtista" prefHeight="32.0" prefWidth="72.0" text="Agregar" />
+                  <Button fx:id="btnModificarArtista" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarArtista" prefHeight="32.0" prefWidth="75.0" text="Modificar" />
+                  <Button fx:id="btnEliminarArtista" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarArtista" prefHeight="32.0" prefWidth="66.0" text="Eliminar" />
                </children>
                <VBox.margin>
                   <Insets />

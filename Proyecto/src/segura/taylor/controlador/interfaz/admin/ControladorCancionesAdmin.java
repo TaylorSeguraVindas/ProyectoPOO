@@ -14,7 +14,6 @@ import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.cancion.ControladorRegistroCancion;
 import segura.taylor.ui.dialogos.AlertDialog;
 import segura.taylor.ui.dialogos.VentanaFiltroCancionesAdmin;
-import segura.taylor.ui.dialogos.VentanaFiltrosCancionesTienda;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.util.List;
@@ -253,7 +252,7 @@ public class ControladorCancionesAdmin {
 
     public void eliminarCancion() {
         YesNoDialog yesNoDialog = new YesNoDialog();
-        boolean resultado = yesNoDialog.mostrar("Aviso", "Realmente quiere eliminar al Cancion seleccionado?");
+        boolean resultado = yesNoDialog.mostrar("Aviso", "Realmente quiere eliminar la Cancion seleccionada?");
 
         if (resultado) {
             Cancion CancionSeleccionado = (Cancion) tblCanciones.getSelectionModel().getSelectedItem();

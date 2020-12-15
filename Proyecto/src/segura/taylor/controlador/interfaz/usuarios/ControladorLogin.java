@@ -26,6 +26,7 @@ public class ControladorLogin {
         }
     }
     public void registrarUsuario() {
+        ControladorRegistroCliente.modificando = false;
         ControladorGeneral.instancia.menuRegistroCliente();
     }
 }

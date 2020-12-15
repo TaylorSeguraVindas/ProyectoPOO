@@ -13,6 +13,11 @@ import java.io.File;
 import java.time.LocalDate;
 
 public class ControladorRegistroCliente {
+    public static Stage ventana;
+    public static int idCliente;
+    public static boolean modificando;
+    public static String urlImagenPerfil;
+
     Stage window;
 
     private String recursoImagenPerfil = "";
@@ -28,8 +33,22 @@ public class ControladorRegistroCliente {
     public Button btnSeleccionarImagen;
     public ImageView imagenPerfil;
 
+    public Label lblTitulo;
+    public Button btnRegistrarModificar;
+
     public void initialize() {
         actualizarComboBoxPaises();
+        if(modificando) {
+            lblTitulo.setText("Modificar usuario");
+            btnRegistrarModificar.setText("Modificar");
+            btnRegistrarModificar.setOnAction(e -> modificarUsuario());
+
+            recursoImagenPerfil = urlImagenPerfil;
+        } else {
+            lblTitulo.setText("Registrar usuario");
+            btnRegistrarModificar.setText("Registrar");
+            btnRegistrarModificar.setOnAction(e -> registrarUsuario());
+        }
     }
 
     public void seleccionarImagen() {
@@ -61,7 +80,7 @@ public class ControladorRegistroCliente {
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Usuario registrado correctamente");
-                volverAInicioDeSesion();
+                volver();
             } else {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Error", "No se pudo registrar el usuario");
@@ -71,8 +90,33 @@ public class ControladorRegistroCliente {
         }
     }
 
-    public void volverAInicioDeSesion() {
-        ControladorGeneral.instancia.menuIniciarSesion();
+    private void modificarUsuario() {
+        String correo = txtCorreo.getText();
+        String nombre = txtNombre.getText();
+        String apellidos = txtApellidos.getText();
+        String nombreUsuario = txtNombreUsuario.getText();
+
+        try {
+            boolean resultado = ControladorGeneral.instancia.getGestor().modificarUsuario(idCliente, correo, nombreUsuario, recursoImagenPerfil, nombre, apellidos);
+            if (resultado) {
+                AlertDialog alertDialog = new AlertDialog();
+                alertDialog.mostrar("Modificación exitosa", "Usuario modificado correctamente");
+                volver();
+            } else {
+                AlertDialog alertDialog = new AlertDialog();
+                alertDialog.mostrar("Error", "No se pudo modificar el usuario");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void volver() {
+        if(modificando) {
+            ventana.close();
+        } else {
+            ControladorGeneral.instancia.menuIniciarSesion();
+        }
     }
 
     private void actualizarComboBoxPaises() {

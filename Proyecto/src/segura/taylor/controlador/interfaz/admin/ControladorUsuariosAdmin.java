@@ -6,15 +6,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import segura.taylor.bl.entidades.Cliente;
 import segura.taylor.bl.entidades.Usuario;
 import segura.taylor.controlador.ControladorGeneral;
+import segura.taylor.controlador.interfaz.usuarios.ControladorRegistroCliente;
+import segura.taylor.controlador.interfaz.usuarios.ControladorRegistroCliente;
 import segura.taylor.ui.dialogos.AlertDialog;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
+import java.util.Date;
 import java.util.List;
 
 public class ControladorUsuariosAdmin {
@@ -59,8 +64,8 @@ public class ControladorUsuariosAdmin {
 
         //Nombre usuario
         TableColumn<Cliente, String> columnaNombreUsuario = new TableColumn("Nombre de usuario");
-        columnaNombre.setMinWidth(100);
-        columnaNombre.setCellValueFactory(new PropertyValueFactory<>("nombreUsuario"));
+        columnaNombreUsuario.setMinWidth(100);
+        columnaNombreUsuario.setCellValueFactory(new PropertyValueFactory<>("nombreUsuario"));
 
         //FechaNacimiento
         TableColumn<Cliente, String> columnaFechaNacimiento = new TableColumn("Fecha Nacimiento");
@@ -102,32 +107,65 @@ public class ControladorUsuariosAdmin {
     public void modificarUsuario() {
         try {
             //Referencias para el controlador
-            Cliente ClienteSeleccionado = (Cliente) tblUsuarios.getSelectionModel().getSelectedItem();
+            Cliente clienteSeleccionado = (Cliente) tblUsuarios.getSelectionModel().getSelectedItem();
 
-            if (ClienteSeleccionado == null) {
+            if (clienteSeleccionado == null) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Error", "No hay ningún Usuario seleccionado");
                 return;
             }
 
-            Stage ventanaRegistroCliente = new Stage();
+            Stage ventanaRegistroAdmin = new Stage();
             //This locks previous window interacivity until this one is closed.
-            ventanaRegistroCliente.initModality(Modality.APPLICATION_MODAL);
+            ventanaRegistroAdmin.initModality(Modality.APPLICATION_MODAL);
+
+            ControladorRegistroCliente.ventana = ventanaRegistroAdmin;
+            ControladorRegistroCliente.idCliente = clienteSeleccionado.getId();
+            ControladorRegistroCliente.modificando = true;
 
             VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroCliente.fxml"));
 
             //Referencia a los campos
+            TextField txtCorreo = (TextField) root.lookup("#txtCorreo");
+            PasswordField txtContrasenna = (PasswordField) root.lookup("#txtContrasenna");
+            TextField txtNombre = (TextField) root.lookup("#txtNombre");
+            TextField txtApellidos = (TextField) root.lookup("#txtApellidos");
+            TextField txtNombreUsuario = (TextField) root.lookup("#txtNombreUsuario");
+            ImageView imagenPerfil = (ImageView) root.lookup("#imagenPerfil");
+            DatePicker txtFechaNacimiento = (DatePicker) root.lookup("#txtFechaNacimiento");
+            ComboBox txtPais = (ComboBox) root.lookup("#txtPais");
 
             //Actualizar campos
+            txtCorreo.setText(clienteSeleccionado.getCorreo());
+            txtContrasenna.setText(clienteSeleccionado.getContrasenna());
+            txtNombre.setText(clienteSeleccionado.getNombre());
+            txtApellidos.setText(clienteSeleccionado.getApellidos());
+            txtNombreUsuario.setText(clienteSeleccionado.getNombreUsuario());
+            txtFechaNacimiento.setValue(clienteSeleccionado.getFechaNacimiento());
+            txtPais.setValue(clienteSeleccionado.getPais().toComboBoxItem());
+
+            ControladorRegistroCliente.urlImagenPerfil = "";
+
+            if(!clienteSeleccionado.getImagenPerfil().equals("")) {
+                ControladorRegistroCliente.urlImagenPerfil = clienteSeleccionado.getImagenPerfil();
+                try {
+                    imagenPerfil.setImage(new Image(clienteSeleccionado.getImagenPerfil()));
+                } catch (Exception e) {
+                    System.out.println("Imagen invalida");
+                }
+            }
 
             //Desactivar campos inmodificables
+            txtContrasenna.setDisable(true);
+            txtFechaNacimiento.setDisable(true);
+            txtPais.setDisable(true);
 
             Scene escena = new Scene(root, 580, 440);
 
-            ventanaRegistroCliente.setScene(escena);
-            ventanaRegistroCliente.setTitle("Modificación de Cliente");
-            ventanaRegistroCliente.setResizable(false);
-            ventanaRegistroCliente.showAndWait();
+            ventanaRegistroAdmin.setScene(escena);
+            ventanaRegistroAdmin.setTitle("Modificación de cliente");
+            ventanaRegistroAdmin.setResizable(false);
+            ventanaRegistroAdmin.showAndWait();
 
             mostrarDatos(); //Actualizar tabla
         } catch (Exception e) {

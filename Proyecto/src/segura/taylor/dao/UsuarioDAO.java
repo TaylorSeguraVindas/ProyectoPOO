@@ -102,10 +102,11 @@ public class UsuarioDAO {
             } else {
                 //Registro normal
                 Cliente nuevoCliente = (Cliente) usuarioActualizado;
+                update = "UPDATE usuarios SET ";
                 update += "correo = '" + nuevoCliente.getCorreo() + "',";
                 update += "nombre = '" + nuevoCliente.getNombre() + "',";
                 update += "apellidos = '" + nuevoCliente.getApellidos() + "',";
-                update += "foto = '" + nuevoCliente.getImagenPerfil() + "',";
+                update += "fotoPerfil = '" + nuevoCliente.getImagenPerfil() + "',";
                 update += "nombreUsuario = '" + nuevoCliente.getNombreUsuario() + "'";
                 update += "WHERE idUsuario = " + usuarioActualizado.getId();
             }

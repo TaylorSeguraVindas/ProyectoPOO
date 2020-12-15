@@ -103,7 +103,7 @@ public class ControladorCompositoresAdmin {
     public void buscar() {
         mostrarDatos(true);
     }
-    
+
     public void agregarCompositor() {
         try {
             Stage ventanaRegistroCompositor = new Stage();

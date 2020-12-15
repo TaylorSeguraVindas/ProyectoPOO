@@ -21,8 +21,11 @@
         </VBox>
         <VBox alignment="TOP_CENTER" prefHeight="316.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
             <children>
-                <HBox alignment="TOP_RIGHT" minHeight="32.0" prefWidth="640.0" spacing="10.0">
+                <HBox alignment="TOP_RIGHT" minHeight="32.0" prefWidth="640.0">
                     <children>
+                        <TextField fx:id="txtBusqueda" prefHeight="32.0" prefWidth="214.0" promptText="Buscar" />
+                        <Button fx:id="btnBuscar" layoutX="532.0" layoutY="10.0" mnemonicParsing="false" onAction="#buscar" prefHeight="32.0" prefWidth="61.0" text="Buscar" />
+                        <Region prefHeight="21.0" prefWidth="199.0" HBox.hgrow="ALWAYS" />
                         <Button fx:id="btnAgregarGenero" mnemonicParsing="false" onAction="#agregarGenero" prefHeight="40.0" prefWidth="89.0" text="Agregar" />
                         <Button fx:id="btnModificarGenero" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarGenero" prefHeight="40.0" prefWidth="89.0" text="Modificar" />
                         <Button fx:id="btnEliminarGenero" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarGenero" prefHeight="40.0" prefWidth="89.0" text="Eliminar" />

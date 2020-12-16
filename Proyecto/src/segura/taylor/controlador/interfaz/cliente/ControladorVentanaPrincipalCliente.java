@@ -23,6 +23,9 @@ public class ControladorVentanaPrincipalCliente {
     public VBox contenedorPrincipal;
     public ListView listListaReproduccion;
 
+    public Label lblNombreCancion;
+    public Label lblNombreArtista;
+
     private void limpiarPantalla() {
         contenedorPrincipal.getChildren().clear();
     }
@@ -67,6 +70,10 @@ public class ControladorVentanaPrincipalCliente {
     }
     public void onCancionAnteriorPressed() {
         ControladorGeneral.instancia.cancionAnterior();
+    }
+    public void actualizarInfoCancion(String nombreCancion, String nombreArtista) {
+        lblNombreCancion.setText(nombreCancion);
+        lblNombreArtista.setText(nombreArtista);
     }
 
     //MENUS

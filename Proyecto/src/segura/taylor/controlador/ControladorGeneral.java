@@ -31,7 +31,7 @@ public class ControladorGeneral {
     private Stage window;
 
     //Reproductor
-    private int idCancionActual = 0;
+    private Cancion cancionActual = null;
     private RepositorioCanciones repoCancionesActual;   //La lista que siempre va a estar sonando
     private MediaPlayer mediaPlayer;
     private double volumen;
@@ -200,7 +200,7 @@ public class ControladorGeneral {
     public void cargarCancionDeRepo(int posicion) {
         if(repoCancionesActual == null) return;
 
-        idCancionActual = repoCancionesActual.getCanciones().get(posicion).getId();
+        cancionActual = repoCancionesActual.getCanciones().get(posicion);
         cargarCancion(repoCancionesActual.getCanciones().get(posicion).getRecurso());
         reproducirCancion();
     }
@@ -217,7 +217,7 @@ public class ControladorGeneral {
     public void siguienteCancion() {
         if(repoCancionesActual == null) return;
 
-        int siguienteCancion = repoCancionesActual.obtenerIndiceCancion(idCancionActual) + 1;
+        int siguienteCancion = repoCancionesActual.obtenerIndiceCancion(cancionActual.getId()) + 1;
 
         if(siguienteCancion < repoCancionesActual.getCanciones().size()) {  //Reproduce la siguiente cancion
             cargarCancionDeRepo(siguienteCancion);
@@ -231,7 +231,7 @@ public class ControladorGeneral {
     public void cancionAnterior() {
         if(repoCancionesActual == null) return;
 
-        int cancionAnterior = repoCancionesActual.obtenerIndiceCancion(idCancionActual) - 1;
+        int cancionAnterior = repoCancionesActual.obtenerIndiceCancion(cancionActual.getId()) - 1;
 
         if(cancionAnterior > 0) {  //Reproduce la siguiente cancion
             cargarCancionDeRepo(cancionAnterior);
@@ -264,5 +264,11 @@ public class ControladorGeneral {
     public void reproducirCancion() {
         mediaPlayer.play();
         pausado = false;
+
+        if(usuarioIngresadoEsAdmin()) {
+            refVentanaPrincipalAdmin.actualizarInfoCancion(cancionActual.getNombre(), cancionActual.getNombreArtista());
+        } else {
+            refVentanaPrincipalCliente.actualizarInfoCancion(cancionActual.getNombre(), cancionActual.getNombreArtista());
+        }
     }
 }

@@ -18,6 +18,8 @@ import segura.taylor.ui.dialogos.AlertDialog;
 
 public class ControladorVentanaPrincipalAdmin {
     public VBox contenedorPrincipal;
+    public Label lblNombreCancion;
+    public Label lblNombreArtista;
 
     private void limpiarPantalla() {
         contenedorPrincipal.getChildren().clear();
@@ -36,6 +38,10 @@ public class ControladorVentanaPrincipalAdmin {
     }
     public void onCancionAnteriorPressed() {
         ControladorGeneral.instancia.cancionAnterior();
+    }
+    public void actualizarInfoCancion(String nombreCancion, String nombreArtista) {
+        lblNombreCancion.setText(nombreCancion);
+        lblNombreArtista.setText(nombreArtista);
     }
 
     //MENUS

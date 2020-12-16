@@ -48,8 +48,8 @@
          <children>
             <VBox prefHeight="53.0" prefWidth="152.0">
                <children>
-                  <Label text="Cancion" />
-                  <Label text="Artista" />
+                  <Label fx:id="lblNombreCancion" text="Cancion" />
+                  <Label fx:id="lblNombreArtista" text="Artista" />
                </children>
                <HBox.margin>
                   <Insets />

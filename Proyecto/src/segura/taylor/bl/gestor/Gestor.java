@@ -829,7 +829,12 @@ public class Gestor {
                     boolean resultado = bibliotecaModifica.agregarCancion(cancionEncontrada.get());
 
                     if(resultado) { //Puedo guardar esta cancion?
-                        return cancionesBibliotecaDAO.save(bibliotecaModifica.getId(), cancionEncontrada.get().getId());
+                        resultado = cancionesBibliotecaDAO.save(bibliotecaModifica.getId(), cancionEncontrada.get().getId());
+
+                        if(resultado) {
+                            usuarioIngresado = buscarUsuarioPorId(usuarioIngresado.getId()).get();    //Actualizar usuario ingresado
+                            return true;
+                        }
                     }
                 }
             }
@@ -904,7 +909,12 @@ public class Gestor {
                 boolean resultado = bibliotecaModifica.removerCancion(pIdCancion);
 
                 if(resultado) { //Puedo remover esta cancion?
-                    return cancionesBibliotecaDAO.delete(idBiblioteca, pIdCancion);
+                    resultado = cancionesBibliotecaDAO.delete(idBiblioteca, pIdCancion);
+
+                    if(resultado) {
+                        usuarioIngresado = buscarUsuarioPorId(usuarioIngresado.getId()).get();    //Actualizar usuario ingresado
+                        return true;
+                    }
                 }
             }
         }
@@ -930,7 +940,12 @@ public class Gestor {
                     boolean resultado = bibliotecaModifica.agregarListaReproduccion(listaEncontrada.get());
 
                     if(resultado) { //Puedo guardar esta lista?
-                        return listasBibliotecaDAO.save(bibliotecaModifica.getId(), listaEncontrada.get().getId());
+                        resultado = listasBibliotecaDAO.save(bibliotecaModifica.getId(), listaEncontrada.get().getId());
+
+                        if(resultado) {
+                            usuarioIngresado = buscarUsuarioPorId(usuarioIngresado.getId()).get();    //Actualizar usuario ingresado
+                            return true;
+                        }
                     }
                 }
             }
@@ -983,7 +998,12 @@ public class Gestor {
                 boolean resultado = bibliotecaModifica.removerListaReproduccion(pIdLista);
 
                 if(resultado) { //Puedo remover esta lista?
-                    return listasBibliotecaDAO.delete(idBiblioteca, pIdLista);
+                    resultado = listasBibliotecaDAO.delete(idBiblioteca, pIdLista);
+
+                    if(resultado) {
+                        usuarioIngresado = buscarUsuarioPorId(usuarioIngresado.getId()).get();    //Actualizar usuario ingresado
+                        return true;
+                    }
                 }
             }
         }

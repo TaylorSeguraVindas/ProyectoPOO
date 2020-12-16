@@ -9,6 +9,7 @@ import java.util.Objects;
 
 public class ListaReproduccion extends RepositorioCanciones implements IComboBoxItem {
     //Variables
+    //TODO agregar attributo para que la lista sea publica o no
     private double calificacion;
     private String imagen;
     private String descripcion;

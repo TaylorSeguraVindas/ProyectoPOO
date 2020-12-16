@@ -14,6 +14,8 @@ import segura.taylor.bl.entidades.Admin;
 import segura.taylor.bl.entidades.Cliente;
 import segura.taylor.bl.entidades.ListaReproduccion;
 import segura.taylor.controlador.ControladorGeneral;
+import segura.taylor.controlador.interfaz.listaReproduccion.ControladorRegistroListaReproduccion;
+import segura.taylor.controlador.interfaz.tienda.ControladorInfoListaReproduccion;
 import segura.taylor.controlador.interfaz.usuarios.ControladorRegistroCliente;
 import segura.taylor.ui.dialogos.AlertDialog;
 
@@ -36,10 +38,13 @@ public class ControladorVentanaPrincipalCliente {
             @Override
             public void handle(MouseEvent click) {
                 if (click.getClickCount() == 2) {
-                    System.out.println(ControladorGeneral.instancia.getGestor().obtenerIdListaReproduccion(listListaReproduccion.getSelectionModel().getSelectedItem().toString()));
+                    ControladorInfoListaReproduccion.idListaSeleccionada = ControladorGeneral.instancia.getGestor().obtenerIdListaReproduccion(listListaReproduccion.getSelectionModel().getSelectedItem().toString());
+                    mostrarInfoListaReproduccion();
                 }
             }
         });
+
+        actualizarListasReproduccionUsuario();
     }
 
     //GENERAL LISTAS REPRODUCCION
@@ -55,10 +60,52 @@ public class ControladorVentanaPrincipalCliente {
 
     public void crearListaReproduccion() {
         //Agregar a biblioteca y mostrar en el menu
+        try {
+            Stage ventanaRegistroListaReproduccion = new Stage();
+            //This locks previous window interacivity until this one is closed.
+            ventanaRegistroListaReproduccion.initModality(Modality.APPLICATION_MODAL);
+
+            //Referencias para el controlador
+            ControladorRegistroListaReproduccion.ventana = ventanaRegistroListaReproduccion;
+            ControladorRegistroListaReproduccion.modificando = false;
+
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroListaReproduccion.fxml"));
+            Scene escena = new Scene(root, 720, 510);
+
+            ventanaRegistroListaReproduccion.setScene(escena);
+            ventanaRegistroListaReproduccion.setTitle("Registro de Lista de Reproduccion");
+            ventanaRegistroListaReproduccion.setResizable(false);
+            ventanaRegistroListaReproduccion.showAndWait();
+
+            actualizarListasReproduccionUsuario(); //Actualizar tabla
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
     public void removerListaReproduccion() {
         //remover de biblioteca y actualizar el menu
+        if(listListaReproduccion.getSelectionModel().getSelectedItem() == null) return;
+
+        int idListaSeleccionada = ControladorGeneral.instancia.getGestor().obtenerIdListaReproduccion(listListaReproduccion.getSelectionModel().getSelectedItem().toString());
+
+        if(idListaSeleccionada != -1) {
+            try {
+                boolean resultado = ControladorGeneral.instancia.getGestor().removerListaReproduccionDeBibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idListaSeleccionada);
+
+                if(resultado) {
+                    AlertDialog alertDialog = new AlertDialog();
+                    alertDialog.mostrar("Éxito!", "Lista removida correctamente");
+                    actualizarListasReproduccionUsuario();
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        AlertDialog alertDialog = new AlertDialog();
+        alertDialog.mostrar("Error", "Ocurrió un problema al intentar remover la lista");
     }
 
     //MUSICA
@@ -187,5 +234,9 @@ public class ControladorVentanaPrincipalCliente {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void cerrarSesion() {
+        ControladorGeneral.instancia.menuIniciarSesion();
     }
 }

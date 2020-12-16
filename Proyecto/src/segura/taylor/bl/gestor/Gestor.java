@@ -36,6 +36,8 @@ public class Gestor {
     private CancionesAlbumDAO cancionesAlbumDAO;
     private ArtistasAlbumDAO artistasAlbumDAO;
     private CancionesListaReproduccionDAO cancionesListaReproduccionDAO;
+    private CancionesBibliotecaDAO cancionesBibliotecaDAO;
+    private ListasReproduccionBibliotecaDAO listasBibliotecaDAO;
 
     /**
      * Método constructor
@@ -69,6 +71,8 @@ public class Gestor {
             this.cancionesAlbumDAO = new CancionesAlbumDAO(this.connection);
             this.artistasAlbumDAO = new ArtistasAlbumDAO(this.connection);
             this.cancionesListaReproduccionDAO = new CancionesListaReproduccionDAO(this.connection);
+            this.cancionesBibliotecaDAO = new CancionesBibliotecaDAO(this.connection);
+            this.listasBibliotecaDAO = new ListasReproduccionBibliotecaDAO(this.connection);
         } catch (Exception e) {
             System.out.println("CANT CONNECT TO DATABASE");
             e.printStackTrace();
@@ -76,6 +80,10 @@ public class Gestor {
     }
 
     //Metodos
+
+    public void reiniciar() {
+        usuarioIngresado = null;
+    }
 
     /**
      * Verifica si el usuario que usa la aplicación es administrador
@@ -408,9 +416,6 @@ public class Gestor {
             //Busca cancion
             if(nuevaCancion.isPresent())
             {
-                //Album albumModifica = repoEncontrado.get();
-                //albumModifica.agregarCancion(nuevaCancion.get());
-                //return repoCancionesDAO.update(albumModifica);
                 return cancionesAlbumDAO.save(pIdAlbum, pIdCancion); //Modifica tabla intermedia
             }
         }
@@ -497,11 +502,11 @@ public class Gestor {
      * @return true si el registro es exitoso, false si ocurre algun error
      * @throws Exception si no se puede conectar con la DB o si la lista de reproduccion ya existe
      */
-    public boolean crearListaReproduccion(String nombre, LocalDate fechaCreacion, String imagen, String descripcion) throws Exception {
+    public int crearListaReproduccion(String nombre, LocalDate fechaCreacion, String imagen, String descripcion) throws Exception {
         ArrayList<Cancion> canciones = new ArrayList<>();   //Las listas de reproducción SIEMPRE se crea sin canciones por defecto
 
         ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, 0.0, imagen, descripcion);
-        return (repoCancionesDAO.save(nuevaLista)) != -1;
+        return repoCancionesDAO.save(nuevaLista);
     }
 
     /**
@@ -798,8 +803,9 @@ public class Gestor {
     }
 
 
-    //Canciones de cliente
+    //Biblioteca de cliente
 
+    //CANCIONES
     /**
      * Método usado para agregar una canción a la biblioteca de un usuario
      * @param pIdCliente int que define el id del cliente dueño de la biblioteca
@@ -819,9 +825,12 @@ public class Gestor {
                 Optional<Cancion> cancionEncontrada = cancionDAO.findByID(pIdCancion);
 
                 if(cancionEncontrada.isPresent()) {     //Luego busca la cancion a ver si existe
-                    Biblioteca bibliotecaModifica = (Biblioteca) bibliotecaEncontrada.get();
-                    bibliotecaModifica.agregarCancion(cancionEncontrada.get());
-                    return repoCancionesDAO.update(bibliotecaModifica);
+                    Biblioteca bibliotecaModifica = bibliotecaEncontrada.get();
+                    boolean resultado = bibliotecaModifica.agregarCancion(cancionEncontrada.get());
+
+                    if(resultado) { //Puedo guardar esta cancion?
+                        return cancionesBibliotecaDAO.save(bibliotecaModifica.getId(), cancionEncontrada.get().getId());
+                    }
                 }
             }
         }
@@ -891,15 +900,96 @@ public class Gestor {
             Optional<Biblioteca> repoEncontrado = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
 
             if(repoEncontrado.isPresent()) {    //Luego verifica que la biblioteca exista
-                Biblioteca bibliotecaModifica = (Biblioteca) repoEncontrado.get();
-                bibliotecaModifica.removerCancion(pIdCancion);
-                return repoCancionesDAO.update(bibliotecaModifica);
+                Biblioteca bibliotecaModifica = repoEncontrado.get();
+                boolean resultado = bibliotecaModifica.removerCancion(pIdCancion);
+
+                if(resultado) { //Puedo remover esta cancion?
+                    return cancionesBibliotecaDAO.delete(idBiblioteca, pIdCancion);
+                }
             }
         }
 
         return false;
     }
 
+    //LISTAS REPRODUCCION
+    //TODO javadoc para esto
+    public boolean agregarListaReproduccionABibliotecaUsuario(int pIdCliente, int pIdLista) throws Exception {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
+
+        if(usuarioEncontrado.isPresent()){  //Primero verifica que el usuario exista
+            Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
+            int idBiblioteca = clienteModifica.getBiblioteca().getId();
+
+            Optional<Biblioteca> bibliotecaEncontrada = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
+            if(bibliotecaEncontrada.isPresent()) {  //Luego verifica si la biblioteca de ese usuario existe
+                Optional<ListaReproduccion> listaEncontrada = repoCancionesDAO.findListaReproduccionById(pIdLista);
+
+                if(listaEncontrada.isPresent()) {     //Luego busca la lista a ver si existe
+                    Biblioteca bibliotecaModifica = bibliotecaEncontrada.get();
+                    boolean resultado = bibliotecaModifica.agregarListaReproduccion(listaEncontrada.get());
+
+                    if(resultado) { //Puedo guardar esta lista?
+                        return listasBibliotecaDAO.save(bibliotecaModifica.getId(), listaEncontrada.get().getId());
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public List<ListaReproduccion> listarListasReproduccionDeBibliotecaUsuario(int pIdCliente) throws SQLException {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
+
+        if(usuarioEncontrado.isPresent()) {  //Primero verifica que el usuario exista
+            Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
+            int idBiblioteca = clienteModifica.getBiblioteca().getId();
+            Optional<Biblioteca> repoEncontrado = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
+
+            if(repoEncontrado.isPresent()) {    //Luego verifica que la biblioteca exista
+                return Collections.unmodifiableList(repoEncontrado.get().getListasDeReproduccion());
+            }
+        }
+
+        return null;
+    }
+
+    public Optional<ListaReproduccion> buscarListaReproduccionEnBibliotecaUsuario(int pIdCliente, int pIdLista) throws SQLException {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
+
+        if(usuarioEncontrado.isPresent()) {  //Primero verifica que el usuario exista
+            Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
+            int idBiblioteca = clienteModifica.getBiblioteca().getId();
+            Optional<Biblioteca> repoEncontrado = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
+
+            if(repoEncontrado.isPresent()) {    //Luego verifica que la biblioteca exista
+                return repoEncontrado.get().buscarListaReproduccion(pIdLista);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    public boolean removerListaReproduccionDeBibliotecaUsuario(int pIdCliente, int pIdLista) throws Exception {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
+
+        if(usuarioEncontrado.isPresent()) {  //Primero verifica que el usuario exista
+            Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
+            int idBiblioteca = clienteModifica.getBiblioteca().getId();
+            Optional<Biblioteca> repoEncontrado = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
+
+            if(repoEncontrado.isPresent()) {    //Luego verifica que la biblioteca exista
+                Biblioteca bibliotecaModifica = repoEncontrado.get();
+                boolean resultado = bibliotecaModifica.removerListaReproduccion(pIdLista);
+
+                if(resultado) { //Puedo remover esta lista?
+                    return listasBibliotecaDAO.delete(idBiblioteca, pIdLista);
+                }
+            }
+        }
+
+        return false;
+    }
 
     //**************Manejo de compositores********************
 

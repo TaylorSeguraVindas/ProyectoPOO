@@ -108,15 +108,22 @@ public class ControladorGeneral {
     private void cambiarVentana(String titulo, Scene escena, boolean maximizar) {
         ControladorGeneral.instancia.window.setTitle(titulo);
         ControladorGeneral.instancia.window.setScene(escena);
-        ControladorGeneral.instancia.window.centerOnScreen();
         ControladorGeneral.instancia.window.setMaximized(maximizar);
+        ControladorGeneral.instancia.window.centerOnScreen();
         ControladorGeneral.instancia.window.show();
     }
 
     public void menuIniciarSesion() {
         try {
+            gestor.reiniciar();
             Parent root = FXMLLoader.load(getClass().getResource("../ui/ventanas/VentanaLogin.fxml"));
-            ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 320), false);
+            ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 380), false);
+
+            ControladorGeneral.instancia.window.setMinWidth(420);
+            ControladorGeneral.instancia.window.setMinHeight(380);
+            ControladorGeneral.instancia.window.setWidth(420);
+            ControladorGeneral.instancia.window.setHeight(380);
+            ControladorGeneral.instancia.window.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,9 +156,11 @@ public class ControladorGeneral {
             } else {
                 root = FXMLLoader.load(getClass().getResource("../ui/ventanas/cliente/VentanaPrincipalCliente.fxml"));
             }
-            ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 320), true);
-            window.setMinWidth(1100);
-            window.setMinHeight(620);
+
+            ControladorGeneral.instancia.cambiarVentana("NotSpotify", new Scene(root, 1100, 620), true);
+
+            ControladorGeneral.instancia.window.setMinWidth(1100);
+            ControladorGeneral.instancia.window.setMinHeight(620);
         } catch (Exception e) {
             e.printStackTrace();
         }

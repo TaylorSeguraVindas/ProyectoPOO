@@ -57,8 +57,13 @@ public class ControladorRegistroListaReproduccion {
         String descripcion = txtDescripcion.getText();
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().crearListaReproduccion(nombre, fechaCreacion, recursoImagenFondo, descripcion);
-            if (resultado) {
+            int idListaRegistrada = ControladorGeneral.instancia.getGestor().crearListaReproduccion(nombre, fechaCreacion, recursoImagenFondo, descripcion);
+            if (idListaRegistrada != -1) {
+                //Si la lista fue creada por un usuario corriente automáticamente se agrega a su biblioteca
+                if(!ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {
+                    ControladorGeneral.instancia.getGestor().agregarListaReproduccionABibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idListaRegistrada);
+                }
+
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Lista de Reproduccion registrada correctamente");
                 ventana.close();

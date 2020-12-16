@@ -237,4 +237,8 @@ public class ControladorVentanaPrincipalAdmin {
             e.printStackTrace();
         }
     }
+
+    public void cerrarSesion() {
+        ControladorGeneral.instancia.menuIniciarSesion();
+    }
 }

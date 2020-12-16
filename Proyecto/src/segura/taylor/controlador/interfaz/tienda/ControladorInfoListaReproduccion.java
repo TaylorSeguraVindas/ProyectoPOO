@@ -32,6 +32,13 @@ public class ControladorInfoListaReproduccion {
 
         if(ControladorGeneral.instancia.getGestor().usuarioIngresadoEsAdmin()) {
             btnGuardarLista.setDisable(true);
+        } else {
+            try {   //Desactiva el botón de guardar lista si esta ya ha sido agregada a la biblioteca del usuario actual
+                boolean listaGuardada = ControladorGeneral.instancia.getGestor().buscarListaReproduccionEnBibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idListaSeleccionada).isPresent();
+                btnGuardarLista.setDisable(listaGuardada);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -99,7 +106,15 @@ public class ControladorInfoListaReproduccion {
     }
 
     public void guardarLista() {
-        //TODO guardar lista en biblioteca
+        try {
+            boolean resultado = ControladorGeneral.instancia.getGestor().agregarListaReproduccionABibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idListaSeleccionada);
+            if(resultado) {
+                ControladorGeneral.refVentanaPrincipalCliente.actualizarListasReproduccionUsuario();
+                btnGuardarLista.setDisable(true);   //Desactiva el botón una vez se guarda la lista
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void volver() {

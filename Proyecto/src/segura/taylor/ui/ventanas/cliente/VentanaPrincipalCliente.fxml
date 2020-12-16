@@ -21,12 +21,13 @@
                      </padding>
                   </VBox>
                   <ListView fx:id="listListaReproduccion" prefHeight="192.0" prefWidth="180.0" VBox.vgrow="ALWAYS" />
-                  <HBox>
+                  <HBox prefHeight="7.0" prefWidth="180.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#crearListaReproduccion" prefHeight="32.0" prefWidth="120.0" text="Nueva lista" />
-                        <Button mnemonicParsing="false" onAction="#removerListaReproduccion" prefHeight="32.0" prefWidth="67.0" text="Remover" />
+                        <Button layoutX="127.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarListaReproduccion" prefHeight="32.0" prefWidth="160.0" text="Modificar" />
+                        <Button mnemonicParsing="false" onAction="#removerListaReproduccion" prefHeight="32.0" prefWidth="112.0" text="Remover" />
                      </children>
                   </HBox>
+                  <Button mnemonicParsing="false" onAction="#crearListaReproduccion" prefHeight="42.0" prefWidth="180.0" text="Nueva lista" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">

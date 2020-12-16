@@ -161,6 +161,56 @@ public class ControladorVentanaPrincipalCliente {
         }
     }
 
+    public void modificarListaReproduccion() {
+        try {
+            //Referencias para el controlador
+            if(listListaReproduccion.getSelectionModel().getSelectedItem() == null) return;
+
+            int idListaSeleccionada = ControladorGeneral.instancia.getGestor().obtenerIdListaReproduccion(listListaReproduccion.getSelectionModel().getSelectedItem().toString());
+            ListaReproduccion listaReproduccionSeleccionada = ControladorGeneral.instancia.getGestor().buscarListaReproduccionPorId(idListaSeleccionada).get();
+
+            if (listaReproduccionSeleccionada == null) {
+                AlertDialog alertDialog = new AlertDialog();
+                alertDialog.mostrar("Error", "No hay ningún Albun seleccionado");
+                return;
+            }
+
+            Stage ventanaRegistroAlbun = new Stage();
+            //This locks previous window interacivity until this one is closed.
+            ventanaRegistroAlbun.initModality(Modality.APPLICATION_MODAL);
+
+            ControladorRegistroListaReproduccion.ventana = ventanaRegistroAlbun;
+            ControladorRegistroListaReproduccion.idListaReproduccionSeleccionada = listaReproduccionSeleccionada.getId();
+            ControladorRegistroListaReproduccion.modificando = true;
+
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroListaReproduccion.fxml"));
+
+            //Referencia a los campos
+            TextField txtNombre = (TextField) root.lookup("#txtNombre");
+            TextArea txtDescripcion = (TextArea) root.lookup("#txtDescripcion");
+            ImageView imagenFondo = (ImageView) root.lookup("#imagenFondo");
+
+            //Actualizar campos
+            txtNombre.setText(listaReproduccionSeleccionada.getNombre());
+            txtDescripcion.setText(listaReproduccionSeleccionada.getDescripcion());
+            if(!listaReproduccionSeleccionada.getImagen().equals("")) {
+                ControladorRegistroListaReproduccion.urlImagenFondo = listaReproduccionSeleccionada.getImagen();
+                imagenFondo.setImage(new Image(listaReproduccionSeleccionada.getImagen()));
+            }
+
+            Scene escena = new Scene(root, 710, 550);
+
+            ventanaRegistroAlbun.setScene(escena);
+            ventanaRegistroAlbun.setTitle("Modificacion de Lista de Reproduccion");
+            ventanaRegistroAlbun.setResizable(false);
+            ventanaRegistroAlbun.showAndWait();
+
+            actualizarListasReproduccionUsuario();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void mostrarBiblioteca() {
         //Mostrar canciones en biblioteca
     }

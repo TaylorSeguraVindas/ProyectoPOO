@@ -105,6 +105,7 @@ public class Gestor {
      * @return
      */
     public Usuario getUsuarioIngresado() {
+        usuarioIngresado = buscarUsuarioPorId(usuarioIngresado.getId()).get();
         return usuarioIngresado;
     }
 
@@ -121,7 +122,8 @@ public class Gestor {
      * @return instancia de la clase Biblioteca que corresponde a la que le pertenece al cliente ingresado
      */
     public Biblioteca getBibliotecaUsuarioIngresado() {
-        Cliente clienteIngresado = (Cliente) usuarioIngresado;
+        Cliente clienteIngresado = (Cliente) buscarUsuarioPorId(usuarioIngresado.getId()).get();
+        usuarioIngresado = clienteIngresado;
         return clienteIngresado.getBiblioteca();
     }
 

@@ -16,6 +16,7 @@ public class ControladorRegistroListaReproduccion {
     public static int idListaReproduccionSeleccionada;
     public static Stage ventana;
     public static boolean modificando;
+    public static String urlImagenFondo;
 
     public TextField txtNombre;
     public TextArea txtDescripcion;
@@ -47,6 +48,7 @@ public class ControladorRegistroListaReproduccion {
 
         if(selectedFile != null) {
             recursoImagenFondo = selectedFile.toURI().toString();
+            urlImagenFondo = recursoImagenFondo;
             imagenFondo.setImage(new Image(recursoImagenFondo));
         }
     }
@@ -81,7 +83,7 @@ public class ControladorRegistroListaReproduccion {
         String descripcion = txtDescripcion.getText();
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().modificarListaReproduccion(idListaReproduccionSeleccionada, nombre, recursoImagenFondo, descripcion);
+            boolean resultado = ControladorGeneral.instancia.getGestor().modificarListaReproduccion(idListaReproduccionSeleccionada, nombre, urlImagenFondo, descripcion);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Modificacion exitosa", "Lista de Reproduccion modificada correctamente");

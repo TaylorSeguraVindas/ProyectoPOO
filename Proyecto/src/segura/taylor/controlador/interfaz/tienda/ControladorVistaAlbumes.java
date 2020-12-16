@@ -80,10 +80,10 @@ public class ControladorVistaAlbumes {
     private void mostrarDetalleAlbum(int idAlbum) {
         ControladorInfoAlbum.idAlbumSeleccionado = idAlbum;
 
-        if(ControladorGeneral.instancia.getGestor().usuarioIngresadoEsAdmin()) {
+        if(ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {
             ControladorGeneral.refVentanaPrincipalAdmin.mostrarInfoAlbum();
         } else {
-            //TODO Hacer lo mismo pero para cliente
+            ControladorGeneral.refVentanaPrincipalCliente.mostrarInfoAlbum();
         }
     }
 

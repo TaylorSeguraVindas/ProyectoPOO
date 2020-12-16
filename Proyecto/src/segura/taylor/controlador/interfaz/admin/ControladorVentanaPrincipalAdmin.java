@@ -39,15 +39,6 @@ public class ControladorVentanaPrincipalAdmin {
     }
 
     //MENUS
-    public void mostrarInicio() {
-        limpiarPantalla();
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/admin/InicioAdmin.fxml"));
-            contenedorPrincipal.getChildren().add(root);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public void mostrarUsuarios() {
         limpiarPantalla();
         try {

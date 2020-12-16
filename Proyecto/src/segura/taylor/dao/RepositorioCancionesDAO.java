@@ -303,6 +303,7 @@ public class RepositorioCancionesDAO {
     }
 
     private ArrayList<Cancion> buscarCancionesLista(int pIdLista) {
+        //TODO
         try {
             ArrayList<Cancion> canciones = cancionDAO.findCancionesRepo(pIdLista, TipoRepositorioCanciones.LISTA_REPRODUCCION);
             return canciones;
@@ -311,6 +312,18 @@ public class RepositorioCancionesDAO {
         }
 
         return new ArrayList<>();
+    }
+
+    public int getIdLista(String nombre) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery(("SELECT * FROM listasreproduccion WHERE nombre = '" + nombre + "'"));
+
+        while (result.next()) {
+            int idLista = result.getInt("idListaReproduccion");
+            return idLista;
+        }
+
+        return -1;
     }
 
     //Bibliotecas

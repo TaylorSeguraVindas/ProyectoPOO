@@ -82,10 +82,10 @@ public class ControladorVistaListasReproduccion {
     private void mostrarDetalleListaReproduccion(int idLista) {
         ControladorInfoListaReproduccion.idListaSeleccionada = idLista;
 
-        if(ControladorGeneral.instancia.getGestor().usuarioIngresadoEsAdmin()) {
+        if(ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {
             ControladorGeneral.refVentanaPrincipalAdmin.mostrarInfoListaReproduccion();
         } else {
-            //TODO Hacer lo mismo pero para cliente
+            ControladorGeneral.refVentanaPrincipalCliente.mostrarInfoListaReproduccion();
         }
     }
 

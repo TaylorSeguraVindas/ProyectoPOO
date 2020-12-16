@@ -4,24 +4,29 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="520.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.admin.ControladorVentanaPrincipalAdmin">
+<VBox prefHeight="520.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.cliente.ControladorVentanaPrincipalCliente">
    <children>
       <HBox prefHeight="357.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
          <children>
             <VBox prefHeight="444.0" prefWidth="180.0">
                <children>
-                  <VBox spacing="10.0">
+                  <VBox>
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="182.0" text="Inicio" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="182.0" text="Tienda" />
-                        <Button layoutX="10.0" layoutY="35.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="182.0" text="Mi biblioteca" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#mostrarTienda" prefHeight="36.0" prefWidth="182.0" text="Tienda" />
+                        <Button layoutX="10.0" layoutY="35.0" mnemonicParsing="false" onAction="#mostrarBiblioteca" prefHeight="36.0" prefWidth="182.0" text="Mi biblioteca" />
+                        <Button layoutX="10.0" layoutY="120.0" mnemonicParsing="false" onAction="#modificarUsuario" prefHeight="36.0" prefWidth="182.0" text="Ajustes" />
                      </children>
                      <padding>
-                        <Insets bottom="10.0" top="40.0" />
+                        <Insets top="40.0" />
                      </padding>
                   </VBox>
-                  <ListView prefHeight="276.0" prefWidth="180.0" VBox.vgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="180.0" text="Nueva lista" />
+                  <ListView fx:id="listListaReproduccion" prefHeight="192.0" prefWidth="180.0" VBox.vgrow="ALWAYS" />
+                  <HBox>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#crearListaReproduccion" prefHeight="32.0" prefWidth="120.0" text="Nueva lista" />
+                        <Button mnemonicParsing="false" onAction="#removerListaReproduccion" prefHeight="32.0" prefWidth="67.0" text="Remover" />
+                     </children>
+                  </HBox>
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
@@ -57,9 +62,9 @@
                <children>
                   <HBox alignment="TOP_CENTER" prefHeight="48.0" prefWidth="213.0">
                      <children>
-                        <Button mnemonicParsing="false" text="&lt;" />
-                        <Button mnemonicParsing="false" text="Play" />
-                        <Button mnemonicParsing="false" text="&gt;" />
+                        <Button mnemonicParsing="false" onAction="#onCancionAnteriorPressed" text="&lt;" />
+                        <Button fx:id="btnPausaReproducir" mnemonicParsing="false" onAction="#onPausaReproducirPressed" text="Play" />
+                        <Button mnemonicParsing="false" onAction="#onSiguienteCancionPressed" text="&gt;" />
                      </children>
                   </HBox>
                   <VBox alignment="BOTTOM_RIGHT" prefHeight="200.0" prefWidth="100.0">

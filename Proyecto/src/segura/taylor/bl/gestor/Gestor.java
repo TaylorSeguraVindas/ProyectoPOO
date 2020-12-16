@@ -257,7 +257,7 @@ public class Gestor {
      * @return true si la modificacion es exitosa, false si ocurre algun error
      */
     public boolean modificarContrasennaUsuario(int idUsuario, String nuevaContrasenna) {
-        //TODO
+        //TODO Modificar contraseña con correo y todo eso
         return true;
     }
 
@@ -478,6 +478,16 @@ public class Gestor {
 
 
     //*********Manejo de Listas de Reproduccion***************
+    public int obtenerIdListaReproduccion(String nombre) {
+        try {
+            return repoCancionesDAO.getIdLista(nombre);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
+
     /**
      * Método usado para crear una lista de reproducción
      * @param nombre String que define el nombre de la lista

@@ -103,10 +103,10 @@ public class ControladorInfoListaReproduccion {
     }
 
     public void volver() {
-        if(ControladorGeneral.instancia.getGestor().usuarioIngresadoEsAdmin()) {
+        if(ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {
             ControladorGeneral.instancia.refVentanaPrincipalAdmin.mostrarTienda();
         } else {
-            //TODO lo mismo pero para el cliente
+            ControladorGeneral.instancia.refVentanaPrincipalCliente.mostrarTienda();
         }
     }
 }

@@ -390,7 +390,7 @@ public class RepositorioCancionesDAO {
 
             bibliotecaLeida.setCanciones(buscarCancionesBiblioteca(bibliotecaLeida.getId()));  //Agregar canciones a la biblioteca
             bibliotecaLeida.setListasDeReproduccion(buscarListasReproduccionBiblioteca(bibliotecaLeida.getId()));    //Agregar listas de reproduccion a la biblioteca
-            
+
             listaBibliotecas.add(bibliotecaLeida);
         }
 

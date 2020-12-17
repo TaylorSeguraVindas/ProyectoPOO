@@ -108,7 +108,6 @@ public class ControladorGeneral {
     private void cambiarVentana(String titulo, Scene escena) {
         ControladorGeneral.instancia.window.setTitle(titulo);
         ControladorGeneral.instancia.window.setScene(escena);
-        ControladorGeneral.instancia.window.centerOnScreen();
         ControladorGeneral.instancia.window.show();
     }
 
@@ -166,9 +165,7 @@ public class ControladorGeneral {
 
             ControladorGeneral.instancia.window.setMinWidth(1100);
             ControladorGeneral.instancia.window.setMinHeight(620);
-            ControladorGeneral.instancia.window.setWidth(1100);
-            ControladorGeneral.instancia.window.setHeight(620);
-            ControladorGeneral.instancia.window.setMaximized(true);
+            ControladorGeneral.instancia.window.setMaximized(false);
             ControladorGeneral.instancia.window.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();

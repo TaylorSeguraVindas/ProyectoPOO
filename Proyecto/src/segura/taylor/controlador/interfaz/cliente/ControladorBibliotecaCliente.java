@@ -92,7 +92,6 @@ public class ControladorBibliotecaCliente {
         try {
             List<Cancion> canciones = ControladorGeneral.instancia.getGestor().listarCancionesDeBibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado());
 
-
             for(Cancion cancion : canciones) {
                 if(usandoFiltros) {
                     if(cancionCoincideConBusqueda(cancion)) {
@@ -142,7 +141,7 @@ public class ControladorBibliotecaCliente {
     }
 
     public void abrirFiltros() {
-        //Mostrar filtros
+        //TODO Filtros para biblioteca
         VentanaFiltroCancionesAdmin ventanaFiltros = new VentanaFiltroCancionesAdmin();
         ventanaFiltros.mostrar();
     }

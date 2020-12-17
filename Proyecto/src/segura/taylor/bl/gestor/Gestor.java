@@ -768,6 +768,12 @@ public class Gestor {
      * @throws Exception si no se puede conectar con la DB o si la cancion no existe
      */
     public boolean eliminarCancion(int pIdCancion) throws Exception {
+        Optional<Cancion> cancionEliminar = buscarCancionPorId(pIdCancion);
+        if(cancionEliminar.isPresent()) {   //Si la canción está en una biblioteca primero la elimina de la biblioteca
+            if(cancionEliminar.get().getTipoCancion().equals(TipoCancion.PARA_USUARIO)) {
+                removerCancionDeBibliotecaUsuario(usuarioIngresado.getId(), pIdCancion);
+            }
+        }
         return cancionDAO.delete(pIdCancion);
     }
 

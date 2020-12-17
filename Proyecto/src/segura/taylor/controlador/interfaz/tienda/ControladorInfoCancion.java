@@ -41,7 +41,7 @@ public class ControladorInfoCancion {
 
             lblCalificacion.setText("Calificación promedio: " + cancion.getCalificacionPromedio());
             lblPrecio.setText("Precio: " + cancion.getPrecio());
-            
+
             txtMiCalificacion.getItems().addAll("-Sin calificar-", "1 estrella", "2 estrellas", "3 estrellas", "4 estrellas", "5 estrellas");
 
             try {
@@ -82,7 +82,6 @@ public class ControladorInfoCancion {
 
             btnComprar.setDisable(true);
             btnComprar.setText("Comprada");
-
         } catch (Exception e) {
             e.printStackTrace();
         }

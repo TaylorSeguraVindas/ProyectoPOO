@@ -47,7 +47,9 @@ public class CancionDAO {
      * @return true si el registro es exitoso, false si ocurre algún error
      * @throws Exception si no se puede conectar con la DB
      */
-    public boolean save(Cancion nuevaCancion) throws Exception {
+    public int save(Cancion nuevaCancion) throws Exception {
+        int key = -1;
+
         try {
             Statement query = connection.createStatement();
             String insert = "INSERT INTO canciones (tipoCancion, nombre, recurso, duracion, fechaLanzamiento, precio, idGenero, idArtista, idCompositor) VALUES ";
@@ -63,12 +65,18 @@ public class CancionDAO {
             insert += nuevaCancion.getCompositor().getId() + ")";
 
             System.out.println("Ejecuto query: " + insert);
-            query.execute(insert);
-            return true;
+            query.execute(insert, Statement.RETURN_GENERATED_KEYS);
+
+            ResultSet generatedKeys = query.getGeneratedKeys();
+
+            while (generatedKeys.next()) {
+                key = generatedKeys.getInt(1);
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
-        return false;
+
+        return key;
     }
 
     /**

@@ -316,6 +316,16 @@ public class RepositorioCancionesDAO {
 
         return new ArrayList<>();
     }
+    private ArrayList<Cancion> buscarCancionesBiblioteca(int idBiblioteca) {
+        try {
+            ArrayList<Cancion> canciones = cancionDAO.findCancionesRepo(idBiblioteca, TipoRepositorioCanciones.BIBLIOTECA);
+            return canciones;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
     private ArrayList<ListaReproduccion> buscarListasReproduccionBiblioteca(int pIdBiblioteca) {
         try {
             String idListas = listasBibliotecaDAO.getIdListasReproduccionBiblioteca(pIdBiblioteca);
@@ -378,6 +388,9 @@ public class RepositorioCancionesDAO {
             bibliotecaLeida.setNombre(result.getString("nombre"));
             bibliotecaLeida.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
 
+            bibliotecaLeida.setCanciones(buscarCancionesBiblioteca(bibliotecaLeida.getId()));  //Agregar canciones a la biblioteca
+            bibliotecaLeida.setListasDeReproduccion(buscarListasReproduccionBiblioteca(bibliotecaLeida.getId()));    //Agregar listas de reproduccion a la biblioteca
+            
             listaBibliotecas.add(bibliotecaLeida);
         }
 
@@ -399,7 +412,7 @@ public class RepositorioCancionesDAO {
             bibliotecaLeida.setNombre(result.getString("nombre"));
             bibliotecaLeida.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
 
-            bibliotecaLeida.setCanciones(buscarCancionesLista(bibliotecaLeida.getId()));  //Agregar canciones a la biblioteca
+            bibliotecaLeida.setCanciones(buscarCancionesBiblioteca(bibliotecaLeida.getId()));  //Agregar canciones a la biblioteca
             bibliotecaLeida.setListasDeReproduccion(buscarListasReproduccionBiblioteca(bibliotecaLeida.getId()));    //Agregar listas de reproduccion a la biblioteca
             return Optional.of(bibliotecaLeida);
         }

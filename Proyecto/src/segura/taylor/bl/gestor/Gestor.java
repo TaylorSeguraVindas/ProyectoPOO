@@ -724,7 +724,7 @@ public class Gestor {
      * @return true si el registro es exitoso, false si ocurre algun error
      * @throws Exception si no se puede conectar con la DB o si la cancion ya existe
      */
-    public boolean crearCancion(String nombre, String recurso, double duracion, int idGenero, int idArtista, int idCompositor, LocalDate fechaLanzamiento, double precio) throws Exception {
+    public int crearCancion(String nombre, String recurso, double duracion, int idGenero, int idArtista, int idCompositor, LocalDate fechaLanzamiento, double precio) throws Exception {
         ArrayList<Calificacion> calificaciones = new ArrayList<>();
 
         TipoCancion tipoCancion;

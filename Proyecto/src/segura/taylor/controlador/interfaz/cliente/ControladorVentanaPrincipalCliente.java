@@ -81,7 +81,6 @@ public class ControladorVentanaPrincipalCliente {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
     public void removerListaReproduccion() {
         //remover de biblioteca y actualizar el menu
@@ -212,7 +211,16 @@ public class ControladorVentanaPrincipalCliente {
     }
 
     public void mostrarBiblioteca() {
-        //Mostrar canciones en biblioteca
+        limpiarPantalla();
+        try {
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/cliente/BibliotecaCliente.fxml"));
+            contenedorPrincipal.getChildren().add(root);
+            //Expandir
+            root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
+            root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void modificarUsuario() {

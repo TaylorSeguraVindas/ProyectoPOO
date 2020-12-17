@@ -105,10 +105,9 @@ public class ControladorGeneral {
         }
     }
 
-    private void cambiarVentana(String titulo, Scene escena, boolean maximizar) {
+    private void cambiarVentana(String titulo, Scene escena) {
         ControladorGeneral.instancia.window.setTitle(titulo);
         ControladorGeneral.instancia.window.setScene(escena);
-        ControladorGeneral.instancia.window.setMaximized(maximizar);
         ControladorGeneral.instancia.window.centerOnScreen();
         ControladorGeneral.instancia.window.show();
     }
@@ -117,12 +116,13 @@ public class ControladorGeneral {
         try {
             gestor.reiniciar();
             Parent root = FXMLLoader.load(getClass().getResource("../ui/ventanas/VentanaLogin.fxml"));
-            ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 380), false);
+            ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 380));
 
             ControladorGeneral.instancia.window.setMinWidth(420);
             ControladorGeneral.instancia.window.setMinHeight(380);
             ControladorGeneral.instancia.window.setWidth(420);
             ControladorGeneral.instancia.window.setHeight(380);
+            ControladorGeneral.instancia.window.setMaximized(false);
             ControladorGeneral.instancia.window.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,9 +140,14 @@ public class ControladorGeneral {
                 alertDialog.mostrar("Aviso", "No se ha detectado un usuario admin, se va a crear uno");
             }
 
-            ControladorGeneral.instancia.cambiarVentana("Registro de usuario", new Scene(root, 580, 440), false);
+            ControladorGeneral.instancia.cambiarVentana("Registro de usuario", new Scene(root, 580, 440));
+
+            ControladorGeneral.instancia.window.setMinWidth(580);
+            ControladorGeneral.instancia.window.setMinHeight(440);
+            ControladorGeneral.instancia.window.setWidth(580);
+            ControladorGeneral.instancia.window.setHeight(440);
+            ControladorGeneral.instancia.window.setMaximized(false);
             ControladorGeneral.instancia.window.centerOnScreen();
-            ControladorGeneral.instancia.window.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -157,10 +162,14 @@ public class ControladorGeneral {
                 root = FXMLLoader.load(getClass().getResource("../ui/ventanas/cliente/VentanaPrincipalCliente.fxml"));
             }
 
-            ControladorGeneral.instancia.cambiarVentana("NotSpotify", new Scene(root, 1100, 620), true);
+            ControladorGeneral.instancia.cambiarVentana("NotSpotify", new Scene(root, 1100, 620));
 
             ControladorGeneral.instancia.window.setMinWidth(1100);
             ControladorGeneral.instancia.window.setMinHeight(620);
+            ControladorGeneral.instancia.window.setWidth(1100);
+            ControladorGeneral.instancia.window.setHeight(620);
+            ControladorGeneral.instancia.window.setMaximized(true);
+            ControladorGeneral.instancia.window.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -186,8 +186,6 @@ public class ControladorRegistroCancion {
     }
 
     public void registrarCancion() {
-        TipoCancion tipoCancion = (paraTienda) ? TipoCancion.PARA_TIENDA : TipoCancion.PARA_USUARIO;
-        int idCreador = ControladorGeneral.instancia.getGestor().getIdUsuarioIngresado();
         String nombre = txtNombre.getText();
         String recurso = txtRecurso.getText();
         double duracion = Double.parseDouble(txtDuracion.getText());
@@ -206,8 +204,13 @@ public class ControladorRegistroCancion {
         double precio = Double.parseDouble(txtPrecio.getText());
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().crearCancion(nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, precio);
-            if (resultado) {
+            int idCancionRegistrada = ControladorGeneral.instancia.getGestor().crearCancion(nombre, recurso, duracion, genero, artista, compositor, fechaLanzamiento, precio);
+            if (idCancionRegistrada != -1) {
+                //Si la lista fue creada por un usuario corriente automáticamente se agrega a su biblioteca
+                if(!ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {
+                    ControladorGeneral.instancia.getGestor().agregarCancionABibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idCancionRegistrada);
+                }
+
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Cancion registrada correctamente");
                 ventana.close();

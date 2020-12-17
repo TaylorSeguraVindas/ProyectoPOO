@@ -283,4 +283,21 @@ public class Cancion implements IComboBoxItem {
     public String toComboBoxItem() {
         return id + "-" + nombre;
     }
+
+    public double getCalificacionPromedio() {
+        double promedio;
+        double acum = 0.0;
+        int calificacionesValidas = 0;
+
+        for (Calificacion calificacion : calificaciones) {
+            acum += calificacion.getEstrellas();
+
+            if(calificacion.getEstrellas() > 0) {   //Solo cuenta las que si tengan estrellas
+                calificacionesValidas++;
+            }
+        }
+
+        promedio = acum / calificacionesValidas;
+        return promedio;
+    }
 }

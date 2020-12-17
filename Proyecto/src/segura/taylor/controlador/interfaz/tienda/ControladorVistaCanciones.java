@@ -14,6 +14,7 @@ import segura.taylor.ui.dialogos.VentanaFiltrosCancionesTienda;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class ControladorVistaCanciones {
     public static boolean filtrandoPorNombre = true;
@@ -141,6 +142,15 @@ public class ControladorVistaCanciones {
     }
 
     public void abrirInfoDetallada() {
+        Cancion cancionSeleccionada = (Cancion) tblCanciones.getSelectionModel().getSelectedItem();
+
         //Abrir info detallada de la cancion
+        ControladorInfoCancion.idCancionSeleccionada = cancionSeleccionada.getId();
+
+        if(ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {
+            ControladorGeneral.refVentanaPrincipalAdmin.mostrarInfoCancion();
+        } else {
+            ControladorGeneral.refVentanaPrincipalCliente.mostrarInfoCancion();
+        }
     }
 }

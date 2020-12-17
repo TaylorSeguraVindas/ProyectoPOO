@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <VBox prefHeight="520.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.cliente.ControladorVentanaPrincipalCliente">
    <children>
@@ -20,6 +21,14 @@
                         <Insets top="40.0" />
                      </padding>
                   </VBox>
+                  <Label text="Mis listas de reproduccion">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="8.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
                   <ListView fx:id="listListaReproduccion" prefHeight="192.0" prefWidth="180.0" VBox.vgrow="ALWAYS" />
                   <HBox prefHeight="7.0" prefWidth="180.0">
                      <children>

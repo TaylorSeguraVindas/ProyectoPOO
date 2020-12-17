@@ -45,20 +45,27 @@ public class ControladorInfoCancion {
             txtMiCalificacion.getItems().addAll("-Sin calificar-", "1 estrella", "2 estrellas", "3 estrellas", "4 estrellas", "5 estrellas");
 
             try {
-                if(ControladorGeneral.instancia.getGestor().buscarCancionEnBibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idCancionSeleccionada).isPresent()) {
-                    //La canción ha sido comprada por el usuario.
-                    lblMiCalificacion.setVisible(true);
-                    txtMiCalificacion.setVisible(true);
-
-                    btnComprar.setDisable(true);
-                    btnComprar.setText("Comprada");
-                } else {
-                    //La canción NO ha sido comprada por el usuario.
+                if(ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {    //Admin no puede comprar
                     lblMiCalificacion.setVisible(false);
                     txtMiCalificacion.setVisible(false);
 
-                    btnComprar.setDisable(false);
-                    btnComprar.setText("Comprar");
+                    btnComprar.setVisible(false);
+                } else {
+                    if(ControladorGeneral.instancia.getGestor().buscarCancionEnBibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idCancionSeleccionada).isPresent()) {
+                        //La canción ha sido comprada por el usuario.
+                        lblMiCalificacion.setVisible(true);
+                        txtMiCalificacion.setVisible(true);
+
+                        btnComprar.setDisable(true);
+                        btnComprar.setText("Comprada");
+                    } else {
+                        //La canción NO ha sido comprada por el usuario.
+                        lblMiCalificacion.setVisible(false);
+                        txtMiCalificacion.setVisible(false);
+
+                        btnComprar.setDisable(false);
+                        btnComprar.setText("Comprar");
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

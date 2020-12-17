@@ -12,6 +12,8 @@ import segura.taylor.bl.entidades.Album;
 import segura.taylor.bl.entidades.Cancion;
 import segura.taylor.bl.entidades.ListaReproduccion;
 import segura.taylor.controlador.ControladorGeneral;
+import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.VentanaSeleccionarLista;
 
 import java.util.Optional;
 
@@ -93,7 +95,49 @@ public class ControladorInfoAlbum {
     }
 
     public void guardarEnLista() {
-        //TODO Agregar a lista de reproduccion
+        //Obtener toda la info del album
+        Optional<Album> albumEncontrado;
+        Album album;
+
+        try {
+            albumEncontrado = ControladorGeneral.instancia.getGestor().buscarAlbumPorId(idAlbumSeleccionado);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        if(albumEncontrado.isPresent()) {
+            album = albumEncontrado.get();
+        } else {
+            System.out.println("No se encontró el album :(");
+            return;
+        }
+
+        VentanaSeleccionarLista ventanaSeleccionarLista = new VentanaSeleccionarLista();
+        int idLista = ventanaSeleccionarLista.mostrar();
+
+        if(idLista != -1) {
+            try {
+                int cancionesAgregadas = 0;
+
+                for (Cancion cancion : album.getCanciones()) {
+                    boolean resultado = ControladorGeneral.instancia.getGestor().agregarCancionALista(idLista, cancion.getId());
+                    if(resultado) {
+                        cancionesAgregadas++;
+                    }
+                }
+
+                if(cancionesAgregadas > 0) {
+                    AlertDialog alertDialog = new AlertDialog();
+                    alertDialog.mostrar("Éxito", "Album agregado correctamente!");
+                } else {
+                    AlertDialog alertDialog = new AlertDialog();
+                    alertDialog.mostrar("Error", "No se pudo agregar el album");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void volver() {

@@ -15,7 +15,8 @@
                      <children>
                         <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#mostrarTienda" prefHeight="36.0" prefWidth="182.0" text="Tienda" />
                         <Button layoutX="10.0" layoutY="35.0" mnemonicParsing="false" onAction="#mostrarBiblioteca" prefHeight="36.0" prefWidth="182.0" text="Mi biblioteca" />
-                        <Button layoutX="10.0" layoutY="120.0" mnemonicParsing="false" onAction="#modificarUsuario" prefHeight="36.0" prefWidth="182.0" text="Ajustes" />
+                        <Button layoutX="10.0" layoutY="120.0" mnemonicParsing="false" onAction="#modificarUsuario" prefHeight="36.0" prefWidth="182.0" text="Modificar perfil" />
+                        <Button layoutX="10.0" layoutY="122.0" mnemonicParsing="false" onAction="#mostrarMetodosDePago" prefHeight="36.0" prefWidth="182.0" text="Métodos de pago" />
                      </children>
                      <padding>
                         <Insets top="40.0" />
@@ -29,7 +30,7 @@
                         <Insets bottom="5.0" left="8.0" top="5.0" />
                      </VBox.margin>
                   </Label>
-                  <ListView fx:id="listListaReproduccion" prefHeight="192.0" prefWidth="180.0" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="listListaReproduccion" prefHeight="168.0" prefWidth="180.0" VBox.vgrow="ALWAYS" />
                   <HBox prefHeight="7.0" prefWidth="180.0">
                      <children>
                         <Button layoutX="127.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarListaReproduccion" prefHeight="32.0" prefWidth="160.0" text="Modificar" />

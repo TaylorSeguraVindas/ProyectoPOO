@@ -67,12 +67,7 @@ public class ControladorVistaCanciones {
         columnaGenero.setMinWidth(100);
         columnaGenero.setCellValueFactory(new PropertyValueFactory<>("nombreGenero"));
 
-        //Precio
-        TableColumn<Cancion, String> columnaPrecio = new TableColumn("Precio");
-        columnaPrecio.setMinWidth(100);
-        columnaPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
-
-        tblCanciones.getColumns().addAll(columnaNombre, columnaDuracion, columnaFechaLanzamiento, columnaArtista, columnaCompositor, columnaGenero, columnaPrecio);
+        tblCanciones.getColumns().addAll(columnaNombre, columnaDuracion, columnaFechaLanzamiento, columnaArtista, columnaCompositor, columnaGenero);
 
     }
     private void mostrarDatos() {

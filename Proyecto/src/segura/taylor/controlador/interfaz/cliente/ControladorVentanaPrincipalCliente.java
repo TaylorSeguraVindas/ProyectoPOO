@@ -293,6 +293,9 @@ public class ControladorVentanaPrincipalCliente {
             e.printStackTrace();
         }
     }
+    public void mostrarMetodosDePago() {
+
+    }
 
     public void cerrarSesion() {
         ControladorGeneral.instancia.menuIniciarSesion();

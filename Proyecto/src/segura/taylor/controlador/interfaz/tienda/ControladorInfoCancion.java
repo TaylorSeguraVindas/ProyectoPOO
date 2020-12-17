@@ -7,6 +7,7 @@ import segura.taylor.bl.entidades.Calificacion;
 import segura.taylor.bl.entidades.Cancion;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.VentanaMetodoPago;
 
 import java.util.Optional;
 
@@ -74,24 +75,29 @@ public class ControladorInfoCancion {
     }
 
     public void comprarCancion() {
-        //TODO ventana para introducir tarjeta y todo eso
-        AlertDialog alertDialog = new AlertDialog();
-        alertDialog.mostrar("Éxito", "Canción comprada correctamente");
+        VentanaMetodoPago ventanaMetodoPago = new VentanaMetodoPago();
+        boolean transaccionCorrecta = ventanaMetodoPago.mostrar();
 
-        //Copiar a biblioteca
-        try {
-            ControladorGeneral.instancia.getGestor().agregarCancionABibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idCancionSeleccionada);
+        if(transaccionCorrecta) {
+            AlertDialog alertDialog = new AlertDialog();
+            alertDialog.mostrar("Éxito", "Canción comprada correctamente");
 
-            //Actualizar botón y calificaciones
-            //La canción ha sido comprada por el usuario.
-            lblMiCalificacion.setVisible(true);
-            txtMiCalificacion.setVisible(true);
+            //Copiar a biblioteca
+            try {
+                ControladorGeneral.instancia.getGestor().agregarCancionABibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idCancionSeleccionada);
 
-            btnComprar.setDisable(true);
-            btnComprar.setText("Comprada");
-        } catch (Exception e) {
-            e.printStackTrace();
+                //Actualizar botón y calificaciones
+                //La canción ha sido comprada por el usuario.
+                lblMiCalificacion.setVisible(true);
+                txtMiCalificacion.setVisible(true);
+
+                btnComprar.setDisable(true);
+                btnComprar.setText("Comprada");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     public void volver() {

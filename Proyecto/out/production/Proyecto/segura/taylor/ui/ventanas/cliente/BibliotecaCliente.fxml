@@ -26,7 +26,7 @@
               <Button fx:id="btnBuscar" layoutX="532.0" layoutY="10.0" mnemonicParsing="false" onAction="#buscar" prefHeight="32.0" prefWidth="61.0" text="Buscar" />
               <Button fx:id="btnFiltros" layoutX="303.0" layoutY="10.0" mnemonicParsing="false" onAction="#abrirFiltros" prefHeight="32.0" prefWidth="61.0" text="Filtros" />
               <Region prefHeight="32.0" prefWidth="61.0" HBox.hgrow="ALWAYS" />
-              <Button fx:id="btnReproducirCancion" layoutX="457.0" layoutY="10.0" mnemonicParsing="false" onAction="#reproducirCancion" prefHeight="32.0" prefWidth="152.0" text="Reproducir seleccionada" />
+              <Button fx:id="btnReproducirCancion" layoutX="457.0" layoutY="10.0" mnemonicParsing="false" onAction="#agregarCancionSeleccionadaARepo" prefHeight="32.0" prefWidth="163.0" text="Agregar seleccionada a..." />
               <Button fx:id="btnAgregarCancion" mnemonicParsing="false" onAction="#agregarCancion" prefHeight="32.0" prefWidth="74.0" text="Agregar" />
               <Button fx:id="btnModificarCancion" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#modificarCancion" prefHeight="32.0" prefWidth="86.0" text="Modificar" />
               <Button fx:id="btnEliminarCancion" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" onAction="#eliminarCancion" prefHeight="32.0" prefWidth="77.0" text="Remover" />

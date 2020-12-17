@@ -17,6 +17,7 @@ import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.cancion.ControladorRegistroCancion;
 import segura.taylor.ui.dialogos.AlertDialog;
 import segura.taylor.ui.dialogos.VentanaFiltroCancionesAdmin;
+import segura.taylor.ui.dialogos.VentanaSeleccionarLista;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.util.ArrayList;
@@ -151,12 +152,28 @@ public class ControladorBibliotecaCliente {
         mostrarDatos();
     }
 
-    public void reproducirCancion() {
+    public void agregarCancionSeleccionadaARepo() {
         Cancion cancionSeleccionada = (Cancion) tblCanciones.getSelectionModel().getSelectedItem();
 
         if(cancionSeleccionada != null) {
-            ControladorGeneral.instancia.cargarCancion(cancionSeleccionada.getRecurso());
-            ControladorGeneral.instancia.reproducirCancion();
+            VentanaSeleccionarLista ventanaSeleccionarLista = new VentanaSeleccionarLista();
+            int idLista = ventanaSeleccionarLista.mostrar();
+
+            if(idLista != -1) {
+                try {
+                    boolean resultado = ControladorGeneral.instancia.getGestor().agregarCancionALista(idLista, cancionSeleccionada.getId());
+
+                    if(resultado) {
+                        AlertDialog alertDialog = new AlertDialog();
+                        alertDialog.mostrar("Éxito", "Cancion agregada correctamente!");
+                    } else {
+                        AlertDialog alertDialog = new AlertDialog();
+                        alertDialog.mostrar("Error", "No se pudo agregar la cancion");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

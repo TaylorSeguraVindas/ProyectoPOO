@@ -11,6 +11,8 @@ import segura.taylor.ui.dialogos.AlertDialog;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ControladorRegistroCliente {
     public static Stage ventana;
@@ -51,6 +53,65 @@ public class ControladorRegistroCliente {
         }
     }
 
+    private boolean hayCamposVacios() {
+        if(txtCorreo.getText().trim().equals("") ||
+                txtContrasenna.getText().trim().equals("") ||
+                txtNombre.getText().trim().equals("") ||
+                txtApellidos.getText().trim().equals("") ||
+                txtNombreUsuario.getText().trim().equals("") ||
+                txtFechaNacimiento.getValue().toString().equals("")) {
+            AlertDialog alertDialog = new AlertDialog();
+            alertDialog.mostrar("Error", "No se puede realizar el registro, hay campos vacíos");
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean errorEnCampos() {
+        boolean error = false;
+        String mensajeError = "";
+
+        //Verificar correo (aaa@aaa) + (*.com, .*.org, *.ac.cr)
+        Pattern contrasennaPattCom = Pattern.compile("^[a-zA-Z0-9.]+\\@[a-zA-Z0-9]+.com$");
+        Pattern contrasennaPattOrg = Pattern.compile("^[a-zA-Z0-9.]+\\@[a-zA-Z0-9]+.org$");
+        Pattern contrasennaPattAcCr = Pattern.compile("^[a-zA-Z0-9.]+\\@[a-zA-Z0-9]+.ac.cr$");
+
+        Matcher matchCorreoCom = contrasennaPattCom.matcher(txtCorreo.getText());
+        Matcher matchCorreoOrg = contrasennaPattOrg.matcher(txtCorreo.getText());
+        Matcher matchCorreoAcCr = contrasennaPattAcCr.matcher(txtCorreo.getText());
+
+        if(!(matchCorreoCom.matches() || matchCorreoOrg.matches() || matchCorreoAcCr.matches())) {
+            error = true;
+            mensajeError = "Hay un problema con el correo, verifique que sea válido";
+        }
+
+        //Verificar contraseña (Entre 8 y 12 caracteres, como minimo: una letra minuscula, una letra mayuscula y un caracter especial)
+        Pattern contrasennaPatt = Pattern.compile("^(?=.*[a-z])+(?=.*[A-Z])+(?=.*[0-9!_.@$!%*#?&])+[a-zA-Z0-9!_.@$!%*#?&]{8,12}$");
+        Matcher matchContrasenna = contrasennaPatt.matcher(txtContrasenna.getText());
+
+        if(!matchContrasenna.matches()) {
+            error = true;
+            mensajeError = "Hay un problema con la contraseña, debe tener entre 8 y 12 caracteres, una letra minúscula, una mayúscula y un caracter especial";
+        }
+
+        //Verificar edad
+        LocalDate fechaNacimiento = txtFechaNacimiento.getValue();
+        int edad = ControladorGeneral.instancia.calcularEdad(fechaNacimiento);
+
+        if(edad < 18) {
+            error = true;
+            mensajeError = "Debe ser mayor de 18 años para usar la app";
+        }
+
+        if(error) {
+            AlertDialog alertDialog = new AlertDialog();
+            alertDialog.mostrar("Error", mensajeError);
+        }
+
+        return error;
+    }
+
     public void seleccionarImagen() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccione una imagen de perfil");
@@ -63,6 +124,9 @@ public class ControladorRegistroCliente {
     }
 
     public void registrarUsuario() {
+        if(hayCamposVacios()) return;
+        if(errorEnCampos()) return;
+
         String correo = txtCorreo.getText();
         String contrasenna = txtContrasenna.getText();
         String nombre = txtNombre.getText();

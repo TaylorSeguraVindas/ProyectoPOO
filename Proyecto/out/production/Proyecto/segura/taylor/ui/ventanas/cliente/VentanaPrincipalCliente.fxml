@@ -16,7 +16,6 @@
                         <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#mostrarTienda" prefHeight="36.0" prefWidth="182.0" text="Tienda" />
                         <Button layoutX="10.0" layoutY="35.0" mnemonicParsing="false" onAction="#mostrarBiblioteca" prefHeight="36.0" prefWidth="182.0" text="Mi biblioteca" />
                         <Button layoutX="10.0" layoutY="120.0" mnemonicParsing="false" onAction="#modificarUsuario" prefHeight="36.0" prefWidth="182.0" text="Modificar perfil" />
-                        <Button layoutX="10.0" layoutY="122.0" mnemonicParsing="false" onAction="#mostrarMetodosDePago" prefHeight="36.0" prefWidth="182.0" text="Métodos de pago" />
                      </children>
                      <padding>
                         <Insets top="40.0" />

@@ -1,10 +1,12 @@
 package segura.taylor.ui.dialogos;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -19,8 +21,12 @@ public class YesNoDialog {
         VBox contenedorPrincipal = new VBox();
         contenedorPrincipal.setSpacing(10);
         contenedorPrincipal.setAlignment(Pos.CENTER);
+        contenedorPrincipal.setPadding(new Insets(10, 10, 10, 10));
 
         Label lblMensaje = new Label(mensaje);
+        lblMensaje.setMinHeight(60);
+        lblMensaje.setWrapText(true);
+        lblMensaje.setTextAlignment(TextAlignment.CENTER);
 
         HBox contenedorBotones = new HBox();
         contenedorBotones.setAlignment(Pos.CENTER);
@@ -40,7 +46,7 @@ public class YesNoDialog {
 
         contenedorBotones.getChildren().addAll(btnSi, btnNo);
         contenedorPrincipal.getChildren().addAll(lblMensaje, contenedorBotones);
-        Scene escena = new Scene(contenedorPrincipal, 240, 120);
+        Scene escena = new Scene(contenedorPrincipal, 280, 180);
 
         window.setScene(escena);
         window.setTitle(titulo);

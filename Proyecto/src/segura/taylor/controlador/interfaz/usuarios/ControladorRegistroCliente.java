@@ -59,7 +59,8 @@ public class ControladorRegistroCliente {
                 txtNombre.getText().trim().equals("") ||
                 txtApellidos.getText().trim().equals("") ||
                 txtNombreUsuario.getText().trim().equals("") ||
-                txtFechaNacimiento.getValue().toString().equals("")) {
+                txtFechaNacimiento.getValue().toString().equals("") ||
+                txtPais.getValue().toString().equals("")) {
             AlertDialog alertDialog = new AlertDialog();
             alertDialog.mostrar("Error", "No se puede realizar el registro, hay campos vacíos");
             return true;

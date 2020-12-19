@@ -29,7 +29,9 @@ public class CalificacionDAO {
      * @param nuevaCalificacion instancia de la clase calificacion que se desea guardar
      * @return true si el registro es exitoso, false si ocurre algún error
      */
-    public boolean save(Calificacion nuevaCalificacion, int idCancion, int idAutor) {
+    public int save(Calificacion nuevaCalificacion, int idAutor, int idCancion) {
+        int key = -1;
+
         try {
             Statement query = connection.createStatement();
             String insert = "INSERT INTO calificaciones (estrellas, idAutor, idCancion) VALUES ";
@@ -37,12 +39,18 @@ public class CalificacionDAO {
             insert += idAutor + ",";
             insert += idCancion + ")";
 
-            query.execute(insert);
-            return true;
+            query.execute(insert, Statement.RETURN_GENERATED_KEYS);
+
+            ResultSet generatedKeys = query.getGeneratedKeys();
+
+            while (generatedKeys.next()) {
+                key = generatedKeys.getInt(1);
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
-        return false;
+
+        return key;
     }
 
     /**

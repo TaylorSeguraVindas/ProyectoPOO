@@ -11,6 +11,8 @@ import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.enums.TipoCancion;
 import segura.taylor.dao.*;
 
+import javax.swing.text.html.Option;
+
 /**
  * La clase gestor se encarga de realizar la conexión entre el controlador y los DAOs
  *
@@ -25,6 +27,7 @@ public class Gestor {
     private PropertiesHandler propertiesHandler = new PropertiesHandler();
 
     private ArtistaDAO artistaDAO;
+    private CalificacionDAO calificacionDAO;
     private CancionDAO cancionDAO;
     private CompositorDAO compostorDAO;
     private GeneroDAO generoDAO;
@@ -61,6 +64,7 @@ public class Gestor {
             System.out.println("CONNECTED TO ---> "+ url);
 
             this.artistaDAO = new ArtistaDAO(this.connection);
+            this.calificacionDAO = new CalificacionDAO(this.connection);
             this.cancionDAO = new CancionDAO(this.connection);
             this.compostorDAO = new CompositorDAO(this.connection);
             this.generoDAO = new GeneroDAO(this.connection);
@@ -810,6 +814,35 @@ public class Gestor {
         return Optional.empty();
     }
 
+
+    //Calificaciones
+
+    //TODO JAVADOC para calificaciones
+    public int registrarCalificacion(int estrellas, int idCliente, int idCancion) {
+        Calificacion nuevaCalificacion = new Calificacion(estrellas);
+        return calificacionDAO.save(nuevaCalificacion, idCliente, idCancion);
+    }
+
+    public boolean modificarCalificacion(int idCalificacion, int estrellas) throws Exception {
+        Optional<Calificacion> calificacionEncontrada = buscarCalificacion(idCalificacion);
+
+        if(calificacionEncontrada.isPresent()) {
+            Calificacion calificacionModifica = calificacionEncontrada.get();
+            calificacionModifica.setEstrellas(estrellas);
+
+            return calificacionDAO.update(calificacionModifica);
+        }
+
+        return false;
+    }
+
+    public Optional<Calificacion> buscarCalificacion(int idCalificacion) throws SQLException {
+        return calificacionDAO.findByID(idCalificacion);
+    }
+
+    public Optional<Calificacion> buscarCalificacion(int idCancion, int idUsuario) throws SQLException {
+        return calificacionDAO.findByCancionYUsuario(idCancion, idUsuario);
+    }
 
     //Biblioteca de cliente
 

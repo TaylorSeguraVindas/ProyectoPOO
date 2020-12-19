@@ -27,6 +27,8 @@ public class ControladorInfoCancion {
 
     public Button btnComprar;
 
+    private Calificacion calificacionUsuarioActual;
+
     public void initialize() {
         Optional<Cancion> cancionSeleccionada = ControladorGeneral.instancia.getGestor().buscarCancionPorId(idCancionSeleccionada);
 
@@ -44,6 +46,8 @@ public class ControladorInfoCancion {
             lblPrecio.setText("Precio: " + cancion.getPrecio());
 
             txtMiCalificacion.getItems().addAll("-Sin calificar-", "1 estrella", "2 estrellas", "3 estrellas", "4 estrellas", "5 estrellas");
+            txtMiCalificacion.setOnAction(e -> { modificarCalificacion(txtMiCalificacion.getValue().toString()); });
+
 
             try {
                 if(ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {    //Admin no puede comprar
@@ -59,6 +63,21 @@ public class ControladorInfoCancion {
 
                         btnComprar.setDisable(true);
                         btnComprar.setText("Comprada");
+
+                        Optional<Calificacion> calificacionEncontrada = ControladorGeneral.instancia.getGestor().buscarCalificacion(idCancionSeleccionada, ControladorGeneral.instancia.getIdUsuarioIngresado());
+
+                        if(calificacionEncontrada.isPresent()) {    //Se actualiza la info para mostrar la calificacion del usuario que está viendo la canción
+                            calificacionUsuarioActual = calificacionEncontrada.get();
+                            txtMiCalificacion.setValue(obtenerValorDeEstrellas(calificacionUsuarioActual.getEstrellas()));
+                        } else {
+                            //TODO crear calificacion si no existe ninguna
+                            int idNuevaCalificacion = ControladorGeneral.instancia.getGestor().registrarCalificacion(0, ControladorGeneral.instancia.getIdUsuarioIngresado(), idCancionSeleccionada);
+
+                            if(idNuevaCalificacion != -1) {
+                                calificacionUsuarioActual = ControladorGeneral.instancia.getGestor().buscarCalificacion(idNuevaCalificacion).get();
+                            }
+                        }
+
                     } else {
                         //La canción NO ha sido comprada por el usuario.
                         lblMiCalificacion.setVisible(false);
@@ -74,6 +93,57 @@ public class ControladorInfoCancion {
         }
     }
 
+    private void modificarCalificacion(String valorSeleccionado) {
+        int estrellas = obtenerEstrellasDeString(valorSeleccionado);
+
+        try {
+            boolean resultado = ControladorGeneral.instancia.getGestor().modificarCalificacion(calificacionUsuarioActual.getId(), estrellas);
+            if(resultado) {
+                System.out.println("Correcto");
+            } else {
+                System.out.println("Mamo");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String obtenerValorDeEstrellas(int estrellas) {
+        String resultado = "";
+
+        switch (estrellas) {
+            case 0:
+                resultado = "-Sin calificar-";
+                break;
+            case 1:
+                resultado = "1 estrella";
+                break;
+            case 2:
+                resultado = "2 estrellas";
+                break;
+            case 3:
+                resultado = "3 estrellas";
+                break;
+            case 4:
+                resultado = "4 estrellas";
+                break;
+            case 5:
+                resultado = "5 estrellas";
+                break;
+        }
+
+        return resultado;
+    }
+    private int obtenerEstrellasDeString(String valor) {
+        char[] caracteres = valor.toCharArray();
+
+        if(caracteres[0] == '-') {  //Si el primer caracter es un guion no se ha calificado
+            return 0;
+        }
+
+        return Integer.parseInt(String.valueOf(caracteres[0])); //Devuelve el primer caracter que define la cantidad de estrellas
+    }
     public void comprarCancion() {
         VentanaMetodoPago ventanaMetodoPago = new VentanaMetodoPago();
         boolean transaccionCorrecta = ventanaMetodoPago.mostrar();
@@ -93,6 +163,14 @@ public class ControladorInfoCancion {
 
                 btnComprar.setDisable(true);
                 btnComprar.setText("Comprada");
+
+                //Crear calificacion para este usuario
+                int idNuevaCalificacion = ControladorGeneral.instancia.getGestor().registrarCalificacion(0, ControladorGeneral.instancia.getIdUsuarioIngresado(), idCancionSeleccionada);
+
+                if(idNuevaCalificacion != -1) {
+                    calificacionUsuarioActual = ControladorGeneral.instancia.getGestor().buscarCalificacion(idNuevaCalificacion).get();
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Calificacion {
     //Variables
     private int id;
-    private float estrellas;
+    private int estrellas;
 
     //Metodos
     public int getId() {
@@ -15,10 +15,10 @@ public class Calificacion {
         this.id = id;
     }
 
-    public float getEstrellas() {
+    public int getEstrellas() {
         return estrellas;
     }
-    public void setEstrellas(float estrellas) {
+    public void setEstrellas(int estrellas) {
         this.estrellas = estrellas;
     }
 
@@ -35,7 +35,7 @@ public class Calificacion {
      * Método constructor
      * @param estrellas int que define la cantidad de estrellas
      */
-    public Calificacion(Usuario autor, float estrellas) {
+    public Calificacion(int estrellas) {
         this.id = 0;
         this.estrellas = estrellas;
     }

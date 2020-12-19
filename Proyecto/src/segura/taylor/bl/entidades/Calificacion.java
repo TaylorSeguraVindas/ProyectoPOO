@@ -5,7 +5,6 @@ import java.util.Objects;
 public class Calificacion {
     //Variables
     private int id;
-    private Usuario autor;
     private float estrellas;
 
     //Metodos
@@ -14,13 +13,6 @@ public class Calificacion {
     }
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Usuario getAutor() {
-        return autor;
-    }
-    public void setAutor(Usuario autor) {
-        this.autor = autor;
     }
 
     public float getEstrellas() {
@@ -41,12 +33,10 @@ public class Calificacion {
 
     /**
      * Método constructor
-     * @param autor instancia de la clase Usuario que define al autor
      * @param estrellas int que define la cantidad de estrellas
      */
     public Calificacion(Usuario autor, float estrellas) {
         this.id = 0;
-        this.autor = autor;
         this.estrellas = estrellas;
     }
 
@@ -55,7 +45,6 @@ public class Calificacion {
     public String toString() {
         return "Calificacion{" +
                 "id='" + id + '\'' +
-                ", autor='" + autor + '\'' +
                 ", estrellas=" + estrellas +
                 '}';
     }
@@ -66,13 +55,12 @@ public class Calificacion {
         if (o == null || getClass() != o.getClass()) return false;
         Calificacion that = (Calificacion) o;
         return id == that.id &&
-                Float.compare(that.estrellas, estrellas) == 0 &&
-                Objects.equals(autor, that.autor);
+                Float.compare(that.estrellas, estrellas) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, autor, estrellas);
+        return Objects.hash(id, estrellas);
     }
 
     /**

@@ -13,6 +13,7 @@ import segura.taylor.bl.entidades.Artista;
 import segura.taylor.bl.entidades.Cancion;
 import segura.taylor.bl.entidades.Compositor;
 import segura.taylor.bl.entidades.Genero;
+import segura.taylor.bl.enums.TipoCancion;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.cancion.ControladorRegistroCancion;
 import segura.taylor.ui.dialogos.AlertDialog;
@@ -23,6 +24,7 @@ import segura.taylor.ui.dialogos.YesNoDialog;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class ControladorBibliotecaCliente {
     public static boolean filtrandoPorNombre = true;
@@ -286,8 +288,22 @@ public class ControladorBibliotecaCliente {
             }
 
             int idCancion = CancionSeleccionado.getId();
+
             try {
-                resultado = ControladorGeneral.instancia.getGestor().eliminarCancion(idCancion);
+                //Si fue subida subida por el usuario se elimina del todo
+                //Si fue comprada solo se quita de la biblioteca
+                Optional<Cancion> cancion = ControladorGeneral.instancia.getGestor().buscarCancionPorId(idCancion);
+
+                if(cancion.isPresent()) {
+                    if(cancion.get().getTipoCancion().equals(TipoCancion.PARA_USUARIO)) {
+                        resultado = ControladorGeneral.instancia.getGestor().eliminarCancion(idCancion);
+                    } else if(cancion.get().getTipoCancion().equals(TipoCancion.PARA_TIENDA)) {
+                        resultado = ControladorGeneral.instancia.getGestor().removerCancionDeBibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idCancion);
+                    }
+                } else {
+                    resultado = false;
+                }
+
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Cancion eliminada correctamente");

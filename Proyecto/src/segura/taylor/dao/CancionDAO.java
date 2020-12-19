@@ -22,6 +22,7 @@ public class CancionDAO {
     private GeneroDAO generoDAO;
     private ArtistaDAO artistaDAO;
     private CompositorDAO compositorDAO;
+    private CalificacionDAO calificacionDAO;
 
     private CancionesAlbumDAO cancionesAlbumDAO;
     private CancionesListaReproduccionDAO cancionesListaReproduccionDAO;
@@ -36,6 +37,8 @@ public class CancionDAO {
         this.generoDAO = new GeneroDAO(connection);
         this.artistaDAO = new ArtistaDAO(connection);
         this.compositorDAO = new CompositorDAO(connection);
+        this.calificacionDAO = new CalificacionDAO(connection);
+
         this.cancionesAlbumDAO = new CancionesAlbumDAO(connection);
         this.cancionesListaReproduccionDAO = new CancionesListaReproduccionDAO(connection);
         this.cancionesBibliotecaDAO = new CancionesBibliotecaDAO(connection);
@@ -154,6 +157,7 @@ public class CancionDAO {
             cancionLeida.setArtista(artistaDAO.findByID(result.getInt("idArtista")).get());
             cancionLeida.setCompositor(compositorDAO.findByID(result.getInt("idCompositor")).get());
 
+            cancionLeida.setCalificaciones(calificacionDAO.findByIdCancion(cancionLeida.getId()));
             listaCanciones.add(cancionLeida);
         }
 

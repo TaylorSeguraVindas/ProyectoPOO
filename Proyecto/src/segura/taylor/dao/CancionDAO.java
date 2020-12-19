@@ -192,6 +192,8 @@ public class CancionDAO {
             cancionLeida.setArtista(artistaDAO.findByID(result.getInt("idArtista")).get());
             cancionLeida.setCompositor(compositorDAO.findByID(result.getInt("idCompositor")).get());
 
+            cancionLeida.setCalificaciones(calificacionDAO.findByIdCancion(cancionLeida.getId()));
+            
             return Optional.of(cancionLeida);
         }
 

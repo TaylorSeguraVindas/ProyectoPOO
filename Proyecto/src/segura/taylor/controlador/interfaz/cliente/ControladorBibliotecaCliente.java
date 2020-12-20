@@ -16,10 +16,7 @@ import segura.taylor.bl.entidades.Genero;
 import segura.taylor.bl.enums.TipoCancion;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.cancion.ControladorRegistroCancion;
-import segura.taylor.ui.dialogos.AlertDialog;
-import segura.taylor.ui.dialogos.VentanaFiltroCancionesAdmin;
-import segura.taylor.ui.dialogos.VentanaSeleccionarLista;
-import segura.taylor.ui.dialogos.YesNoDialog;
+import segura.taylor.ui.dialogos.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,8 +141,7 @@ public class ControladorBibliotecaCliente {
     }
 
     public void abrirFiltros() {
-        //TODO Filtros para biblioteca
-        VentanaFiltroCancionesAdmin ventanaFiltros = new VentanaFiltroCancionesAdmin();
+        VentanaFiltroCancionesBiblioteca ventanaFiltros = new VentanaFiltroCancionesBiblioteca();
         ventanaFiltros.mostrar();
     }
 

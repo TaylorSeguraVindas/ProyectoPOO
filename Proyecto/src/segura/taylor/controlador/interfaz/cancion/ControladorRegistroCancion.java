@@ -24,6 +24,7 @@ import segura.taylor.ui.dialogos.AlertDialog;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 
 public class ControladorRegistroCancion {
     public static int idCancionSeleccionada;
@@ -44,7 +45,12 @@ public class ControladorRegistroCancion {
     public Button btnRegistrarModificar;
     public Label lblTitulo;
 
-    private boolean paraTienda = false;
+    private boolean paraTienda;
+
+    private String tituloLeido;
+    private String artistaLeido;
+    private String compositorLeido;
+    private String generoLeido;
 
     public void initialize() {
         if(ControladorRegistroCancion.modificando) {
@@ -82,7 +88,10 @@ public class ControladorRegistroCancion {
         File selectedFile = fileChooser.showOpenDialog(ventana);
 
         if(selectedFile != null) {  //Actualizar campos
-
+            tituloLeido = "";
+            artistaLeido = "";
+            compositorLeido = "";
+            generoLeido = "";
 
             txtRecurso.setText(selectedFile.toURI().toString());
 
@@ -93,25 +102,72 @@ public class ControladorRegistroCancion {
                 public void run() {
                     txtDuracion.setText(String.valueOf(media.getDuration().toMinutes()));
 
-                    // display media's metadata
+                    // Metadata
                     for (Map.Entry<String, Object> entry : media.getMetadata().entrySet()){
-                        System.out.println(entry.getKey() + ": " + entry.getValue());
 
-                        if(entry.getKey().equals("artist")) {
-                            //TODO Hacer algo con el artista
+                        if(entry.getKey().equals("artist")) {   //Artista
+                            artistaLeido = entry.getValue().toString();
+
+                            Optional<Artista> artista;
+                            if(!artistaLeido.equals("")) {
+                                artista = ControladorGeneral.instancia.getGestor().buscarArtistaPorNombre(artistaLeido);
+                            } else {
+                                artista = ControladorGeneral.instancia.getGestor().buscarArtistaPorNombre("Desconocido");
+                            }
+
+                            if(artista.isPresent()) {
+                                txtArtista.setValue(artista.get().toComboBoxItem());
+                            }
                         }
-                        if(entry.getKey().equals("album")) {
-                            //TODO Hacer algo con el album
+
+                        if(entry.getKey().equals("genre")) {    //Genero
+                            generoLeido = entry.getValue().toString();
+
+                            Optional<Genero> genero;
+                            if(!generoLeido.equals("")) {
+                                genero = ControladorGeneral.instancia.getGestor().buscarGeneroPorNombre(generoLeido);
+                            } else {
+                                genero = ControladorGeneral.instancia.getGestor().buscarGeneroPorNombre("Desconocido");
+                            }
+
+                            if(genero.isPresent()) {
+                                txtGenero.setValue(genero.get().toComboBoxItem());
+                            }
                         }
-                        if(entry.getKey().equals("genre")) {
-                            //TODO hacer algo con el genero
-                        }
-                        if(entry.getKey().equals("title")) {
-                            txtNombre.setText(entry.getValue().toString());
+
+                        if(entry.getKey().equals("title")) {    //Titulo
+                            tituloLeido = entry.getValue().toString();
+                            txtNombre.setText(tituloLeido);
                         }
                     }
                 }
             });
+
+            //Compositor
+            Optional<Compositor> compositor = ControladorGeneral.instancia.getGestor().buscarCompositorPorNombre("Desconocido");
+            txtCompositor.setValue(compositor.get().toComboBoxItem());
+
+            if(txtArtista.getValue() == null) {   //Verifica si el comboBox artista tiene un valor asignado
+                Optional<Artista> artista;
+                artista = ControladorGeneral.instancia.getGestor().buscarArtistaPorNombre("Desconocido");
+
+                if(artista.isPresent()) {
+                    txtArtista.setValue(artista.get().toComboBoxItem());
+                }
+            }
+
+            if(txtGenero.getValue() == null) {    //Verifica si el comboBox genero tiene un valor asignado
+                Optional<Genero> genero;
+                genero = ControladorGeneral.instancia.getGestor().buscarGeneroPorNombre("Desconocido");
+
+                if(genero.isPresent()) {
+                    txtGenero.setValue(genero.get().toComboBoxItem());
+                }
+            }
+
+            if(txtNombre.getText().equals("")) {
+                txtNombre.setText(selectedFile.getName());
+            }
         }
     }
     public void crearArtista() {

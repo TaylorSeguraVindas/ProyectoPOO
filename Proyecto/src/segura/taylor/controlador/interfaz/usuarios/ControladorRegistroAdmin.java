@@ -63,6 +63,8 @@ public class ControladorRegistroAdmin {
     public void seleccionarImagen() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccione una imagen de perfil");
+        fileChooser.setInitialDirectory(new File("C:/dev/"));
+
         File selectedFile = fileChooser.showOpenDialog(window);
 
         if(selectedFile != null) {

@@ -82,8 +82,6 @@ public class ControladorRegistroCancion {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccione una cancion");
 
-        //FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Audio files", "*.mp3", "*.wav", "*.ogg");
-        //fileChooser.getExtensionFilters().add(extFilter);
         fileChooser.setInitialDirectory(new File("C:/dev/"));
         File selectedFile = fileChooser.showOpenDialog(ventana);
 

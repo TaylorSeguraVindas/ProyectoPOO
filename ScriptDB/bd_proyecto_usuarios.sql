@@ -36,12 +36,13 @@ CREATE TABLE `usuarios` (
   `fechaNacimiento` date NOT NULL,
   `idPais` int NOT NULL,
   `idBiblioteca` int NOT NULL,
+  `correoVerificado` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`idUsuario`),
   KEY `fk_paisUsuario_idx` (`idPais`),
   KEY `fk_bibliotecaUsuario_idx` (`idBiblioteca`),
   CONSTRAINT `fk_bibliotecaUsuario` FOREIGN KEY (`idBiblioteca`) REFERENCES `bibliotecas` (`idBiblioteca`),
   CONSTRAINT `fk_paisUsuario` FOREIGN KEY (`idPais`) REFERENCES `paises` (`idPais`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +54,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-14 15:52:04
+-- Dump completed on 2020-12-20 17:18:41

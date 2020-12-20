@@ -33,7 +33,7 @@ CREATE TABLE `canciones_biblioteca` (
   KEY `fk_cancionAgrBiblioteca_idx` (`idCancion`),
   CONSTRAINT `fk_bibliotecaPertCancion` FOREIGN KEY (`idBiblioteca`) REFERENCES `bibliotecas` (`idBiblioteca`),
   CONSTRAINT `fk_cancionAgrBiblioteca` FOREIGN KEY (`idCancion`) REFERENCES `canciones` (`idCancion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -45,4 +45,4 @@ CREATE TABLE `canciones_biblioteca` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-14 15:52:05
+-- Dump completed on 2020-12-20 17:18:41

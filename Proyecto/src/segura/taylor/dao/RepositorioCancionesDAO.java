@@ -1,6 +1,7 @@
 package segura.taylor.dao;
 
 import segura.taylor.bl.entidades.*;
+import segura.taylor.bl.enums.TipoListaReproduccion;
 import segura.taylor.bl.enums.TipoRepositorioCanciones;
 
 import java.sql.*;
@@ -58,8 +59,9 @@ public class RepositorioCancionesDAO {
         } else if (nuevoRepositorioCanciones.getTipoRepo().equals(TipoRepositorioCanciones.LISTA_REPRODUCCION)) {
             ListaReproduccion nuevaListaReproduccion = (ListaReproduccion) nuevoRepositorioCanciones;
 
-            insert = "INSERT INTO listasreproduccion (nombre, fechaCreacion, imagen, descripcion) VALUES ";
-            insert += "('" + nuevaListaReproduccion.getNombre() + "','";
+            insert = "INSERT INTO listasreproduccion (tipoLista, nombre, fechaCreacion, imagen, descripcion) VALUES ";
+            insert += "('" + nuevaListaReproduccion.getTipoLista() + "','";
+            insert += nuevaListaReproduccion.getNombre() + "','";
             insert += Date.valueOf(nuevaListaReproduccion.getFechaCreacion()) + "','";
             insert += nuevaListaReproduccion.getImagen() + "','";
             insert += nuevaListaReproduccion.getDescripcion() + "')";
@@ -145,14 +147,6 @@ public class RepositorioCancionesDAO {
 
 
     //General
-    /**
-     * Este método se usa para obtener una lista con todos los repositorios de canciones guardados en la base de datos
-     * @return una lista con todos los repositorios de canciones guardados en la base de datos
-     */
-    public List<RepositorioCanciones> findAll() {
-        return Collections.unmodifiableList(repoCanciones);
-    }
-
     /**
      * Este método se usa para buscar un repositorio de canciones usando como filtro su id
      * @param idRepo int que define el id del repositorio de canciones que se desea encontrar
@@ -270,6 +264,8 @@ public class RepositorioCancionesDAO {
         while (result.next()) {
             ListaReproduccion listaReproduccionLeida = new ListaReproduccion();
             listaReproduccionLeida.setId(result.getInt("idListaReproduccion"));
+            listaReproduccionLeida.setTipoLista(TipoListaReproduccion.valueOf(result.getString("tipoLista")));
+
             listaReproduccionLeida.setNombre(result.getString("nombre"));
             listaReproduccionLeida.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
             listaReproduccionLeida.setImagen(result.getString("imagen"));
@@ -294,6 +290,8 @@ public class RepositorioCancionesDAO {
         while (result.next()) {
             ListaReproduccion listaReproduccionLeida = new ListaReproduccion();
             listaReproduccionLeida.setId(result.getInt("idListaReproduccion"));
+            listaReproduccionLeida.setTipoLista(TipoListaReproduccion.valueOf(result.getString("tipoLista")));
+
             listaReproduccionLeida.setNombre(result.getString("nombre"));
             listaReproduccionLeida.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
             listaReproduccionLeida.setImagen(result.getString("imagen"));

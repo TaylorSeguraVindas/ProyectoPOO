@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import segura.taylor.bl.entidades.Admin;
 import segura.taylor.bl.entidades.Cliente;
 import segura.taylor.bl.entidades.ListaReproduccion;
+import segura.taylor.bl.enums.TipoListaReproduccion;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.listaReproduccion.ControladorRegistroListaReproduccion;
 import segura.taylor.controlador.interfaz.tienda.ControladorInfoListaReproduccion;
@@ -82,6 +83,62 @@ public class ControladorVentanaPrincipalCliente {
             e.printStackTrace();
         }
     }
+    public void modificarListaReproduccion() {
+        try {
+            //Referencias para el controlador
+            if(listListaReproduccion.getSelectionModel().getSelectedItem() == null) return;
+
+            int idListaSeleccionada = ControladorGeneral.instancia.getGestor().obtenerIdListaReproduccion(listListaReproduccion.getSelectionModel().getSelectedItem().toString());
+            ListaReproduccion listaReproduccionSeleccionada = ControladorGeneral.instancia.getGestor().buscarListaReproduccionPorId(idListaSeleccionada).get();
+
+            if (listaReproduccionSeleccionada == null) {
+                AlertDialog alertDialog = new AlertDialog();
+                alertDialog.mostrar("Error", "No se encontró la lista");
+                return;
+            }
+
+            //El usuario solo puede modificar listas que haya creado
+            if(listaReproduccionSeleccionada.getTipoLista().equals(TipoListaReproduccion.PARA_TIENDA)) {
+                AlertDialog alertDialog = new AlertDialog();
+                alertDialog.mostrar("Error", "No tiene permisos para modificar esta lista");
+                return;
+            }
+
+            Stage ventanaRegistroAlbun = new Stage();
+            //This locks previous window interacivity until this one is closed.
+            ventanaRegistroAlbun.initModality(Modality.APPLICATION_MODAL);
+
+            ControladorRegistroListaReproduccion.ventana = ventanaRegistroAlbun;
+            ControladorRegistroListaReproduccion.idListaReproduccionSeleccionada = listaReproduccionSeleccionada.getId();
+            ControladorRegistroListaReproduccion.modificando = true;
+
+            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroListaReproduccion.fxml"));
+
+            //Referencia a los campos
+            TextField txtNombre = (TextField) root.lookup("#txtNombre");
+            TextArea txtDescripcion = (TextArea) root.lookup("#txtDescripcion");
+            ImageView imagenFondo = (ImageView) root.lookup("#imagenFondo");
+
+            //Actualizar campos
+            txtNombre.setText(listaReproduccionSeleccionada.getNombre());
+            txtDescripcion.setText(listaReproduccionSeleccionada.getDescripcion());
+            if(!listaReproduccionSeleccionada.getImagen().equals("")) {
+                ControladorRegistroListaReproduccion.urlImagenFondo = listaReproduccionSeleccionada.getImagen();
+                imagenFondo.setImage(new Image(listaReproduccionSeleccionada.getImagen()));
+            }
+
+            Scene escena = new Scene(root, 710, 550);
+
+            ventanaRegistroAlbun.setScene(escena);
+            ventanaRegistroAlbun.setTitle("Modificacion de Lista de Reproduccion");
+            ventanaRegistroAlbun.setResizable(false);
+            ventanaRegistroAlbun.showAndWait();
+
+            actualizarListasReproduccionUsuario();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void removerListaReproduccion() {
         //remover de biblioteca y actualizar el menu
         if(listListaReproduccion.getSelectionModel().getSelectedItem() == null) return;
@@ -93,10 +150,19 @@ public class ControladorVentanaPrincipalCliente {
                 boolean resultado = ControladorGeneral.instancia.getGestor().removerListaReproduccionDeBibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idListaSeleccionada);
 
                 if(resultado) {
-                    AlertDialog alertDialog = new AlertDialog();
-                    alertDialog.mostrar("Éxito!", "Lista removida correctamente");
-                    actualizarListasReproduccionUsuario();
-                    return;
+                    ListaReproduccion listaRemovida = ControladorGeneral.instancia.getGestor().buscarListaReproduccionPorId(idListaSeleccionada).get();
+
+                    //Si la lista fue creada por el usuario se elimina del todo
+                    if(listaRemovida.getTipoLista().equals(TipoListaReproduccion.PARA_USUARIO)) {
+                        resultado = ControladorGeneral.instancia.getGestor().eliminarListaReproduccion(idListaSeleccionada);
+                    }
+
+                    if(resultado) {
+                        AlertDialog alertDialog = new AlertDialog();
+                        alertDialog.mostrar("Éxito!", "Lista removida correctamente");
+                        actualizarListasReproduccionUsuario();
+                        return;
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -155,56 +221,6 @@ public class ControladorVentanaPrincipalCliente {
             //Expandir
             root.prefWidthProperty().bind(contenedorPrincipal.widthProperty());
             root.prefHeightProperty().bind(contenedorPrincipal.heightProperty());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void modificarListaReproduccion() {
-        try {
-            //Referencias para el controlador
-            if(listListaReproduccion.getSelectionModel().getSelectedItem() == null) return;
-
-            int idListaSeleccionada = ControladorGeneral.instancia.getGestor().obtenerIdListaReproduccion(listListaReproduccion.getSelectionModel().getSelectedItem().toString());
-            ListaReproduccion listaReproduccionSeleccionada = ControladorGeneral.instancia.getGestor().buscarListaReproduccionPorId(idListaSeleccionada).get();
-
-            if (listaReproduccionSeleccionada == null) {
-                AlertDialog alertDialog = new AlertDialog();
-                alertDialog.mostrar("Error", "No hay ningún Albun seleccionado");
-                return;
-            }
-
-            Stage ventanaRegistroAlbun = new Stage();
-            //This locks previous window interacivity until this one is closed.
-            ventanaRegistroAlbun.initModality(Modality.APPLICATION_MODAL);
-
-            ControladorRegistroListaReproduccion.ventana = ventanaRegistroAlbun;
-            ControladorRegistroListaReproduccion.idListaReproduccionSeleccionada = listaReproduccionSeleccionada.getId();
-            ControladorRegistroListaReproduccion.modificando = true;
-
-            VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/VentanaRegistroListaReproduccion.fxml"));
-
-            //Referencia a los campos
-            TextField txtNombre = (TextField) root.lookup("#txtNombre");
-            TextArea txtDescripcion = (TextArea) root.lookup("#txtDescripcion");
-            ImageView imagenFondo = (ImageView) root.lookup("#imagenFondo");
-
-            //Actualizar campos
-            txtNombre.setText(listaReproduccionSeleccionada.getNombre());
-            txtDescripcion.setText(listaReproduccionSeleccionada.getDescripcion());
-            if(!listaReproduccionSeleccionada.getImagen().equals("")) {
-                ControladorRegistroListaReproduccion.urlImagenFondo = listaReproduccionSeleccionada.getImagen();
-                imagenFondo.setImage(new Image(listaReproduccionSeleccionada.getImagen()));
-            }
-
-            Scene escena = new Scene(root, 710, 550);
-
-            ventanaRegistroAlbun.setScene(escena);
-            ventanaRegistroAlbun.setTitle("Modificacion de Lista de Reproduccion");
-            ventanaRegistroAlbun.setResizable(false);
-            ventanaRegistroAlbun.showAndWait();
-
-            actualizarListasReproduccionUsuario();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -292,9 +308,6 @@ public class ControladorVentanaPrincipalCliente {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    public void mostrarMetodosDePago() {
-
     }
 
     public void cerrarSesion() {

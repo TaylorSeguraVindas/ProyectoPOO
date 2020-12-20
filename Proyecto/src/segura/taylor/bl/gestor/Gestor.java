@@ -9,6 +9,7 @@ import java.util.*;
 import segura.taylor.PropertiesHandler;
 import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.enums.TipoCancion;
+import segura.taylor.bl.enums.TipoListaReproduccion;
 import segura.taylor.dao.*;
 
 import javax.swing.text.html.Option;
@@ -575,7 +576,10 @@ public class Gestor {
     public int crearListaReproduccion(String nombre, LocalDate fechaCreacion, String imagen, String descripcion) throws Exception {
         ArrayList<Cancion> canciones = new ArrayList<>();   //Las listas de reproducción SIEMPRE se crea sin canciones por defecto
 
-        ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, 0.0, imagen, descripcion);
+        //Si fue creada por admin está disponible en la tienda, si no solo en la biblioteca del usuario
+        TipoListaReproduccion tipoLista = (usuarioIngresadoEsAdmin()) ? TipoListaReproduccion.PARA_TIENDA : TipoListaReproduccion.PARA_USUARIO;
+        ListaReproduccion nuevaLista = new ListaReproduccion(tipoLista, nombre, fechaCreacion, canciones, 0.0, imagen, descripcion);
+
         return repoCancionesDAO.save(nuevaLista);
     }
 

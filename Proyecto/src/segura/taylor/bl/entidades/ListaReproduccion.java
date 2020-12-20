@@ -1,5 +1,6 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoListaReproduccion;
 import segura.taylor.bl.enums.TipoRepositorioCanciones;
 import segura.taylor.bl.interfaces.IComboBoxItem;
 
@@ -9,12 +10,19 @@ import java.util.Objects;
 
 public class ListaReproduccion extends RepositorioCanciones implements IComboBoxItem {
     //Variables
-    //TODO agregar attributo para que la lista sea publica o no
+    private TipoListaReproduccion tipoLista;
     private double calificacion;
     private String imagen;
     private String descripcion;
 
     //Propiedades
+    public TipoListaReproduccion getTipoLista() {
+        return tipoLista;
+    }
+    public void setTipoLista(TipoListaReproduccion tipoLista) {
+        this.tipoLista = tipoLista;
+    }
+
     public double getCalificacion() {
         return calificacion;
     }
@@ -54,8 +62,9 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
      * @param imagen String que define la ruta de la imagen
      * @param descripcion Stirng que define la calificacion
      */
-    public ListaReproduccion(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, double calificacion, String imagen, String descripcion) {
+    public ListaReproduccion(TipoListaReproduccion tipo, String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, double calificacion, String imagen, String descripcion) {
         super(nombre, fechaCreacion, canciones);
+        this.tipoLista = tipo;
         this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
         this.calificacion = calificacion;
         this.imagen = imagen;

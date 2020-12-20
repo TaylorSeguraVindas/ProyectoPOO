@@ -83,6 +83,8 @@ public class ControladorGeneral {
 
     //LOGICA
     public void iniciarPrograma(Stage primaryStage) {
+        gestor.verificarValoresPorDefecto();
+
         window = primaryStage;
         window.setOnCloseRequest(e -> {
             e.consume();    //Stops the base event.

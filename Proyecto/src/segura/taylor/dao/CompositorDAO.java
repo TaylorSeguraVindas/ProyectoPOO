@@ -146,4 +146,31 @@ public class CompositorDAO {
 
         return Optional.empty();
     }
+
+    /**
+     * Este método se usa para buscar un compositor usando como filtro su id
+     * @param nombre String que define el nombre del compositor que se desea encontrar
+     * @return un objeto de tipo Optional que contiene una instancia de Compositor si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la DB
+     * @see Optional
+     * @see Compositor
+     */
+    public Optional<Compositor> findByNombre(String nombre) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM compositores WHERE nombre = '" + nombre + "'");
+
+        while (result.next()) {
+            Compositor compositorLeido = new Compositor();
+            compositorLeido.setId(result.getInt("idCompositor"));
+            compositorLeido.setNombre(result.getString("nombre"));
+            compositorLeido.setApellidos(result.getString("apellidos"));
+            compositorLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
+            compositorLeido.setPaisNacimiento(paisDAO.findByID(result.getInt("idPais")).get());
+            compositorLeido.setGenero(generoDAO.findByID(result.getInt("idGenero")).get());
+
+            return Optional.of(compositorLeido);
+        }
+
+        return Optional.empty();
+    }
 }

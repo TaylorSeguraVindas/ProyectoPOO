@@ -136,4 +136,28 @@ public class PaisDAO {
 
         return Optional.empty();
     }
+
+    /**
+     * Este método se usa para buscar un pais usando como filtro su id
+     * @param nombre String que define el nombre del pais que se desea encontrar
+     * @return un objeto de tipo Optional que contiene una instancia de Pais si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la DB
+     * @see Optional
+     * @see Pais
+     */
+    public Optional<Pais> findByNombre(String nombre) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery(("SELECT * FROM paises WHERE nombre = '" + nombre + "'"));
+
+        while (result.next()) {
+            Pais paisLeido = new Pais();
+            paisLeido.setId(result.getInt("idPais"));
+            paisLeido.setNombre(result.getString("nombre"));
+            paisLeido.setDescripcion(result.getString("descripcion"));
+
+            return Optional.of(paisLeido);
+        }
+
+        return Optional.empty();
+    }
 }

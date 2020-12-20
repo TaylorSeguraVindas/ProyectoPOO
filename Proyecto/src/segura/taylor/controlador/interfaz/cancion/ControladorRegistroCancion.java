@@ -82,6 +82,8 @@ public class ControladorRegistroCancion {
         File selectedFile = fileChooser.showOpenDialog(ventana);
 
         if(selectedFile != null) {  //Actualizar campos
+
+
             txtRecurso.setText(selectedFile.toURI().toString());
 
             Media media = new Media(txtRecurso.getText());

@@ -12,8 +12,6 @@ import segura.taylor.bl.enums.TipoCancion;
 import segura.taylor.bl.enums.TipoListaReproduccion;
 import segura.taylor.dao.*;
 
-import javax.swing.text.html.Option;
-
 /**
  * La clase gestor se encarga de realizar la conexión entre el controlador y los DAOs
  *
@@ -90,6 +88,55 @@ public class Gestor {
         usuarioIngresado = null;
     }
 
+    /**
+     * Método usado para revisar los valores por defecto y crearlos en caso que no existan.
+     */
+    public void verificarValoresPorDefecto() {
+        Optional<Pais> paisDefecto = buscarPaisPorNombre("Desconocido");
+        Optional<Genero> generoDefecto = buscarGeneroPorNombre("Desconocido");
+        Optional<Compositor> compositorDefecto = buscarCompositorPorNombre("Desconocido");
+        Optional<Artista> artistaDefecto = buscarArtistaPorNombre("Desconocido");
+
+        if(!paisDefecto.isPresent()) {
+            System.out.println("No hay pais por defecto");
+            try {
+                crearPais("Desconocido", "Asignado por defecto");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(!generoDefecto.isPresent()) {
+            System.out.println("No hay genero por defecto");
+            try {
+                crearGenero("Desconocido", "Asignado por defecto");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        paisDefecto = buscarPaisPorNombre("Desconocido");
+        generoDefecto = buscarGeneroPorNombre("Desconocido");
+
+        if(!compositorDefecto.isPresent()) {
+            System.out.println("No hay compositor por defecto");
+            try {
+                crearCompositor("Desconocido", "", paisDefecto.get().getId(), generoDefecto.get().getId(), LocalDate.of(2001, 01, 01), 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(!artistaDefecto.isPresent()) {
+            System.out.println("No hay artista por defecto");
+            try {
+                crearArtista("Desconocido", "", "Desconocido", LocalDate.of(2001, 01, 01), null, paisDefecto.get().getId(), generoDefecto.get().getId(), 0, "Asignado por defecto");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
     /**
      * Verifica si el usuario que usa la aplicación es administrador
      * @return true si es administrador, false si no lo es
@@ -780,6 +827,23 @@ public class Gestor {
         return Optional.empty();
     }
 
+    /**
+     * Método usado para buscar un artista usando como filtro su id
+     * @param pNombre String que define el nombreArtistico del artista que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de un artista si se encuentra una coincidencia
+     * @see Optional
+     * @see Artista
+     */
+    public Optional<Artista> buscarArtistaPorNombre(String pNombre){
+        try {
+            return artistaDAO.findByNombre(pNombre);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
 
     //*******************Manejo de canciones******************
 
@@ -1219,6 +1283,22 @@ public class Gestor {
         return Optional.empty();
     }
 
+    /**
+     * Método usado para buscar un compositor usando como filtro su id
+     * @param pNombre String que define el nombre del compositor que se desea encontrar
+     * @return un objeto de tipo Optional que contiene una instancia de Compositor si se encuentra una coincidencia
+     * @see Optional
+     * @see Compositor
+     */
+    public Optional<Compositor> buscarCompositorPorNombre(String pNombre){
+        try {
+            return compostorDAO.findByNombre(pNombre);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
 
     //******************Manejo de Generos******************
 
@@ -1295,6 +1375,20 @@ public class Gestor {
         return Optional.empty();
     }
 
+    /**
+     * Método usado para buscar un genero usando como filtro su id
+     * @param pNombre String que define el nombre del genero que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Genero si se encuentra una coincidencia
+     */
+    public Optional<Genero> buscarGeneroPorNombre(String pNombre){
+        try {
+            return generoDAO.findByNombre(pNombre);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
 
     //*****************Manejo de Paises********************
 
@@ -1366,6 +1460,23 @@ public class Gestor {
     public Optional<Pais> buscarPaisPorId(int pIdPais){
         try {
             return paisDAO.findByID(pIdPais);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Método usado para buscar un pais usando como filtro su id
+     * @param pNombre String que define el nombre del pais que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Pais si se encuentra una coincidencia
+     * @see Optional
+     * @see Pais
+     */
+    public Optional<Pais> buscarPaisPorNombre(String pNombre){
+        try {
+            return paisDAO.findByNombre(pNombre);
         } catch (Exception e) {
             e.printStackTrace();
         }

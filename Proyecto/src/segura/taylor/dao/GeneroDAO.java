@@ -138,4 +138,28 @@ public class GeneroDAO {
 
         return Optional.empty();
     }
+
+    /**
+     * Este método se usa para buscar un genero usando como filtro su id
+     * @param nombre String que define el nombre del genero que se desea encontrar
+     * @return un objeto de tipo Optional que contiene una instancia de Genero si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la DB
+     * @see Optional
+     * @see Genero
+     */
+    public Optional<Genero> findByNombre(String nombre) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery(("SELECT * FROM generos WHERE nombre = '" + nombre + "'"));
+
+        while (result.next()) {
+            Genero generoLeido = new Genero();
+            generoLeido.setId(result.getInt("idGenero"));
+            generoLeido.setNombre(result.getString("nombre"));
+            generoLeido.setDescripcion(result.getString("descripcion"));
+
+            return Optional.of(generoLeido);
+        }
+
+        return Optional.empty();
+    }
 }

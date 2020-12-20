@@ -71,7 +71,7 @@ public class ControladorInfoCancion {
                             calificacionUsuarioActual = calificacionEncontrada.get();
                             txtMiCalificacion.setValue(obtenerValorDeEstrellas(calificacionUsuarioActual.getEstrellas()));
                         } else {
-                            //TODO crear calificacion si no existe ninguna
+                            //Crear calificacion si no existe ninguna
                             int idNuevaCalificacion = ControladorGeneral.instancia.getGestor().registrarCalificacion(0, ControladorGeneral.instancia.getIdUsuarioIngresado(), idCancionSeleccionada);
 
                             if(idNuevaCalificacion != -1) {

@@ -246,6 +246,7 @@ public class UsuarioDAO {
      * @return un objeto de tipo Optional que contiene una instancia de Usuario si se encuentra una coincidencia
      * @see Optional
      * @see Usuario
+     * @throws SQLException si no se puede conectar con la BD
      */
     public Optional<Usuario> findByEmail(String pCorreo) throws SQLException {
         Statement query = connection.createStatement();
@@ -292,7 +293,7 @@ public class UsuarioDAO {
     /**
      * Método usado para actualizar el estado de cuando se verifica el correo de un usuario al ingresar por primera vez
      * @param usuarioActualizado el usuario con los datos actualizados
-     * @return
+     * @return true si la modificacion es exitosa, false si ocurre algun error
      */
     public boolean updateEstadoCorreo(Cliente usuarioActualizado) {
         try {
@@ -317,7 +318,7 @@ public class UsuarioDAO {
     /**
      * Método usado para actualizar la contraseña de un usuario
      * @param usuarioActualizado el usuario con los datos actualizados
-     * @return
+     * @return true si la modificacion es exitosa, false si ocurre algun error
      */
     public boolean updateContrasenna(Usuario usuarioActualizado) {
         try {

@@ -27,6 +27,8 @@ public class CalificacionDAO {
     /**
      * Este método se usa para escribir los datos de un nuevo calificacion en la base de datos
      * @param nuevaCalificacion instancia de la clase calificacion que se desea guardar
+     * @param idAutor int que define el id del autor
+     * @param idCancion int que define el id de la cancion a la que pertenece
      * @return true si el registro es exitoso, false si ocurre algún error
      */
     public int save(Calificacion nuevaCalificacion, int idAutor, int idCancion) {

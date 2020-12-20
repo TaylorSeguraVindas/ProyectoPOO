@@ -55,6 +55,7 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
 
     /**
      * Método constructor
+     * @param tipo Enum que define el tipo de lista de reproduccion TIENDA o USUARIO
      * @param nombre String que define el nombre
      * @param fechaCreacion LocalDate que define la fecha de creacion
      * @param canciones ArrayList que define las canciones que pertenecen a esta lista de reproduccion

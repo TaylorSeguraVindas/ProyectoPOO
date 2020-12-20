@@ -73,7 +73,7 @@ public class Cliente extends Usuario{
      * @param edad int que define la edad
      * @param pais instancia de la clase Pais que define el pais
      * @param biblioteca instancia de la clase Biblioteca que define la biblioteca
-     * @para correoVerificado para saber si se debe mostrar el dialogo para verificar el correo
+     * @param correoVerificado para saber si se debe mostrar el dialogo para verificar el correo
      * @see Pais
      * @see Biblioteca
      */

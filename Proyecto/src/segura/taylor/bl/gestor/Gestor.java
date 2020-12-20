@@ -154,7 +154,7 @@ public class Gestor {
 
     /**
      * Método usado para conocer el usuario ingresado.
-     * @return
+     * @return instancia del usuario que está usando la app
      */
     public Usuario getUsuarioIngresado() {
         usuarioIngresado = buscarUsuarioPorId(usuarioIngresado.getId()).get();
@@ -282,6 +282,7 @@ public class Gestor {
     /**
      * Método usado para modificar un usuario
      * @param id int que define el id del usuario que se va a modificar
+     * @param correo String que define el nuevo correo del usuario
      * @param pNombreUsuario String que define el nuevo nombre de usuario
      * @param pImagenPerfil String que define la nueva ruta de la imagen de perfil del usuario
      * @param pNombre String que define el nuevo nombre del usuario
@@ -340,6 +341,7 @@ public class Gestor {
     /**
      * Método usado para actualizar la contraseña de un usuario
      * @param idUsuario id del usuario que verificó su correo
+     * @param nuevaContrasenna String que define la nueva contraseña
      * @return tru si se actualiza correctamente, false si ocurre algún error
      * @throws Exception si no se puede conectar con la BD
      */
@@ -960,13 +962,25 @@ public class Gestor {
 
 
     //Calificaciones
-
-    //TODO JAVADOC para calificaciones
+    /**
+     * Método usaod para crear una calificacion
+     * @param estrellas int que define la cantidad de estrellas
+     * @param idCliente int que define el id del autor
+     * @param idCancion int que define el id de la cancion
+     * @return id de la calificacion registrada
+     */
     public int registrarCalificacion(int estrellas, int idCliente, int idCancion) {
         Calificacion nuevaCalificacion = new Calificacion(estrellas);
         return calificacionDAO.save(nuevaCalificacion, idCliente, idCancion);
     }
 
+    /**
+     * Método usado para modificar una calificacion
+     * @param idCalificacion int que define el id de la calificacion que se va a modificar
+     * @param estrellas int que define la nueva cantidad de estrellas
+     * @return true si la modificacion es exitosa, false si ocurre algun error
+     * @throws Exception si no se puede conectar con la BD
+     */
     public boolean modificarCalificacion(int idCalificacion, int estrellas) throws Exception {
         Optional<Calificacion> calificacionEncontrada = buscarCalificacion(idCalificacion);
 
@@ -980,10 +994,23 @@ public class Gestor {
         return false;
     }
 
+    /**
+     * Método usado para buscar una calificacione
+     * @param idCalificacion int que define el id de la calificacion que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Calificacion si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la BD
+     */
     public Optional<Calificacion> buscarCalificacion(int idCalificacion) throws SQLException {
         return calificacionDAO.findByID(idCalificacion);
     }
 
+    /**
+     * Método usado para buscar una calificacione
+     * @param idCancion int que define el id de la cancion a la que pertenece la calificacion
+     * @param idUsuario int que define el id del autor
+     * @return objeto de tipo Optional que contiene una instancia de Calificacion si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la BD
+     */
     public Optional<Calificacion> buscarCalificacion(int idCancion, int idUsuario) throws SQLException {
         return calificacionDAO.findByCancionYUsuario(idCancion, idUsuario);
     }
@@ -1108,7 +1135,14 @@ public class Gestor {
     }
 
     //LISTAS REPRODUCCION
-    //TODO javadoc para esto
+
+    /**
+     * Método usado para guardar una lista de reproducción en la biblioteca de un usuario
+     * @param pIdCliente int que define el id del usuario dueño de la biblioteca
+     * @param pIdLista int que define el id de la lista que se va a guardar
+     * @return true si se agrega correctamente, false si ocurre un error
+     * @throws Exception si no se puede conectar con la BD
+     */
     public boolean agregarListaReproduccionABibliotecaUsuario(int pIdCliente, int pIdLista) throws Exception {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
 
@@ -1138,6 +1172,12 @@ public class Gestor {
         return false;
     }
 
+    /**
+     * Método usado para obtener una lista de todas las listas de reproduccion guardadas en la biblioteca de un usuario
+     * @param pIdCliente int que define el id del usuari dueño de la biblioteca
+     * @return lista de todas las listas de reproduccion guardadas en la biblioteca de un usuario
+     * @throws SQLException si no se puede conectar con la BD
+     */
     public List<ListaReproduccion> listarListasReproduccionDeBibliotecaUsuario(int pIdCliente) throws SQLException {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
 
@@ -1154,6 +1194,13 @@ public class Gestor {
         return null;
     }
 
+    /**
+     * Método usado para buscar una lista de reproduccion en la biblioteca de un usuario
+     * @param pIdCliente int que define el id del usuario dueño de la biblioteca
+     * @param pIdLista int que define el id de la lista que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de ListaReproduccion si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la BD
+     */
     public Optional<ListaReproduccion> buscarListaReproduccionEnBibliotecaUsuario(int pIdCliente, int pIdLista) throws SQLException {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
 
@@ -1170,6 +1217,13 @@ public class Gestor {
         return Optional.empty();
     }
 
+    /**
+     * Método usado para remover una lista de reproduccion de la biblioteca de un usuario
+     * @param pIdCliente int que define el id del usuario dueño de la biblioteca
+     * @param pIdLista int que define el id de la lista que se desea remover
+     * @return true si la eliminacion es exitosa, false si ocurre algun error
+     * @throws Exception si no se puede conectar con la BD
+     */
     public boolean removerListaReproduccionDeBibliotecaUsuario(int pIdCliente, int pIdLista) throws Exception {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
 

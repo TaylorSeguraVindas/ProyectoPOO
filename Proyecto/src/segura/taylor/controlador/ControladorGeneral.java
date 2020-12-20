@@ -118,9 +118,9 @@ public class ControladorGeneral {
             ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 380));
 
             ControladorGeneral.instancia.window.setMinWidth(420);
-            ControladorGeneral.instancia.window.setMinHeight(380);
+            ControladorGeneral.instancia.window.setMinHeight(400);
             ControladorGeneral.instancia.window.setWidth(420);
-            ControladorGeneral.instancia.window.setHeight(380);
+            ControladorGeneral.instancia.window.setHeight(400);
             ControladorGeneral.instancia.window.setMaximized(false);
             ControladorGeneral.instancia.window.centerOnScreen();
         } catch (Exception e) {

@@ -71,6 +71,6 @@ public class VentanaVerificarCorreo {
             codigoGenerado += numRandom;
         }
 
-        System.out.println("Hola " + ControladorGeneral.instancia.getUsuarioIngresado().getNombreUsuario() + " el codigo que debe ingresar es: " + codigoGenerado);
+        System.out.println("Hola, el codigo que debe ingresar es: " + codigoGenerado);
     }
 }

@@ -4,6 +4,7 @@ import javafx.scene.control.TextField;
 import segura.taylor.bl.entidades.Cliente;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.VentanaContrasennaTemporal;
 import segura.taylor.ui.dialogos.VentanaVerificarCorreo;
 
 public class ControladorLogin {
@@ -49,8 +50,14 @@ public class ControladorLogin {
             }
         }
     }
+
     public void registrarUsuario() {
         ControladorRegistroCliente.modificando = false;
         ControladorGeneral.instancia.menuRegistroCliente();
+    }
+
+    public void olvidarContrasenna(){
+        VentanaContrasennaTemporal ventanaContrasennaTemporal = new VentanaContrasennaTemporal();
+        ventanaContrasennaTemporal.mostrar();
     }
 }

@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import segura.taylor.bl.entidades.Pais;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.VentanaCambiarContrasenna;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -37,6 +38,7 @@ public class ControladorRegistroCliente {
 
     public Label lblTitulo;
     public Button btnRegistrarModificar;
+    public Button btnCambiarContrasenna;
 
     public void initialize() {
         actualizarComboBoxPaises();
@@ -46,10 +48,12 @@ public class ControladorRegistroCliente {
             btnRegistrarModificar.setOnAction(e -> modificarUsuario());
 
             recursoImagenPerfil = urlImagenPerfil;
+            btnCambiarContrasenna.setVisible(true);
         } else {
             lblTitulo.setText("Registrar usuario");
             btnRegistrarModificar.setText("Registrar");
             btnRegistrarModificar.setOnAction(e -> registrarUsuario());
+            btnCambiarContrasenna.setVisible(false);    //Ocultar botón para cambiar contraseña
         }
     }
 
@@ -174,6 +178,11 @@ public class ControladorRegistroCliente {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void cambiarContrasenna() {
+        VentanaCambiarContrasenna ventanaCambiarContrasenna = new VentanaCambiarContrasenna();
+        ventanaCambiarContrasenna.mostrar();
     }
 
     public void volver() {

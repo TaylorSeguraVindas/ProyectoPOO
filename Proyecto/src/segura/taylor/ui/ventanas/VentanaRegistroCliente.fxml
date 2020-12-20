@@ -33,6 +33,11 @@
                         <TextField fx:id="txtApellidos" layoutX="10.0" layoutY="60.0" promptText="Apellidos" />
                         <Label layoutX="10.0" layoutY="136.0" text="Pais" />
                         <ComboBox fx:id="txtPais" prefHeight="25.0" prefWidth="270.0" promptText="Seleccione un pais" />
+                        <Button fx:id="btnCambiarContrasenna" mnemonicParsing="false" onAction="#cambiarContrasenna" prefHeight="32.0" prefWidth="147.0" text="Cambiar contraseña">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Button>
                      </children>
                   </VBox>
                   <VBox prefHeight="278.0" prefWidth="267.0" HBox.hgrow="ALWAYS">

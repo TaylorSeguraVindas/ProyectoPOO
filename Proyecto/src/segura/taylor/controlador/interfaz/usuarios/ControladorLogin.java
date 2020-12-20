@@ -25,23 +25,27 @@ public class ControladorLogin {
             boolean usuarioEsAdmin = ControladorGeneral.instancia.getGestor().usuarioIngresadoEsAdmin();
             System.out.println("Ingresando como admin: " + usuarioEsAdmin);
 
-            Cliente usuarioIngresado = (Cliente) ControladorGeneral.instancia.getUsuarioIngresado();
+            if(!usuarioEsAdmin) {
+                Cliente usuarioIngresado = (Cliente) ControladorGeneral.instancia.getUsuarioIngresado();
 
-            if(usuarioIngresado.isCorreoVerificado()) {
-                ControladorGeneral.instancia.menuPrincipal(usuarioEsAdmin);
-            } else {
-                System.out.println("No se ha verificado el correo");
-                VentanaVerificarCorreo ventanaVerificarCorreo = new VentanaVerificarCorreo();
+                if(usuarioIngresado.isCorreoVerificado()) {
+                    ControladorGeneral.instancia.menuPrincipal(usuarioEsAdmin);
+                } else {
+                    System.out.println("No se ha verificado el correo");
+                    VentanaVerificarCorreo ventanaVerificarCorreo = new VentanaVerificarCorreo();
 
-                resultado = ventanaVerificarCorreo.mostrar();
-                if(resultado) {
-                    try {
-                        ControladorGeneral.instancia.getGestor().verificarCorreoUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado());  //Actualizar el estado de verificacion del correo del usuario actual.
-                        ControladorGeneral.instancia.menuPrincipal(usuarioEsAdmin);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    resultado = ventanaVerificarCorreo.mostrar();
+                    if(resultado) {
+                        try {
+                            ControladorGeneral.instancia.getGestor().verificarCorreoUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado());  //Actualizar el estado de verificacion del correo del usuario actual.
+                            ControladorGeneral.instancia.menuPrincipal(usuarioEsAdmin);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+            } else {
+                ControladorGeneral.instancia.menuPrincipal(usuarioEsAdmin);
             }
         }
     }

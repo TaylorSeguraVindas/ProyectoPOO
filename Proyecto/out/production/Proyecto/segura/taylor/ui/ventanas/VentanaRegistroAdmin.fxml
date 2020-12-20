@@ -31,6 +31,11 @@
                                 <TextField fx:id="txtNombre" layoutX="10.0" layoutY="35.0" promptText="Nombre" />
                                 <Label layoutX="10.0" layoutY="94.0" text="Apellidos" />
                                 <TextField fx:id="txtApellidos" layoutX="10.0" layoutY="60.0" promptText="Apellidos" />
+                        <Button fx:id="btnCambiarContrasenna" mnemonicParsing="false" onAction="#cambiarContrasenna" prefHeight="32.0" prefWidth="147.0" text="Cambiar contraseña">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Button>
                             </children>
                         </VBox>
                         <VBox prefHeight="278.0" prefWidth="267.0" HBox.hgrow="ALWAYS">

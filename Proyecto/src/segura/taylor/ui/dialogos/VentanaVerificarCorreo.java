@@ -38,12 +38,8 @@ public class VentanaVerificarCorreo {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Éxito", "Correo verificado correctamente");
 
-                    try {
-                        resultado = true;
-                        window.close();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    resultado = true;
+                    window.close();
                 } else {
                     //Mostrar mensaje de error
                     AlertDialog alertDialog = new AlertDialog();
@@ -57,7 +53,7 @@ public class VentanaVerificarCorreo {
             Scene escena = new Scene(root, 380, 280);
 
             window.setScene(escena);
-            window.setTitle("Seleccione una canción");
+            window.setTitle("Verificar correo");
             window.setResizable(false);
             window.showAndWait();
         } catch (Exception e) {

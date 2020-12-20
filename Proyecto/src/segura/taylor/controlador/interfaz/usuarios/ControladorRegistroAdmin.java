@@ -10,6 +10,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.VentanaCambiarContrasenna;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -37,16 +38,23 @@ public class ControladorRegistroAdmin {
     public ImageView imagenPerfil;
 
     public Button btnRegistrarModificar;
+    public Button btnCambiarContrasenna;
 
     public void initialize() {
         if(modificando) {
             lblTitulo.setText("Modificar admin");
+
+            btnCambiarContrasenna.setVisible(true);
+
             btnRegistrarModificar.setText("Modificar");
             btnRegistrarModificar.setOnAction(e -> modificarUsuario());
 
             recursoImagenPerfil = urlImagenPerfil;
         } else {
             lblTitulo.setText("Registrar admin");
+
+            btnCambiarContrasenna.setVisible(false);    //Ocultar botón para cambiar contraseña
+
             btnRegistrarModificar.setText("Registrar");
             btnRegistrarModificar.setOnAction(e -> registrarUsuario());
         }
@@ -159,6 +167,10 @@ public class ControladorRegistroAdmin {
         }
     }
 
+    public void cambiarContrasenna() {
+        VentanaCambiarContrasenna ventanaCambiarContrasenna = new VentanaCambiarContrasenna();
+        ventanaCambiarContrasenna.mostrar();
+    }
 
     public void volver() {
         if(modificando) {

@@ -264,6 +264,12 @@ public class Gestor {
         return false;
     }
 
+    /**
+     * Método usado para actualizar el estado de verificacion del correo de un usuario
+     * @param idUsuario id del usuario que verificó su correo
+     * @return tru si se actualiza correctamente, false si ocurre algún error
+     * @throws Exception si no se puede conectar con la BD
+     */
     public boolean verificarCorreoUsuario(int idUsuario) throws Exception {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(idUsuario);
 
@@ -282,6 +288,32 @@ public class Gestor {
 
         return false;
     }
+
+    /**
+     * Método usado para actualizar la contraseña de un usuario
+     * @param idUsuario id del usuario que verificó su correo
+     * @return tru si se actualiza correctamente, false si ocurre algún error
+     * @throws Exception si no se puede conectar con la BD
+     */
+    public boolean verificarCorreoUsuario(int idUsuario, String nuevaContrasenna) throws Exception {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(idUsuario);
+
+        if(usuarioEncontrado.isPresent()){
+
+            Usuario usuarioModifica = usuarioEncontrado.get();
+
+            usuarioModifica.setContrasenna(nuevaContrasenna);
+
+            if(usuarioIngresado.getId() == usuarioModifica.getId()) {
+                usuarioIngresado = usuarioModifica; //Actualizar info del usuario ingresado.
+            }
+
+            return usuarioDAO.updateContrasenna(usuarioModifica);
+        }
+
+        return false;
+    }
+
     /**
      * Método usado para modificar la contraseña de un usuario
      * @param idUsuario int que define el id del usuario que se va a modificar su contraseña
@@ -289,7 +321,21 @@ public class Gestor {
      * @return true si la modificacion es exitosa, false si ocurre algun error
      */
     public boolean modificarContrasennaUsuario(int idUsuario, String nuevaContrasenna) {
-        //TODO Modificar contraseña con correo y todo eso
+        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorId(idUsuario);
+
+        if(usuarioEncontrado.isPresent()) {
+            Usuario usuarioModifica = usuarioEncontrado.get();
+
+            usuarioModifica.setContrasenna(nuevaContrasenna);
+
+            try {
+                usuarioDAO.updateContrasenna(usuarioModifica);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         return true;
     }
 

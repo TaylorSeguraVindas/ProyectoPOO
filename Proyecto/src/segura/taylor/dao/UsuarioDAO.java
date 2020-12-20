@@ -313,4 +313,38 @@ public class UsuarioDAO {
 
         return false;
     }
+
+    /**
+     * Método usado para actualizar la contraseña de un usuario
+     * @param usuarioActualizado el usuario con los datos actualizados
+     * @return
+     */
+    public boolean updateContrasenna(Usuario usuarioActualizado) {
+        try {
+            Statement query = connection.createStatement();
+            String update = "";
+
+            if(usuarioActualizado.esAdmin()) {
+                //Registro admin
+                Admin nuevoAdmin = (Admin) usuarioActualizado;
+                update = "UPDATE usuario_admin SET ";
+                update += "contrasenna = '" + nuevoAdmin.getContrasenna() + "' ";
+                update += "WHERE id = " + usuarioActualizado.getId();
+            } else {
+                //Registro normal
+                Cliente nuevoCliente = (Cliente) usuarioActualizado;
+                update = "UPDATE usuarios SET ";
+                update += "contrasenna = '" + nuevoCliente.getContrasenna() + "' ";
+                update += "WHERE idUsuario = " + usuarioActualizado.getId();
+            }
+
+            System.out.println("Ejecuto query: " + update);
+            query.execute(update);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

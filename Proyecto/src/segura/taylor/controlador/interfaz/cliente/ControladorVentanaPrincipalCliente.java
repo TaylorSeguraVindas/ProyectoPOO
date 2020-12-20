@@ -19,6 +19,7 @@ import segura.taylor.controlador.interfaz.listaReproduccion.ControladorRegistroL
 import segura.taylor.controlador.interfaz.tienda.ControladorInfoListaReproduccion;
 import segura.taylor.controlador.interfaz.usuarios.ControladorRegistroCliente;
 import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.util.List;
 
@@ -140,6 +141,12 @@ public class ControladorVentanaPrincipalCliente {
         }
     }
     public void removerListaReproduccion() {
+        YesNoDialog yesNoDialog = new YesNoDialog();
+        boolean decision = yesNoDialog.mostrar("Aviso", "Está realmente seguro que desea remover la lista seleccionada");
+
+        if(!decision) return;
+
+
         //remover de biblioteca y actualizar el menu
         if(listListaReproduccion.getSelectionModel().getSelectedItem() == null) return;
 

@@ -9,6 +9,7 @@ import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.ui.dialogos.AlertDialog;
 import segura.taylor.ui.dialogos.VentanaMetodoPago;
 
+import java.text.DecimalFormat;
 import java.util.Optional;
 
 public class ControladorInfoCancion {
@@ -42,7 +43,7 @@ public class ControladorInfoCancion {
             lblArtista.setText("Artista: " + cancion.getNombreArtista());
             lblCompositor.setText("Compositor: " + cancion.getNombreCompositor());
 
-            lblCalificacion.setText("Calificación promedio: " + cancion.getCalificacionPromedio());
+            lblCalificacion.setText("Calificación promedio: " + new DecimalFormat("#.##").format(cancion.getCalificacionPromedio()));
             lblPrecio.setText("Precio: " + cancion.getPrecio());
 
             txtMiCalificacion.getItems().addAll("-Sin calificar-", "1 estrella", "2 estrellas", "3 estrellas", "4 estrellas", "5 estrellas");

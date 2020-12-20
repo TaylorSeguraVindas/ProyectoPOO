@@ -13,6 +13,7 @@ import segura.taylor.bl.entidades.Cancion;
 import segura.taylor.bl.entidades.ListaReproduccion;
 import segura.taylor.controlador.ControladorGeneral;
 
+import java.text.DecimalFormat;
 import java.util.Optional;
 
 public class ControladorInfoListaReproduccion {
@@ -23,6 +24,7 @@ public class ControladorInfoListaReproduccion {
     public Label lblNombre;
     public Label lblDescripcion;
     public Label lblFechaCreacion;
+    public Label lblCalificacionPromedio;
 
     public Button btnGuardarLista;
 
@@ -91,6 +93,7 @@ public class ControladorInfoListaReproduccion {
 
         lblNombre.setText(listaReproduccionSeleccionada.getNombre());
         lblDescripcion.setText(listaReproduccionSeleccionada.getDescripcion());
+        lblCalificacionPromedio.setText("Calificacion promedio: " + new DecimalFormat("#.##").format(listaReproduccionSeleccionada.calcularCalificacion()));
         lblFechaCreacion.setText("Creada: " + listaReproduccionSeleccionada.getFechaCreacion().toString());
         ObservableList<Cancion> canciones = FXCollections.observableArrayList();
 

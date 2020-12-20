@@ -259,12 +259,15 @@ public class Cancion implements IComboBoxItem {
         int calificacionesValidas = 0;
 
         for (Calificacion calificacion : calificaciones) {
-            System.out.println("Vea loco: " + calificacion.getEstrellas());
             acum += calificacion.getEstrellas();
 
             if(calificacion.getEstrellas() > 0) {   //Solo cuenta las que si tengan estrellas
                 calificacionesValidas++;
             }
+        }
+
+        if(calificacionesValidas == 0) {    //Evitar division entre 0
+            calificacionesValidas = 1;
         }
 
         promedio = acum / calificacionesValidas;

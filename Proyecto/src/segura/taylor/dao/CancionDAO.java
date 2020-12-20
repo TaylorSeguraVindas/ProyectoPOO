@@ -157,7 +157,9 @@ public class CancionDAO {
             cancionLeida.setArtista(artistaDAO.findByID(result.getInt("idArtista")).get());
             cancionLeida.setCompositor(compositorDAO.findByID(result.getInt("idCompositor")).get());
 
+            //Calificaciones
             cancionLeida.setCalificaciones(calificacionDAO.findByIdCancion(cancionLeida.getId()));
+
             listaCanciones.add(cancionLeida);
         }
 
@@ -192,8 +194,9 @@ public class CancionDAO {
             cancionLeida.setArtista(artistaDAO.findByID(result.getInt("idArtista")).get());
             cancionLeida.setCompositor(compositorDAO.findByID(result.getInt("idCompositor")).get());
 
+            //Calificaciones
             cancionLeida.setCalificaciones(calificacionDAO.findByIdCancion(cancionLeida.getId()));
-            
+
             return Optional.of(cancionLeida);
         }
 
@@ -236,6 +239,9 @@ public class CancionDAO {
             cancionLeida.setGenero(generoDAO.findByID(result.getInt("idGenero")).get());
             cancionLeida.setArtista(artistaDAO.findByID(result.getInt("idArtista")).get());
             cancionLeida.setCompositor(compositorDAO.findByID(result.getInt("idCompositor")).get());
+
+            //Calificaciones
+            cancionLeida.setCalificaciones(calificacionDAO.findByIdCancion(cancionLeida.getId()));
 
             listaCanciones.add(cancionLeida);
         }

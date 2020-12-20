@@ -104,6 +104,24 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
         return null;
     }
 
+    public double calcularCalificacion() {
+        double promedio;
+        double acum = 0.0;
+        int calificacionesValidas = 0;
+
+        for (Cancion cancion : canciones) {
+            System.out.println("Cal cancion: " + cancion.getCalificacionPromedio());
+            acum += cancion.getCalificacionPromedio();
+            calificacionesValidas++;
+        }
+
+        System.out.println("Acumulado: " + acum);
+        System.out.println("Canciones: " + calificacionesValidas);
+
+        promedio = acum / calificacionesValidas;
+        calificacion = promedio;
+        return calificacion;
+    }
     @Override
     public String toComboBoxItem() {
         return id + "-" + nombre;

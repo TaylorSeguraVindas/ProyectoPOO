@@ -1,8 +1,10 @@
 package segura.taylor.controlador.interfaz.usuarios;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import segura.taylor.bl.entidades.Cliente;
 import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.VentanaVerificarCorreo;
 
 public class ControladorLogin {
     private boolean ingresadoCorrectamente = false;
@@ -22,7 +24,25 @@ public class ControladorLogin {
         } else {
             boolean usuarioEsAdmin = ControladorGeneral.instancia.getGestor().usuarioIngresadoEsAdmin();
             System.out.println("Ingresando como admin: " + usuarioEsAdmin);
-            ControladorGeneral.instancia.menuPrincipal(usuarioEsAdmin);
+
+            Cliente usuarioIngresado = (Cliente) ControladorGeneral.instancia.getUsuarioIngresado();
+
+            if(usuarioIngresado.isCorreoVerificado()) {
+                ControladorGeneral.instancia.menuPrincipal(usuarioEsAdmin);
+            } else {
+                System.out.println("No se ha verificado el correo");
+                VentanaVerificarCorreo ventanaVerificarCorreo = new VentanaVerificarCorreo();
+
+                resultado = ventanaVerificarCorreo.mostrar();
+                if(resultado) {
+                    try {
+                        ControladorGeneral.instancia.getGestor().verificarCorreoUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado());  //Actualizar el estado de verificacion del correo del usuario actual.
+                        ControladorGeneral.instancia.menuPrincipal(usuarioEsAdmin);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }
     public void registrarUsuario() {

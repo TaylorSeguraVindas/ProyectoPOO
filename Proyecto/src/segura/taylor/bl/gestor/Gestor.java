@@ -225,7 +225,7 @@ public class Gestor {
         biblioteca.setId(idBibliotecaGuardada);
 
         //Pais pais = buscarPaisPorId(idPais).get();
-        Cliente nuevoCliente = new Cliente(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, pais, biblioteca);
+        Cliente nuevoCliente = new Cliente(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, pais, biblioteca, false);
         nuevoCliente.setBiblioteca(biblioteca);
 
         return usuarioDAO.save(nuevoCliente);
@@ -264,6 +264,24 @@ public class Gestor {
         return false;
     }
 
+    public boolean verificarCorreoUsuario(int idUsuario) throws Exception {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(idUsuario);
+
+        if(usuarioEncontrado.isPresent()){
+
+            Cliente usuarioModifica = (Cliente) usuarioEncontrado.get();
+
+            usuarioModifica.setCorreoVerificado(true);
+
+            if(usuarioIngresado.getId() == usuarioModifica.getId()) {
+                usuarioIngresado = usuarioModifica; //Actualizar info del usuario ingresado.
+            }
+
+            return usuarioDAO.updateEstadoCorreo(usuarioModifica);
+        }
+
+        return false;
+    }
     /**
      * Método usado para modificar la contraseña de un usuario
      * @param idUsuario int que define el id del usuario que se va a modificar su contraseña

@@ -55,7 +55,7 @@ public class UsuarioDAO {
             } else {
                 //Registro normal
                 Cliente nuevoCliente = (Cliente) nuevoUsuario;
-                insert = "INSERT INTO usuarios (tipoUsuario, correo, contrasenna, nombre, apellidos, fotoPerfil, nombreUsuario, fechaNacimiento, idPais, idBiblioteca) VALUES ";
+                insert = "INSERT INTO usuarios (tipoUsuario, correo, contrasenna, nombre, apellidos, fotoPerfil, nombreUsuario, fechaNacimiento, idPais, idBiblioteca, correoVerificado) VALUES ";
                 insert += "('" + nuevoCliente.getTipoUsuario() + "',";
                 insert += "'" + nuevoCliente.getCorreo() + "',";
                 insert += "'" + nuevoCliente.getContrasenna() + "',";
@@ -65,7 +65,8 @@ public class UsuarioDAO {
                 insert += "'" + nuevoCliente.getNombreUsuario() + "',";
                 insert += "'" + Date.valueOf(nuevoCliente.getFechaNacimiento()) + "',";
                 insert += "" + nuevoCliente.getPais().getId() + ",";
-                insert += "" + nuevoCliente.getBiblioteca().getId() + ")";
+                insert += "" + nuevoCliente.getBiblioteca().getId() + ",";
+                insert += "" + nuevoCliente.isCorreoVerificado() + ")";
             }
 
             System.out.println("Ejecuto query: " + insert);
@@ -97,7 +98,7 @@ public class UsuarioDAO {
                 update += "nombre = '" + nuevoAdmin.getNombre() + "',";
                 update += "apellidos = '" + nuevoAdmin.getApellidos() + "',";
                 update += "foto = '" + nuevoAdmin.getImagenPerfil() + "',";
-                update += "nombreUsuario = '" + nuevoAdmin.getNombreUsuario() + "'";
+                update += "nombreUsuario = '" + nuevoAdmin.getNombreUsuario() + "' ";
                 update += "WHERE id = " + usuarioActualizado.getId();
             } else {
                 //Registro normal
@@ -108,6 +109,7 @@ public class UsuarioDAO {
                 update += "apellidos = '" + nuevoCliente.getApellidos() + "',";
                 update += "fotoPerfil = '" + nuevoCliente.getImagenPerfil() + "',";
                 update += "nombreUsuario = '" + nuevoCliente.getNombreUsuario() + "'";
+                update += "correoVerificado = " + nuevoCliente.isCorreoVerificado() + " ";
                 update += "WHERE idUsuario = " + usuarioActualizado.getId();
             }
 
@@ -177,6 +179,7 @@ public class UsuarioDAO {
             usuarioLeido.setImagenPerfil(result.getString("fotoPerfil"));
             usuarioLeido.setNombreUsuario(result.getString("nombreUsuario"));
             usuarioLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
+            usuarioLeido.setCorreoVerificado(result.getBoolean("correoVerificado"));
 
             usuarioLeido.setPais(paisDAO.findByID(result.getInt("idPais")).get());
             usuarioLeido.setBiblioteca(repoCancionesDAO.findBibliotecaByID(result.getInt("idBiblioteca")).get());
@@ -226,6 +229,7 @@ public class UsuarioDAO {
             usuarioLeido.setImagenPerfil(result.getString("fotoPerfil"));
             usuarioLeido.setNombreUsuario(result.getString("nombreUsuario"));
             usuarioLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
+            usuarioLeido.setCorreoVerificado(result.getBoolean("correoVerificado"));
 
             usuarioLeido.setPais(paisDAO.findByID(result.getInt("idPais")).get());
             usuarioLeido.setBiblioteca(repoCancionesDAO.findBibliotecaByID(result.getInt("idBiblioteca")).get());
@@ -274,6 +278,7 @@ public class UsuarioDAO {
             usuarioLeido.setImagenPerfil(result.getString("fotoPerfil"));
             usuarioLeido.setNombreUsuario(result.getString("nombreUsuario"));
             usuarioLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
+            usuarioLeido.setCorreoVerificado(result.getBoolean("correoVerificado"));
 
             usuarioLeido.setPais(paisDAO.findByID(result.getInt("idPais")).get());
             usuarioLeido.setBiblioteca(repoCancionesDAO.findBibliotecaByID(result.getInt("idBiblioteca")).get());
@@ -282,5 +287,30 @@ public class UsuarioDAO {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Método usado para actualizar el estado de cuando se verifica el correo de un usuario al ingresar por primera vez
+     * @param usuarioActualizado el usuario con los datos actualizados
+     * @return
+     */
+    public boolean updateEstadoCorreo(Cliente usuarioActualizado) {
+        try {
+            Statement query = connection.createStatement();
+            String update;
+
+            Cliente nuevoCliente = usuarioActualizado;
+            update = "UPDATE usuarios SET ";
+            update += "correoVerificado = " + nuevoCliente.isCorreoVerificado() + " ";
+            update += "WHERE idUsuario = " + usuarioActualizado.getId();
+
+            System.out.println("Ejecuto query: " + update);
+            query.execute(update);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

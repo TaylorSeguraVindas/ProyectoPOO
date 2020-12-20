@@ -14,7 +14,6 @@
                     <Font size="18.0" />
                 </font>
             </Label>
-            <Label fx:id="lblCancionReproducida" text="Reproduciendo: lalala" />
         </children>
         <padding>
             <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />

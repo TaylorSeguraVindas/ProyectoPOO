@@ -841,11 +841,23 @@ public class Gestor {
      */
     public boolean eliminarCancion(int pIdCancion) throws Exception {
         Optional<Cancion> cancionEliminar = buscarCancionPorId(pIdCancion);
+
         if(cancionEliminar.isPresent()) {   //Si la canción está en una biblioteca primero la elimina de la biblioteca
             if(cancionEliminar.get().getTipoCancion().equals(TipoCancion.PARA_USUARIO)) {
                 removerCancionDeBibliotecaUsuario(usuarioIngresado.getId(), pIdCancion);
             }
         }
+
+        //Remover referencias en repos
+        cancionesBibliotecaDAO.onDeleteCancion(pIdCancion);
+        cancionesAlbumDAO.onDeleteCancion(pIdCancion);
+        cancionesListaReproduccionDAO.onDeleteCancion(pIdCancion);
+
+        //Limpiar calificaciones de la cancion
+        for (Calificacion calificacion : cancionEliminar.get().getCalificaciones()) {
+            calificacionDAO.delete(calificacion.getId());
+        }
+
         return cancionDAO.delete(pIdCancion);
     }
 

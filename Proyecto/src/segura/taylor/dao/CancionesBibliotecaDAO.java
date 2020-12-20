@@ -40,6 +40,19 @@ public class CancionesBibliotecaDAO {
         return false;
     }
 
+    public boolean onDeleteCancion(int idCancion) {
+        try {
+            Statement query = connection.createStatement();
+            String insert = "DELETE FROM canciones_biblioteca WHERE idCancion = " + idCancion;
+
+            query.execute(insert);
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public String getIdCancionesBiblioteca(int idBiblioteca) throws SQLException {
         Statement query = connection.createStatement();
         ResultSet result = query.executeQuery("SELECT * FROM canciones_biblioteca WHERE idBiblioteca = " + idBiblioteca);

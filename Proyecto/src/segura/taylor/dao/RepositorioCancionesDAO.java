@@ -340,6 +340,8 @@ public class RepositorioCancionesDAO {
             while (result.next()) {
                 ListaReproduccion listaReproduccionLeida = new ListaReproduccion();
                 listaReproduccionLeida.setId(result.getInt("idListaReproduccion"));
+                listaReproduccionLeida.setTipoLista(TipoListaReproduccion.valueOf(result.getString("tipoLista")));
+                
                 listaReproduccionLeida.setNombre(result.getString("nombre"));
                 listaReproduccionLeida.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
                 listaReproduccionLeida.setImagen(result.getString("imagen"));

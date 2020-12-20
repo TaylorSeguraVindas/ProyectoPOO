@@ -9,7 +9,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class VentanaSeleccionarLista {
-    private int idCancion = -1;
+    private int idLista = -1;
 
     public int mostrar() {
         try {
@@ -23,7 +23,7 @@ public class VentanaSeleccionarLista {
             Button btnAceptar = (Button) root.lookup("#btnAceptar");
             btnAceptar.setOnAction(e -> {
                 String[] valorCancion = txtLista.getValue().toString().split("-");
-                idCancion = Integer.parseInt(valorCancion[0]);
+                idLista = Integer.parseInt(valorCancion[0]);
                 window.close();
             });
 
@@ -41,6 +41,6 @@ public class VentanaSeleccionarLista {
             e.printStackTrace();
         }
 
-        return idCancion;
+        return idLista;
     }
 }

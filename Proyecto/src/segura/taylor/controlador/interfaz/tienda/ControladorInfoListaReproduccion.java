@@ -11,12 +11,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import segura.taylor.bl.entidades.Cancion;
 import segura.taylor.bl.entidades.ListaReproduccion;
+import segura.taylor.bl.enums.TipoListaReproduccion;
 import segura.taylor.controlador.ControladorGeneral;
+import segura.taylor.ui.dialogos.AlertDialog;
+import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.text.DecimalFormat;
 import java.util.Optional;
 
 public class ControladorInfoListaReproduccion {
+    public static boolean desdeTienda;
     public static int idListaSeleccionada;
 
     public TableView tblCanciones;
@@ -27,8 +31,11 @@ public class ControladorInfoListaReproduccion {
     public Label lblCalificacionPromedio;
 
     public Button btnGuardarLista;
+    public Button btnRemoverSeleccionada;
 
     public void initialize() {
+        btnRemoverSeleccionada.setVisible(false);   //Ocultar botón para remover canciones por defecto
+
         inicializarTablaCanciones();
         actualizarInfoListaReproduccion();
 
@@ -87,6 +94,14 @@ public class ControladorInfoListaReproduccion {
         }
 
         //Actualizar datos
+        if(!desdeTienda) {  //Si no se ve desde la tienda y fue creada por el usuario actual es posible remover canciones
+            if(listaReproduccionSeleccionada.getTipoLista().equals(TipoListaReproduccion.PARA_USUARIO)) {
+                btnRemoverSeleccionada.setVisible(true);
+            } else {
+                btnRemoverSeleccionada.setVisible(false);
+            }
+        }
+
         if(!listaReproduccionSeleccionada.getImagen().equals("")) {
             imgFondo.setImage(new Image(listaReproduccionSeleccionada.getImagen()));
         }
@@ -102,6 +117,29 @@ public class ControladorInfoListaReproduccion {
         }
 
         tblCanciones.setItems(canciones);
+    }
+
+    public void removerSeleccionada() {
+        YesNoDialog yesNoDialog = new YesNoDialog();
+        boolean resultado = yesNoDialog.mostrar("Aviso", "Realmente quiere remover la canción seleccionada?");
+
+        if (resultado) {
+            Cancion cancionSeleccionada = (Cancion) tblCanciones.getSelectionModel().getSelectedItem();
+
+            try {
+                resultado = ControladorGeneral.instancia.getGestor().removerCancionDeLista(idListaSeleccionada, cancionSeleccionada.getId());
+                if (resultado) {
+                    AlertDialog alertDialog = new AlertDialog();
+                    alertDialog.mostrar("Exito", "Canción removida correctamente");
+                    actualizarInfoListaReproduccion();
+                } else {
+                    AlertDialog alertDialog = new AlertDialog();
+                    alertDialog.mostrar("Error", "No se pudo remover la canción :(");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void reproducirLista() {

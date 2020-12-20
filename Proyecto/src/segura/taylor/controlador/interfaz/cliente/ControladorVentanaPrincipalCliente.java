@@ -204,6 +204,8 @@ public class ControladorVentanaPrincipalCliente {
     public void mostrarInfoListaReproduccion() {
         limpiarPantalla();
         try {
+            ControladorInfoListaReproduccion.desdeTienda = false;
+
             VBox root = FXMLLoader.load(getClass().getResource("../../../ui/ventanas/tienda/VentanaInfoListaReproduccion.fxml"));
             contenedorPrincipal.getChildren().add(root);
             //Expandir

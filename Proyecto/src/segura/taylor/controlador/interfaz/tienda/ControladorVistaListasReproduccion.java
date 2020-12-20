@@ -84,6 +84,7 @@ public class ControladorVistaListasReproduccion {
     }
 
     private void mostrarDetalleListaReproduccion(int idLista) {
+        ControladorInfoListaReproduccion.desdeTienda = true;
         ControladorInfoListaReproduccion.idListaSeleccionada = idLista;
 
         if(ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {

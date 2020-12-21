@@ -190,7 +190,8 @@ public class ControladorListasReproduccionAdmin {
             //Actualizar campos
             txtNombre.setText(ListaReproduccionSeleccionada.getNombre());
             txtDescripcion.setText(listaReproduccionSeleccionada.getDescripcion());
-            if(!listaReproduccionSeleccionada.getImagen().equals("")) {
+            if(!listaReproduccionSeleccionada.getImagen().equals("") && !listaReproduccionSeleccionada.getImagen().equals("null")) {
+                ControladorRegistroListaReproduccion.urlImagenFondo = listaReproduccionSeleccionada.getImagen();
                 imagenFondo.setImage(new Image(listaReproduccionSeleccionada.getImagen()));
             }
 

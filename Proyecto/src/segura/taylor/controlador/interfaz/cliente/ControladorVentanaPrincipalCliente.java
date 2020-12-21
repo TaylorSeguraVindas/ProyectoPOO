@@ -294,7 +294,7 @@ public class ControladorVentanaPrincipalCliente {
 
             ControladorRegistroCliente.urlImagenPerfil = "";
 
-            if(!usuarioIngresado.getImagenPerfil().equals("")) {
+            if(!usuarioIngresado.getImagenPerfil().equals("") && !usuarioIngresado.getImagenPerfil().equals("null")) {
                 ControladorRegistroCliente.urlImagenPerfil = usuarioIngresado.getImagenPerfil();
                 try {
                     imagenPerfil.setImage(new Image(usuarioIngresado.getImagenPerfil()));

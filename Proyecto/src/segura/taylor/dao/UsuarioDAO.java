@@ -108,7 +108,7 @@ public class UsuarioDAO {
                 update += "nombre = '" + nuevoCliente.getNombre() + "',";
                 update += "apellidos = '" + nuevoCliente.getApellidos() + "',";
                 update += "fotoPerfil = '" + nuevoCliente.getImagenPerfil() + "',";
-                update += "nombreUsuario = '" + nuevoCliente.getNombreUsuario() + "'";
+                update += "nombreUsuario = '" + nuevoCliente.getNombreUsuario() + "',";
                 update += "correoVerificado = " + nuevoCliente.isCorreoVerificado() + " ";
                 update += "WHERE idUsuario = " + usuarioActualizado.getId();
             }

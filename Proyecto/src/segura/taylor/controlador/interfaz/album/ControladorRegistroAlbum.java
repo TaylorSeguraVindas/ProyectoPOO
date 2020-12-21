@@ -14,6 +14,7 @@ import java.time.LocalDate;
 
 public class ControladorRegistroAlbum {
     public static int idAlbumSeleccionado;
+    public static String urlImagenFondo;
     public static Stage ventana;
     public static boolean modificando;
 
@@ -68,6 +69,7 @@ public class ControladorRegistroAlbum {
 
         if(selectedFile != null) {
             recursoImagenFondo = selectedFile.toURI().toString();
+            urlImagenFondo = recursoImagenFondo;
             imagenFondo.setImage(new Image(recursoImagenFondo));
         }
     }
@@ -76,7 +78,7 @@ public class ControladorRegistroAlbum {
         String nombre = txtNombre.getText();
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().modificarAlbum(idAlbumSeleccionado, nombre, recursoImagenFondo);
+            boolean resultado = ControladorGeneral.instancia.getGestor().modificarAlbum(idAlbumSeleccionado, nombre, urlImagenFondo);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Modificacion exitosa", "Album modificado correctamente");

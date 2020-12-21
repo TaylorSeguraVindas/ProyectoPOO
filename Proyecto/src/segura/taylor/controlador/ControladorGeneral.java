@@ -282,6 +282,8 @@ public class ControladorGeneral {
         mediaPlayer.play();
         pausado = false;
 
+        if(cancionActual == null) return;
+
         if(usuarioIngresadoEsAdmin()) {
             refVentanaPrincipalAdmin.actualizarInfoCancion(cancionActual.getNombre(), cancionActual.getNombreArtista());
         } else {

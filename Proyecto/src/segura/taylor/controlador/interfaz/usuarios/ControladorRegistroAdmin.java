@@ -69,6 +69,7 @@ public class ControladorRegistroAdmin {
 
         if(selectedFile != null) {
             recursoImagenPerfil = selectedFile.toURI().toString();
+            urlImagenPerfil = recursoImagenPerfil;
             imagenPerfil.setImage(new Image(recursoImagenPerfil));
         }
     }
@@ -155,7 +156,7 @@ public class ControladorRegistroAdmin {
         String nombreUsuario = txtNombreUsuario.getText();
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().modificarUsuario(idAdmin, correo, nombreUsuario, recursoImagenPerfil, nombre, apellidos);
+            boolean resultado = ControladorGeneral.instancia.getGestor().modificarUsuario(idAdmin, correo, nombreUsuario, urlImagenPerfil, nombre, apellidos);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Modificación exitosa", "Usuario modificado correctamente");

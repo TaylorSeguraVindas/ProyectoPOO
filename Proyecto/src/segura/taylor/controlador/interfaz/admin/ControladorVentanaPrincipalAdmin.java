@@ -219,9 +219,13 @@ public class ControladorVentanaPrincipalAdmin {
 
             ControladorRegistroAdmin.urlImagenPerfil = "";
 
-            if(!usuarioIngresado.getImagenPerfil().equals("")) {
-                ControladorRegistroAdmin.urlImagenPerfil = usuarioIngresado.getImagenPerfil();
-                imagenPerfil.setImage(new Image(usuarioIngresado.getImagenPerfil()));
+            if(usuarioIngresado.getImagenPerfil() != null) {
+                if(!usuarioIngresado.getImagenPerfil().equals("") && !usuarioIngresado.getImagenPerfil().equals("null")) {
+                    ControladorRegistroAdmin.urlImagenPerfil = usuarioIngresado.getImagenPerfil();
+                    System.out.println("Imagen: " + usuarioIngresado.getImagenPerfil());
+
+                    imagenPerfil.setImage(new Image(usuarioIngresado.getImagenPerfil()));
+                }
             }
 
             //Desactivar campos inmodificables

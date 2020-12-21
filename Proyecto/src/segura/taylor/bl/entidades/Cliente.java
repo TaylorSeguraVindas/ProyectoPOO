@@ -11,6 +11,7 @@ public class Cliente extends Usuario{
     private int edad;
     private Pais pais;
     private Biblioteca biblioteca;
+    private boolean correoVerificado;
 
     //Propiedades
     public LocalDate getFechaNacimiento() {
@@ -44,6 +45,13 @@ public class Cliente extends Usuario{
         this.biblioteca = biblioteca;
     }
 
+    public boolean isCorreoVerificado() {
+        return correoVerificado;
+    }
+    public void setCorreoVerificado(boolean correoVerificado) {
+        this.correoVerificado = correoVerificado;
+    }
+
     //Constructores
 
     /**
@@ -65,16 +73,18 @@ public class Cliente extends Usuario{
      * @param edad int que define la edad
      * @param pais instancia de la clase Pais que define el pais
      * @param biblioteca instancia de la clase Biblioteca que define la biblioteca
+     * @param correoVerificado para saber si se debe mostrar el dialogo para verificar el correo
      * @see Pais
      * @see Biblioteca
      */
-    public Cliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaNacimiento, int edad, Pais pais, Biblioteca biblioteca) {
+    public Cliente(String correo, String contrasenna, String nombre, String apellidos, String imagenPerfil, String nombreUsuario, LocalDate fechaNacimiento, int edad, Pais pais, Biblioteca biblioteca, boolean correoVerificado) {
         super(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario);
         this.tipoUsuario = TipoUsuario.CLIENTE;
         this.fechaNacimiento = fechaNacimiento;
         this.edad = edad;
         this.pais = pais;
         this.biblioteca = biblioteca;
+        this.correoVerificado = correoVerificado;
     }
 
     //Metodos
@@ -102,14 +112,11 @@ public class Cliente extends Usuario{
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Cliente cliente = (Cliente) o;
-        return edad == cliente.edad &&
-                Objects.equals(fechaNacimiento, cliente.fechaNacimiento) &&
-                Objects.equals(pais, cliente.pais) &&
-                Objects.equals(biblioteca, cliente.biblioteca);
+        return edad == cliente.edad && correoVerificado == cliente.correoVerificado && Objects.equals(fechaNacimiento, cliente.fechaNacimiento) && Objects.equals(pais, cliente.pais) && Objects.equals(biblioteca, cliente.biblioteca);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), fechaNacimiento, edad, pais, biblioteca);
+        return Objects.hash(super.hashCode(), fechaNacimiento, edad, pais, biblioteca, correoVerificado);
     }
 }

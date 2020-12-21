@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import segura.taylor.bl.entidades.ListaReproduccion;
+import segura.taylor.bl.enums.TipoListaReproduccion;
 import segura.taylor.controlador.ControladorGeneral;
 
 import java.util.List;
@@ -31,14 +32,17 @@ public class ControladorVistaListasReproduccion {
         List<ListaReproduccion> listasReproduccion = ControladorGeneral.instancia.getGestor().listarListasReproduccion();
 
         for (ListaReproduccion listaReproduccion : listasReproduccion) {
-            if(usandoFiltro) {
-                if(listaCoincideConBusqueda(listaReproduccion)) {
+
+            //Solo se muestra las listas creadas por el admin
+            if(listaReproduccion.getTipoLista().equals(TipoListaReproduccion.PARA_TIENDA)) {
+                if(usandoFiltro) {
+                    if(listaCoincideConBusqueda(listaReproduccion)) {
+                        crearCartaListaReproduccion(listaReproduccion.getId(), listaReproduccion.getImagen(), listaReproduccion.getNombre(), listaReproduccion.getDescripcion());
+                    }
+                } else {
                     crearCartaListaReproduccion(listaReproduccion.getId(), listaReproduccion.getImagen(), listaReproduccion.getNombre(), listaReproduccion.getDescripcion());
                 }
-            } else {
-                crearCartaListaReproduccion(listaReproduccion.getId(), listaReproduccion.getImagen(), listaReproduccion.getNombre(), listaReproduccion.getDescripcion());
             }
-
         }
     }
 
@@ -80,12 +84,13 @@ public class ControladorVistaListasReproduccion {
     }
 
     private void mostrarDetalleListaReproduccion(int idLista) {
+        ControladorInfoListaReproduccion.desdeTienda = true;
         ControladorInfoListaReproduccion.idListaSeleccionada = idLista;
 
-        if(ControladorGeneral.instancia.getGestor().usuarioIngresadoEsAdmin()) {
+        if(ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {
             ControladorGeneral.refVentanaPrincipalAdmin.mostrarInfoListaReproduccion();
         } else {
-            //TODO Hacer lo mismo pero para cliente
+            ControladorGeneral.refVentanaPrincipalCliente.mostrarInfoListaReproduccion();
         }
     }
 

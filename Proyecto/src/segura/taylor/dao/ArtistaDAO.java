@@ -175,6 +175,41 @@ public class ArtistaDAO {
         return Optional.empty();
     }
 
+    /**
+     * Este método se usa para buscar un artista usando como filtro su id
+     * @param nombre String que define el nombre artistico del artista que se desea encontrar
+     * @return un objeto de tipo Optional que contiene una instancia de Artista si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la DB
+     * @see Optional
+     * @see Artista
+     */
+    public Optional<Artista> findByNombre(String nombre) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM artistas where nombreArtistico = '" + nombre + "'");
+
+        while (result.next()) {
+            Artista artistaLeido = new Artista();
+            artistaLeido.setId(result.getInt("idArtista"));
+            artistaLeido.setNombre(result.getString("nombre"));
+            artistaLeido.setApellidos(result.getString("apellidos"));
+            artistaLeido.setNombreArtistico(result.getString("nombreArtistico"));
+            artistaLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
+
+            //Nulleable
+            Date fechaDefuncion = result.getDate("fechaDefuncion");
+            artistaLeido.setFechaDefuncion((fechaDefuncion != null) ? fechaDefuncion.toLocalDate() : null);
+
+            artistaLeido.setDescripcion(result.getString("descripcion"));
+
+            artistaLeido.setPaisNacimiento(paisDAO.findByID(result.getInt("idPais")).get());
+            artistaLeido.setGenero(generoDAO.findByID(result.getInt("idGenero")).get());
+
+            return Optional.of(artistaLeido);
+        }
+
+        return Optional.empty();
+    }
+
     public ArrayList<Artista> findArtistasAlbum(int idAlbum) throws SQLException {
         String idArtistas = artistasAlbumDAO.getIdArtistasAlbum(idAlbum);
 

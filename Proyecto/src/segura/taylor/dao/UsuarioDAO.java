@@ -16,8 +16,6 @@ import java.util.Optional;
  * @version 1.0
  */
 public class UsuarioDAO {
-    private ArrayList<Usuario> usuarios = new ArrayList<>();
-
     private Connection connection;
     private PaisDAO paisDAO;
     private RepositorioCancionesDAO repoCancionesDAO;
@@ -57,7 +55,7 @@ public class UsuarioDAO {
             } else {
                 //Registro normal
                 Cliente nuevoCliente = (Cliente) nuevoUsuario;
-                insert = "INSERT INTO usuarios (tipoUsuario, correo, contrasenna, nombre, apellidos, fotoPerfil, nombreUsuario, fechaNacimiento, idPais, idBiblioteca) VALUES ";
+                insert = "INSERT INTO usuarios (tipoUsuario, correo, contrasenna, nombre, apellidos, fotoPerfil, nombreUsuario, fechaNacimiento, idPais, idBiblioteca, correoVerificado) VALUES ";
                 insert += "('" + nuevoCliente.getTipoUsuario() + "',";
                 insert += "'" + nuevoCliente.getCorreo() + "',";
                 insert += "'" + nuevoCliente.getContrasenna() + "',";
@@ -67,7 +65,8 @@ public class UsuarioDAO {
                 insert += "'" + nuevoCliente.getNombreUsuario() + "',";
                 insert += "'" + Date.valueOf(nuevoCliente.getFechaNacimiento()) + "',";
                 insert += "" + nuevoCliente.getPais().getId() + ",";
-                insert += "" + nuevoCliente.getBiblioteca().getId() + ")";
+                insert += "" + nuevoCliente.getBiblioteca().getId() + ",";
+                insert += "" + nuevoCliente.isCorreoVerificado() + ")";
             }
 
             System.out.println("Ejecuto query: " + insert);
@@ -87,41 +86,59 @@ public class UsuarioDAO {
      * @throws Exception si no se puede conectar con la DB
      */
     public boolean update(Usuario usuarioActualizado) throws Exception {
-        int indiceUsuario = -1;
-        int cont = 0;
+        try {
+            Statement query = connection.createStatement();
+            String update = "";
 
-        for (Usuario Usuario : usuarios) {
-            if(Usuario.getId() == usuarioActualizado.getId()) {
-                indiceUsuario = cont;
-                break;
+            if(usuarioActualizado.esAdmin()) {
+                //Registro admin
+                Admin nuevoAdmin = (Admin) usuarioActualizado;
+                update = "UPDATE usuario_admin SET ";
+                update += "correo = '" + nuevoAdmin.getCorreo() + "',";
+                update += "nombre = '" + nuevoAdmin.getNombre() + "',";
+                update += "apellidos = '" + nuevoAdmin.getApellidos() + "',";
+                update += "foto = '" + nuevoAdmin.getImagenPerfil() + "',";
+                update += "nombreUsuario = '" + nuevoAdmin.getNombreUsuario() + "' ";
+                update += "WHERE id = " + usuarioActualizado.getId();
+            } else {
+                //Registro normal
+                Cliente nuevoCliente = (Cliente) usuarioActualizado;
+                update = "UPDATE usuarios SET ";
+                update += "correo = '" + nuevoCliente.getCorreo() + "',";
+                update += "nombre = '" + nuevoCliente.getNombre() + "',";
+                update += "apellidos = '" + nuevoCliente.getApellidos() + "',";
+                update += "fotoPerfil = '" + nuevoCliente.getImagenPerfil() + "',";
+                update += "nombreUsuario = '" + nuevoCliente.getNombreUsuario() + "'";
+                update += "correoVerificado = " + nuevoCliente.isCorreoVerificado() + " ";
+                update += "WHERE idUsuario = " + usuarioActualizado.getId();
             }
 
-            cont++;
-        }
-
-        if(indiceUsuario != -1) {
-            usuarios.set(indiceUsuario, usuarioActualizado);
+            System.out.println("Ejecuto query: " + update);
+            query.execute(update);
             return true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        throw new Exception("El Usuario que se desea actualizar no existe");
+        return false;
     }
 
     /**
      * Este método se usa para eliminar un usuario de la base de datos
      * @param idUsuario int que define el id del usuario que se desea eliminar
      * @return true si la eliminación es exitosa, false si ocurre algún error
-     * @throws Exception si no se puede conectar con la DB
      */
-    public boolean delete(int idUsuario) throws Exception {
-        Optional<Usuario> UsuarioEncontrado = findByID(idUsuario);
+    public boolean delete(int idUsuario) {
+        try {
+            Statement query = connection.createStatement();
+            String delete = "DELETE FROM usuarios WHERE idUsuario = " + idUsuario;
 
-        if(UsuarioEncontrado.isPresent()) {
-            usuarios.remove(UsuarioEncontrado.get());
+            query.execute(delete);
             return true;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        throw new Exception("El Usuario que se desea eliminar no existe");
+        return false;
     }
 
     /**
@@ -162,6 +179,7 @@ public class UsuarioDAO {
             usuarioLeido.setImagenPerfil(result.getString("fotoPerfil"));
             usuarioLeido.setNombreUsuario(result.getString("nombreUsuario"));
             usuarioLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
+            usuarioLeido.setCorreoVerificado(result.getBoolean("correoVerificado"));
 
             usuarioLeido.setPais(paisDAO.findByID(result.getInt("idPais")).get());
             usuarioLeido.setBiblioteca(repoCancionesDAO.findBibliotecaByID(result.getInt("idBiblioteca")).get());
@@ -178,12 +196,45 @@ public class UsuarioDAO {
      * @return un objeto de tipo Optional que contiene una instancia de Usuario si se encuentra una coincidencia
      * @see Optional
      * @see Usuario
+     * @throws SQLException si no se puede conectar con la BD
      */
-    public Optional<Usuario> findByID(int id) {
-        for (Usuario Usuario : usuarios) {
-            if(Usuario.getId() == id) {
-                return Optional.of(Usuario);
-            }
+    public Optional<Usuario> findByID(int id) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM usuario_admin WHERE id = " + id);
+
+        //Primero obtiene admin
+        while (result.next()) {
+            Admin usuarioLeido = new Admin();
+            usuarioLeido.setId(result.getInt("id"));
+            usuarioLeido.setCorreo(result.getString("correo"));
+            usuarioLeido.setContrasenna(result.getString("contrasenna"));
+            usuarioLeido.setNombre(result.getString("nombre"));
+            usuarioLeido.setApellidos(result.getString("apellidos"));
+            usuarioLeido.setImagenPerfil(result.getString("foto"));
+            usuarioLeido.setNombreUsuario(result.getString("nombreUsuario"));
+            usuarioLeido.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
+
+            return Optional.of(usuarioLeido);
+        }
+
+        //Luego todos los demás
+        result = query.executeQuery("SELECT * FROM usuarios WHERE idUsuario = " + id);
+        while (result.next()) {
+            Cliente usuarioLeido = new Cliente();
+            usuarioLeido.setId(result.getInt("idUsuario"));
+            usuarioLeido.setCorreo(result.getString("correo"));
+            usuarioLeido.setContrasenna(result.getString("contrasenna"));
+            usuarioLeido.setNombre(result.getString("nombre"));
+            usuarioLeido.setApellidos(result.getString("apellidos"));
+            usuarioLeido.setImagenPerfil(result.getString("fotoPerfil"));
+            usuarioLeido.setNombreUsuario(result.getString("nombreUsuario"));
+            usuarioLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
+            usuarioLeido.setCorreoVerificado(result.getBoolean("correoVerificado"));
+
+            usuarioLeido.setPais(paisDAO.findByID(result.getInt("idPais")).get());
+            usuarioLeido.setBiblioteca(repoCancionesDAO.findBibliotecaByID(result.getInt("idBiblioteca")).get());
+
+            return Optional.of(usuarioLeido);
         }
 
         return Optional.empty();
@@ -195,14 +246,106 @@ public class UsuarioDAO {
      * @return un objeto de tipo Optional que contiene una instancia de Usuario si se encuentra una coincidencia
      * @see Optional
      * @see Usuario
+     * @throws SQLException si no se puede conectar con la BD
      */
-    public Optional<Usuario> findByEmail(String pCorreo) {
-        for (Usuario Usuario : usuarios) {
-            if(Usuario.getCorreo().equals(pCorreo)) {
-                return Optional.of(Usuario);
-            }
+    public Optional<Usuario> findByEmail(String pCorreo) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("SELECT * FROM usuario_admin WHERE correo = '" + pCorreo + "'");
+
+        //Primero obtiene admin
+        while (result.next()) {
+            Admin usuarioLeido = new Admin();
+            usuarioLeido.setId(result.getInt("id"));
+            usuarioLeido.setCorreo(result.getString("correo"));
+            usuarioLeido.setContrasenna(result.getString("contrasenna"));
+            usuarioLeido.setNombre(result.getString("nombre"));
+            usuarioLeido.setApellidos(result.getString("apellidos"));
+            usuarioLeido.setImagenPerfil(result.getString("foto"));
+            usuarioLeido.setNombreUsuario(result.getString("nombreUsuario"));
+            usuarioLeido.setFechaCreacion(result.getDate("fechaCreacion").toLocalDate());
+
+            return Optional.of(usuarioLeido);
+        }
+
+        //Luego todos los demás
+        result = query.executeQuery("SELECT * FROM usuarios WHERE correo = '" + pCorreo + "'");
+        while (result.next()) {
+            Cliente usuarioLeido = new Cliente();
+            usuarioLeido.setId(result.getInt("idUsuario"));
+            usuarioLeido.setCorreo(result.getString("correo"));
+            usuarioLeido.setContrasenna(result.getString("contrasenna"));
+            usuarioLeido.setNombre(result.getString("nombre"));
+            usuarioLeido.setApellidos(result.getString("apellidos"));
+            usuarioLeido.setImagenPerfil(result.getString("fotoPerfil"));
+            usuarioLeido.setNombreUsuario(result.getString("nombreUsuario"));
+            usuarioLeido.setFechaNacimiento(result.getDate("fechaNacimiento").toLocalDate());
+            usuarioLeido.setCorreoVerificado(result.getBoolean("correoVerificado"));
+
+            usuarioLeido.setPais(paisDAO.findByID(result.getInt("idPais")).get());
+            usuarioLeido.setBiblioteca(repoCancionesDAO.findBibliotecaByID(result.getInt("idBiblioteca")).get());
+
+            return Optional.of(usuarioLeido);
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Método usado para actualizar el estado de cuando se verifica el correo de un usuario al ingresar por primera vez
+     * @param usuarioActualizado el usuario con los datos actualizados
+     * @return true si la modificacion es exitosa, false si ocurre algun error
+     */
+    public boolean updateEstadoCorreo(Cliente usuarioActualizado) {
+        try {
+            Statement query = connection.createStatement();
+            String update;
+
+            Cliente nuevoCliente = usuarioActualizado;
+            update = "UPDATE usuarios SET ";
+            update += "correoVerificado = " + nuevoCliente.isCorreoVerificado() + " ";
+            update += "WHERE idUsuario = " + usuarioActualizado.getId();
+
+            System.out.println("Ejecuto query: " + update);
+            query.execute(update);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * Método usado para actualizar la contraseña de un usuario
+     * @param usuarioActualizado el usuario con los datos actualizados
+     * @return true si la modificacion es exitosa, false si ocurre algun error
+     */
+    public boolean updateContrasenna(Usuario usuarioActualizado) {
+        try {
+            Statement query = connection.createStatement();
+            String update = "";
+
+            if(usuarioActualizado.esAdmin()) {
+                //Registro admin
+                Admin nuevoAdmin = (Admin) usuarioActualizado;
+                update = "UPDATE usuario_admin SET ";
+                update += "contrasenna = '" + nuevoAdmin.getContrasenna() + "' ";
+                update += "WHERE id = " + usuarioActualizado.getId();
+            } else {
+                //Registro normal
+                Cliente nuevoCliente = (Cliente) usuarioActualizado;
+                update = "UPDATE usuarios SET ";
+                update += "contrasenna = '" + nuevoCliente.getContrasenna() + "' ";
+                update += "WHERE idUsuario = " + usuarioActualizado.getId();
+            }
+
+            System.out.println("Ejecuto query: " + update);
+            query.execute(update);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

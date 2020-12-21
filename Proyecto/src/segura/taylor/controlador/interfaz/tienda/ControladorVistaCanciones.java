@@ -14,6 +14,7 @@ import segura.taylor.ui.dialogos.VentanaFiltrosCancionesTienda;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class ControladorVistaCanciones {
     public static boolean filtrandoPorNombre = true;
@@ -32,7 +33,7 @@ public class ControladorVistaCanciones {
         filtrandoPorGenero = false;
 
         inicializarTabla();
-        mostrarDatos(false);
+        mostrarDatos();
     }
 
     public void inicializarTabla() {
@@ -66,17 +67,12 @@ public class ControladorVistaCanciones {
         columnaGenero.setMinWidth(100);
         columnaGenero.setCellValueFactory(new PropertyValueFactory<>("nombreGenero"));
 
-        //Precio
-        TableColumn<Cancion, String> columnaPrecio = new TableColumn("Precio");
-        columnaPrecio.setMinWidth(100);
-        columnaPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
-
-        tblCanciones.getColumns().addAll(columnaNombre, columnaDuracion, columnaFechaLanzamiento, columnaArtista, columnaCompositor, columnaGenero, columnaPrecio);
+        tblCanciones.getColumns().addAll(columnaNombre, columnaDuracion, columnaFechaLanzamiento, columnaArtista, columnaCompositor, columnaGenero);
 
     }
-    private void mostrarDatos(boolean usandoFiltro) {
+    private void mostrarDatos() {
         tblCanciones.getItems().clear();
-        tblCanciones.setItems(obtenerCanciones(usandoFiltro));
+        tblCanciones.setItems(obtenerCanciones(!txtBusqueda.getText().trim().equals("")));   //Usa filtro si el texto de búsqueda no está vacío
     }
 
     public ObservableList<Cancion> obtenerCanciones(boolean usandoFiltro) {
@@ -137,10 +133,19 @@ public class ControladorVistaCanciones {
 
     public void buscar() {
         //Actualizar lista
-        mostrarDatos(true);
+        mostrarDatos();
     }
 
     public void abrirInfoDetallada() {
+        Cancion cancionSeleccionada = (Cancion) tblCanciones.getSelectionModel().getSelectedItem();
+
         //Abrir info detallada de la cancion
+        ControladorInfoCancion.idCancionSeleccionada = cancionSeleccionada.getId();
+
+        if(ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {
+            ControladorGeneral.refVentanaPrincipalAdmin.mostrarInfoCancion();
+        } else {
+            ControladorGeneral.refVentanaPrincipalCliente.mostrarInfoCancion();
+        }
     }
 }

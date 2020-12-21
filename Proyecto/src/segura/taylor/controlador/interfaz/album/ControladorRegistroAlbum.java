@@ -62,6 +62,8 @@ public class ControladorRegistroAlbum {
     public void seleccionarImagen() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccione una imagen de fondo");
+        fileChooser.setInitialDirectory(new File("C:/dev/"));
+
         File selectedFile = fileChooser.showOpenDialog(ventana);
 
         if(selectedFile != null) {

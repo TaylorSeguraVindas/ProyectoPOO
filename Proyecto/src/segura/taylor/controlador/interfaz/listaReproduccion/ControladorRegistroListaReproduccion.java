@@ -16,6 +16,7 @@ public class ControladorRegistroListaReproduccion {
     public static int idListaReproduccionSeleccionada;
     public static Stage ventana;
     public static boolean modificando;
+    public static String urlImagenFondo;
 
     public TextField txtNombre;
     public TextArea txtDescripcion;
@@ -43,10 +44,13 @@ public class ControladorRegistroListaReproduccion {
     public void seleccionarImagen() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccione una imagen de fondo");
+        fileChooser.setInitialDirectory(new File("C:/dev/"));
+
         File selectedFile = fileChooser.showOpenDialog(ventana);
 
         if(selectedFile != null) {
             recursoImagenFondo = selectedFile.toURI().toString();
+            urlImagenFondo = recursoImagenFondo;
             imagenFondo.setImage(new Image(recursoImagenFondo));
         }
     }
@@ -57,8 +61,13 @@ public class ControladorRegistroListaReproduccion {
         String descripcion = txtDescripcion.getText();
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().crearListaReproduccion(nombre, fechaCreacion, recursoImagenFondo, descripcion);
-            if (resultado) {
+            int idListaRegistrada = ControladorGeneral.instancia.getGestor().crearListaReproduccion(nombre, fechaCreacion, recursoImagenFondo, descripcion);
+            if (idListaRegistrada != -1) {
+                //Si la lista fue creada por un usuario corriente automáticamente se agrega a su biblioteca
+                if(!ControladorGeneral.instancia.usuarioIngresadoEsAdmin()) {
+                    ControladorGeneral.instancia.getGestor().agregarListaReproduccionABibliotecaUsuario(ControladorGeneral.instancia.getIdUsuarioIngresado(), idListaRegistrada);
+                }
+
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Lista de Reproduccion registrada correctamente");
                 ventana.close();
@@ -76,7 +85,7 @@ public class ControladorRegistroListaReproduccion {
         String descripcion = txtDescripcion.getText();
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().modificarListaReproduccion(idListaReproduccionSeleccionada, nombre, recursoImagenFondo, descripcion);
+            boolean resultado = ControladorGeneral.instancia.getGestor().modificarListaReproduccion(idListaReproduccionSeleccionada, nombre, urlImagenFondo, descripcion);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Modificacion exitosa", "Lista de Reproduccion modificada correctamente");

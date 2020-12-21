@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="310.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.usuarios.ControladorLogin">
+<VBox prefHeight="400.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="segura.taylor.controlador.interfaz.usuarios.ControladorLogin">
    <children>
       <VBox alignment="CENTER" prefHeight="94.0" prefWidth="415.0">
          <children>
@@ -16,7 +16,7 @@
             </Label>
          </children>
       </VBox>
-      <VBox prefHeight="297.0" prefWidth="415.0">
+      <VBox prefHeight="304.0" prefWidth="420.0">
          <children>
             <Label text="Correo" />
             <TextField fx:id="txtCorreo" layoutX="30.0" layoutY="141.0" prefHeight="25.0" prefWidth="474.0" promptText="Correo">
@@ -30,10 +30,11 @@
                   <Insets bottom="20.0" />
                </VBox.margin>
             </PasswordField>
-            <VBox alignment="CENTER" spacing="10.0">
+            <VBox alignment="CENTER" prefHeight="135.0" prefWidth="380.0" spacing="10.0">
                <children>
-                  <Button fx:id="btnIniciarSesion" mnemonicParsing="false" onAction="#iniciarSesion" prefHeight="37.0" prefWidth="156.0" text="Iniciar sesion" />
-                  <Button fx:id="btnRegistrarse" mnemonicParsing="false" onAction="#registrarUsuario" prefHeight="37.0" prefWidth="156.0" text="Registrarse" />
+                  <Button fx:id="btnIniciarSesion" mnemonicParsing="false" onAction="#iniciarSesion" prefHeight="43.0" prefWidth="156.0" text="Iniciar sesion" />
+                  <Button fx:id="btnRegistrarse" mnemonicParsing="false" onAction="#registrarUsuario" prefHeight="40.0" prefWidth="156.0" text="Registrarse" />
+                  <Button fx:id="btnOlvidoContrasenna" layoutX="122.0" layoutY="57.0" mnemonicParsing="false" onAction="#olvidarContrasenna" prefHeight="8.0" prefWidth="156.0" text="Olvidé mi contraseña" />
                </children>
             </VBox>
          </children>

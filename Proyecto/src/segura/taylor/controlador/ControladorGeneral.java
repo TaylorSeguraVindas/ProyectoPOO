@@ -6,10 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.Media;
 import javafx.stage.Stage;
-import segura.taylor.bl.entidades.Album;
-import segura.taylor.bl.entidades.Biblioteca;
-import segura.taylor.bl.entidades.ListaReproduccion;
-import segura.taylor.bl.entidades.RepositorioCanciones;
+import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.gestor.Gestor;
 
 import segura.taylor.controlador.interfaz.admin.ControladorVentanaPrincipalAdmin;
@@ -34,7 +31,7 @@ public class ControladorGeneral {
     private Stage window;
 
     //Reproductor
-    private int idCancionActual = 0;
+    private Cancion cancionActual = null;
     private RepositorioCanciones repoCancionesActual;   //La lista que siempre va a estar sonando
     private MediaPlayer mediaPlayer;
     private double volumen;
@@ -43,6 +40,20 @@ public class ControladorGeneral {
     //Propiedades
     public Gestor getGestor() {
         return gestor;
+    }
+
+    public Usuario getUsuarioIngresado() {
+        return gestor.getUsuarioIngresado();
+    }
+    public int getIdUsuarioIngresado() {
+        return gestor.getIdUsuarioIngresado();
+    }
+    public Biblioteca getBibliotecaUsuarioIngresado() {
+        return gestor.getBibliotecaUsuarioIngresado();
+    }
+
+    public boolean usuarioIngresadoEsAdmin() {
+        return gestor.usuarioIngresadoEsAdmin();
     }
 
     public ControladorGeneral() {
@@ -72,6 +83,8 @@ public class ControladorGeneral {
 
     //LOGICA
     public void iniciarPrograma(Stage primaryStage) {
+        gestor.verificarValoresPorDefecto();
+
         window = primaryStage;
         window.setOnCloseRequest(e -> {
             e.consume();    //Stops the base event.
@@ -94,18 +107,24 @@ public class ControladorGeneral {
         }
     }
 
-    private void cambiarVentana(String titulo, Scene escena, boolean maximizar) {
+    private void cambiarVentana(String titulo, Scene escena) {
         ControladorGeneral.instancia.window.setTitle(titulo);
         ControladorGeneral.instancia.window.setScene(escena);
-        ControladorGeneral.instancia.window.centerOnScreen();
-        ControladorGeneral.instancia.window.setMaximized(maximizar);
         ControladorGeneral.instancia.window.show();
     }
 
     public void menuIniciarSesion() {
         try {
+            gestor.reiniciar();
             Parent root = FXMLLoader.load(getClass().getResource("../ui/ventanas/VentanaLogin.fxml"));
-            ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 320), false);
+            ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 380));
+
+            ControladorGeneral.instancia.window.setMinWidth(420);
+            ControladorGeneral.instancia.window.setMinHeight(400);
+            ControladorGeneral.instancia.window.setWidth(420);
+            ControladorGeneral.instancia.window.setHeight(400);
+            ControladorGeneral.instancia.window.setMaximized(false);
+            ControladorGeneral.instancia.window.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -122,9 +141,14 @@ public class ControladorGeneral {
                 alertDialog.mostrar("Aviso", "No se ha detectado un usuario admin, se va a crear uno");
             }
 
-            ControladorGeneral.instancia.cambiarVentana("Registro de usuario", new Scene(root, 580, 440), false);
+            ControladorGeneral.instancia.cambiarVentana("Registro de usuario", new Scene(root, 580, 440));
+
+            ControladorGeneral.instancia.window.setMinWidth(580);
+            ControladorGeneral.instancia.window.setMinHeight(440);
+            ControladorGeneral.instancia.window.setWidth(580);
+            ControladorGeneral.instancia.window.setHeight(440);
+            ControladorGeneral.instancia.window.setMaximized(false);
             ControladorGeneral.instancia.window.centerOnScreen();
-            ControladorGeneral.instancia.window.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,9 +162,13 @@ public class ControladorGeneral {
             } else {
                 root = FXMLLoader.load(getClass().getResource("../ui/ventanas/cliente/VentanaPrincipalCliente.fxml"));
             }
-            ControladorGeneral.instancia.cambiarVentana("Inicio de sesion", new Scene(root, 420, 320), true);
-            window.setMinWidth(1100);
-            window.setMinHeight(620);
+
+            ControladorGeneral.instancia.cambiarVentana("NotSpotify", new Scene(root, 1100, 620));
+
+            ControladorGeneral.instancia.window.setMinWidth(1100);
+            ControladorGeneral.instancia.window.setMinHeight(620);
+            ControladorGeneral.instancia.window.setMaximized(false);
+            ControladorGeneral.instancia.window.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -189,7 +217,7 @@ public class ControladorGeneral {
     public void cargarCancionDeRepo(int posicion) {
         if(repoCancionesActual == null) return;
 
-        idCancionActual = repoCancionesActual.getCanciones().get(posicion).getId();
+        cancionActual = repoCancionesActual.getCanciones().get(posicion);
         cargarCancion(repoCancionesActual.getCanciones().get(posicion).getRecurso());
         reproducirCancion();
     }
@@ -206,7 +234,7 @@ public class ControladorGeneral {
     public void siguienteCancion() {
         if(repoCancionesActual == null) return;
 
-        int siguienteCancion = repoCancionesActual.obtenerIndiceCancion(idCancionActual) + 1;
+        int siguienteCancion = repoCancionesActual.obtenerIndiceCancion(cancionActual.getId()) + 1;
 
         if(siguienteCancion < repoCancionesActual.getCanciones().size()) {  //Reproduce la siguiente cancion
             cargarCancionDeRepo(siguienteCancion);
@@ -220,7 +248,7 @@ public class ControladorGeneral {
     public void cancionAnterior() {
         if(repoCancionesActual == null) return;
 
-        int cancionAnterior = repoCancionesActual.obtenerIndiceCancion(idCancionActual) - 1;
+        int cancionAnterior = repoCancionesActual.obtenerIndiceCancion(cancionActual.getId()) - 1;
 
         if(cancionAnterior > 0) {  //Reproduce la siguiente cancion
             cargarCancionDeRepo(cancionAnterior);
@@ -253,5 +281,13 @@ public class ControladorGeneral {
     public void reproducirCancion() {
         mediaPlayer.play();
         pausado = false;
+
+        if(cancionActual == null) return;
+
+        if(usuarioIngresadoEsAdmin()) {
+            refVentanaPrincipalAdmin.actualizarInfoCancion(cancionActual.getNombre(), cancionActual.getNombreArtista());
+        } else {
+            refVentanaPrincipalCliente.actualizarInfoCancion(cancionActual.getNombre(), cancionActual.getNombreArtista());
+        }
     }
 }

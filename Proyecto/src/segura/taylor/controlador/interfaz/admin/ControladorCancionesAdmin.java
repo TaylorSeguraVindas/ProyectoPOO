@@ -14,7 +14,6 @@ import segura.taylor.controlador.ControladorGeneral;
 import segura.taylor.controlador.interfaz.cancion.ControladorRegistroCancion;
 import segura.taylor.ui.dialogos.AlertDialog;
 import segura.taylor.ui.dialogos.VentanaFiltroCancionesAdmin;
-import segura.taylor.ui.dialogos.VentanaFiltrosCancionesTienda;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class ControladorCancionesAdmin {
         filtrandoPorGenero = false;
 
         inicializarTabla();
-        mostrarDatos(false);
+        mostrarDatos();
     }
 
     public void inicializarTabla() {
@@ -83,9 +82,9 @@ public class ControladorCancionesAdmin {
         tblCanciones.getColumns().addAll(columnaRecurso, columnaNombre, columnaDuracion, columnaFechaLanzamiento, columnaArtista, columnaCompositor, columnaGenero, columnaPrecio);
 
     }
-    private void mostrarDatos(boolean usandoFiltros) {
+    private void mostrarDatos() {
         tblCanciones.getItems().clear();
-        tblCanciones.setItems(obtenerCanciones(usandoFiltros));
+        tblCanciones.setItems(obtenerCanciones(!txtBusqueda.getText().trim().equals("")));   //Usa filtro si el texto de búsqueda no está vacío
     }
 
     public ObservableList<Cancion> obtenerCanciones(boolean usandoFiltros) {
@@ -144,7 +143,7 @@ public class ControladorCancionesAdmin {
 
     public void buscar() {
         //Actualizar lista
-        mostrarDatos(true);
+        mostrarDatos();
     }
 
     public void reproducirCancion() {
@@ -174,7 +173,7 @@ public class ControladorCancionesAdmin {
             ventanaRegistroCancion.setResizable(false);
             ventanaRegistroCancion.showAndWait();
 
-            mostrarDatos(false); //Actualizar tabla
+            mostrarDatos(); //Actualizar tabla
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -245,7 +244,7 @@ public class ControladorCancionesAdmin {
             ventanaRegistroCancion.setResizable(false);
             ventanaRegistroCancion.showAndWait();
 
-            mostrarDatos(false); //Actualizar tabla
+            mostrarDatos(); //Actualizar tabla
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -253,7 +252,7 @@ public class ControladorCancionesAdmin {
 
     public void eliminarCancion() {
         YesNoDialog yesNoDialog = new YesNoDialog();
-        boolean resultado = yesNoDialog.mostrar("Aviso", "Realmente quiere eliminar al Cancion seleccionado?");
+        boolean resultado = yesNoDialog.mostrar("Aviso", "Realmente quiere eliminar la Cancion seleccionada?");
 
         if (resultado) {
             Cancion CancionSeleccionado = (Cancion) tblCanciones.getSelectionModel().getSelectedItem();
@@ -270,7 +269,7 @@ public class ControladorCancionesAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Cancion eliminada correctamente");
-                    mostrarDatos(false);
+                    mostrarDatos();
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Error", "No se pudo eliminar la Cancion");

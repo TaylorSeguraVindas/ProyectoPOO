@@ -1,5 +1,6 @@
 package segura.taylor.bl.entidades;
 
+import segura.taylor.bl.enums.TipoListaReproduccion;
 import segura.taylor.bl.enums.TipoRepositorioCanciones;
 import segura.taylor.bl.interfaces.IComboBoxItem;
 
@@ -9,11 +10,19 @@ import java.util.Objects;
 
 public class ListaReproduccion extends RepositorioCanciones implements IComboBoxItem {
     //Variables
+    private TipoListaReproduccion tipoLista;
     private double calificacion;
     private String imagen;
     private String descripcion;
 
     //Propiedades
+    public TipoListaReproduccion getTipoLista() {
+        return tipoLista;
+    }
+    public void setTipoLista(TipoListaReproduccion tipoLista) {
+        this.tipoLista = tipoLista;
+    }
+
     public double getCalificacion() {
         return calificacion;
     }
@@ -46,6 +55,7 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
 
     /**
      * Método constructor
+     * @param tipo Enum que define el tipo de lista de reproduccion TIENDA o USUARIO
      * @param nombre String que define el nombre
      * @param fechaCreacion LocalDate que define la fecha de creacion
      * @param canciones ArrayList que define las canciones que pertenecen a esta lista de reproduccion
@@ -53,8 +63,9 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
      * @param imagen String que define la ruta de la imagen
      * @param descripcion Stirng que define la calificacion
      */
-    public ListaReproduccion(String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, double calificacion, String imagen, String descripcion) {
+    public ListaReproduccion(TipoListaReproduccion tipo, String nombre, LocalDate fechaCreacion, ArrayList<Cancion> canciones, double calificacion, String imagen, String descripcion) {
         super(nombre, fechaCreacion, canciones);
+        this.tipoLista = tipo;
         this.tipoRepo = TipoRepositorioCanciones.LISTA_REPRODUCCION;
         this.calificacion = calificacion;
         this.imagen = imagen;
@@ -103,6 +114,24 @@ public class ListaReproduccion extends RepositorioCanciones implements IComboBox
         return null;
     }
 
+    public double calcularCalificacion() {
+        double promedio;
+        double acum = 0.0;
+        int calificacionesValidas = 0;
+
+        for (Cancion cancion : canciones) {
+            System.out.println("Cal cancion: " + cancion.getCalificacionPromedio());
+            acum += cancion.getCalificacionPromedio();
+            calificacionesValidas++;
+        }
+
+        System.out.println("Acumulado: " + acum);
+        System.out.println("Canciones: " + calificacionesValidas);
+
+        promedio = acum / calificacionesValidas;
+        calificacion = promedio;
+        return calificacion;
+    }
     @Override
     public String toComboBoxItem() {
         return id + "-" + nombre;

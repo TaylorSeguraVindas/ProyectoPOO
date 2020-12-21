@@ -220,37 +220,6 @@ public class Cancion implements IComboBoxItem {
     }
 
     /**
-     * Método usado para eliminar una calificacion
-     * @param pCalificacion instancia de la clase calificacion que se desea eliminar
-     * @return true si la eliminacion es exitosa
-     * @see Calificacion
-     */
-    public boolean eliminarCalificacion(Calificacion pCalificacion){
-        if(existeCalificacion(pCalificacion.getId())){
-            calificaciones.remove(pCalificacion);
-        }
-        return false;
-    }
-
-    /**
-     * Método usado para modificar una calificacion
-     * @param nuevaCalificacion instancia de la clase Calificacion con los cambios aplicados
-     * @return true si la modificacion es exitosa
-     * @see Calificacion
-     */
-    public boolean modificarCalificacion(Calificacion nuevaCalificacion){
-        Calificacion viejaCalificacion = buscarCalificacion(nuevaCalificacion.getAutor().getId());
-
-        if(viejaCalificacion != null){
-            eliminarCalificacion(viejaCalificacion);
-            agregarCalificacion(nuevaCalificacion);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Método usado para verificar si existe una calificacion
      * @param pIdCalificacion int que define el id de la calificacion de la que se desea verificar su existencia
      * @return true si existe, false si no
@@ -266,13 +235,13 @@ public class Cancion implements IComboBoxItem {
 
     /**
      * Método usado para buscar una calificación usando como filtro el id de su autor
-     * @param pIdUsuario int que define el id del autor de la calificacion
+     * @param pId int que define el id de la calificacion
      * @return instancia de la clase Calificacion si se encuentra una coincidencia
      * @see Calificacion
      */
-    public Calificacion buscarCalificacion(int pIdUsuario) {
+    public Calificacion buscarCalificacion(int pId) {
         for (Calificacion objCalificacion: calificaciones) {
-            if(pIdUsuario == objCalificacion.getAutor().getId()){
+            if(pId == objCalificacion.getId()){
                 return objCalificacion;
             }
         }
@@ -282,5 +251,26 @@ public class Cancion implements IComboBoxItem {
     @Override
     public String toComboBoxItem() {
         return id + "-" + nombre;
+    }
+
+    public double getCalificacionPromedio() {
+        double promedio;
+        double acum = 0.0;
+        int calificacionesValidas = 0;
+
+        for (Calificacion calificacion : calificaciones) {
+            acum += calificacion.getEstrellas();
+
+            if(calificacion.getEstrellas() > 0) {   //Solo cuenta las que si tengan estrellas
+                calificacionesValidas++;
+            }
+        }
+
+        if(calificacionesValidas == 0) {    //Evitar division entre 0
+            calificacionesValidas = 1;
+        }
+
+        promedio = acum / calificacionesValidas;
+        return promedio;
     }
 }

@@ -16,14 +16,17 @@ import segura.taylor.ui.dialogos.AlertDialog;
 import segura.taylor.ui.dialogos.YesNoDialog;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ControladorGenerosAdmin {
     public TableView tblGeneros;
     public VBox ventanaPrincipal;
 
+    public TextField txtBusqueda;
+
     public void initialize() {
         inicializarTabla();
-        mostrarDatos();
+        mostrarDatos(false);
     }
 
     public void inicializarTabla() {
@@ -40,21 +43,43 @@ public class ControladorGenerosAdmin {
         tblGeneros.getColumns().addAll(columnaNombre, columnaDescripcion);
 
     }
-    private void mostrarDatos() {
+    private void mostrarDatos(boolean usandoFiltro) {
         tblGeneros.getItems().clear();
-        tblGeneros.setItems(obtenerGeneros());
+        tblGeneros.setItems(obtenerGeneros(usandoFiltro));
     }
 
-    public ObservableList<Genero> obtenerGeneros() {
+    public ObservableList<Genero> obtenerGeneros(boolean usandoFiltro) {
         List<Genero> generos = ControladorGeneral.instancia.getGestor().listarGeneros();
 
         ObservableList<Genero> generosFinal = FXCollections.observableArrayList();
 
         for(Genero genero : generos) {
-            generosFinal.addAll(genero);
+            if(usandoFiltro) {
+                if(generoCoincideConBusqueda(genero)) {
+                    generosFinal.addAll(genero);
+                }
+            } else {
+                generosFinal.addAll(genero);
+            }
         }
 
         return generosFinal;
+    }
+
+    private boolean generoCoincideConBusqueda(Genero genero) {
+        String textoBusqueda = txtBusqueda.getText().trim().toUpperCase(Locale.ROOT);
+
+        String nombreGenero = genero.getNombre().trim().toUpperCase(Locale.ROOT);
+
+        if(nombreGenero.equals(textoBusqueda) || nombreGenero.contains(textoBusqueda)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void buscar() {
+        mostrarDatos(true);
     }
 
     public void agregarGenero() {
@@ -75,7 +100,7 @@ public class ControladorGenerosAdmin {
             ventanaRegistroGenero.setResizable(false);
             ventanaRegistroGenero.showAndWait();
 
-            mostrarDatos(); //Actualizar tabla
+            mostrarDatos(false); //Actualizar tabla
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,7 +142,7 @@ public class ControladorGenerosAdmin {
             ventanaRegistroGenero.setResizable(false);
             ventanaRegistroGenero.showAndWait();
 
-            mostrarDatos(); //Actualizar tabla
+            mostrarDatos(false); //Actualizar tabla
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -142,7 +167,7 @@ public class ControladorGenerosAdmin {
                 if (resultado) {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Exito", "Genero eliminado correctamente");
-                    mostrarDatos();
+                    mostrarDatos(false);
                 } else {
                     AlertDialog alertDialog = new AlertDialog();
                     alertDialog.mostrar("Error", "No se pudo eliminar el Genero");

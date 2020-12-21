@@ -22,6 +22,7 @@ public class CancionDAO {
     private GeneroDAO generoDAO;
     private ArtistaDAO artistaDAO;
     private CompositorDAO compositorDAO;
+    private CalificacionDAO calificacionDAO;
 
     private CancionesAlbumDAO cancionesAlbumDAO;
     private CancionesListaReproduccionDAO cancionesListaReproduccionDAO;
@@ -36,6 +37,8 @@ public class CancionDAO {
         this.generoDAO = new GeneroDAO(connection);
         this.artistaDAO = new ArtistaDAO(connection);
         this.compositorDAO = new CompositorDAO(connection);
+        this.calificacionDAO = new CalificacionDAO(connection);
+
         this.cancionesAlbumDAO = new CancionesAlbumDAO(connection);
         this.cancionesListaReproduccionDAO = new CancionesListaReproduccionDAO(connection);
         this.cancionesBibliotecaDAO = new CancionesBibliotecaDAO(connection);
@@ -47,7 +50,9 @@ public class CancionDAO {
      * @return true si el registro es exitoso, false si ocurre algún error
      * @throws Exception si no se puede conectar con la DB
      */
-    public boolean save(Cancion nuevaCancion) throws Exception {
+    public int save(Cancion nuevaCancion) throws Exception {
+        int key = -1;
+
         try {
             Statement query = connection.createStatement();
             String insert = "INSERT INTO canciones (tipoCancion, nombre, recurso, duracion, fechaLanzamiento, precio, idGenero, idArtista, idCompositor) VALUES ";
@@ -63,12 +68,18 @@ public class CancionDAO {
             insert += nuevaCancion.getCompositor().getId() + ")";
 
             System.out.println("Ejecuto query: " + insert);
-            query.execute(insert);
-            return true;
+            query.execute(insert, Statement.RETURN_GENERATED_KEYS);
+
+            ResultSet generatedKeys = query.getGeneratedKeys();
+
+            while (generatedKeys.next()) {
+                key = generatedKeys.getInt(1);
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
-        return false;
+
+        return key;
     }
 
     /**
@@ -146,6 +157,9 @@ public class CancionDAO {
             cancionLeida.setArtista(artistaDAO.findByID(result.getInt("idArtista")).get());
             cancionLeida.setCompositor(compositorDAO.findByID(result.getInt("idCompositor")).get());
 
+            //Calificaciones
+            cancionLeida.setCalificaciones(calificacionDAO.findByIdCancion(cancionLeida.getId()));
+
             listaCanciones.add(cancionLeida);
         }
 
@@ -179,6 +193,9 @@ public class CancionDAO {
             cancionLeida.setGenero(generoDAO.findByID(result.getInt("idGenero")).get());
             cancionLeida.setArtista(artistaDAO.findByID(result.getInt("idArtista")).get());
             cancionLeida.setCompositor(compositorDAO.findByID(result.getInt("idCompositor")).get());
+
+            //Calificaciones
+            cancionLeida.setCalificaciones(calificacionDAO.findByIdCancion(cancionLeida.getId()));
 
             return Optional.of(cancionLeida);
         }
@@ -222,6 +239,9 @@ public class CancionDAO {
             cancionLeida.setGenero(generoDAO.findByID(result.getInt("idGenero")).get());
             cancionLeida.setArtista(artistaDAO.findByID(result.getInt("idArtista")).get());
             cancionLeida.setCompositor(compositorDAO.findByID(result.getInt("idCompositor")).get());
+
+            //Calificaciones
+            cancionLeida.setCalificaciones(calificacionDAO.findByIdCancion(cancionLeida.getId()));
 
             listaCanciones.add(cancionLeida);
         }

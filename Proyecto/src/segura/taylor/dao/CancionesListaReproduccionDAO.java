@@ -40,6 +40,19 @@ public class CancionesListaReproduccionDAO {
         return false;
     }
 
+    public boolean onDeleteCancion(int idCancion) {
+        try {
+            Statement query = connection.createStatement();
+            String insert = "DELETE FROM canciones_listareproduccion WHERE idCancion = " + idCancion;
+
+            query.execute(insert);
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public String getIdCancionesListaReproduccion(int idListaReproduccion) throws SQLException {
         Statement query = connection.createStatement();
         ResultSet result = query.executeQuery("SELECT * FROM canciones_listareproduccion WHERE idListaReproduccion = " + idListaReproduccion);

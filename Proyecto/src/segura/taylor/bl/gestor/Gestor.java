@@ -9,6 +9,7 @@ import java.util.*;
 import segura.taylor.PropertiesHandler;
 import segura.taylor.bl.entidades.*;
 import segura.taylor.bl.enums.TipoCancion;
+import segura.taylor.bl.enums.TipoListaReproduccion;
 import segura.taylor.dao.*;
 
 /**
@@ -25,6 +26,7 @@ public class Gestor {
     private PropertiesHandler propertiesHandler = new PropertiesHandler();
 
     private ArtistaDAO artistaDAO;
+    private CalificacionDAO calificacionDAO;
     private CancionDAO cancionDAO;
     private CompositorDAO compostorDAO;
     private GeneroDAO generoDAO;
@@ -36,6 +38,8 @@ public class Gestor {
     private CancionesAlbumDAO cancionesAlbumDAO;
     private ArtistasAlbumDAO artistasAlbumDAO;
     private CancionesListaReproduccionDAO cancionesListaReproduccionDAO;
+    private CancionesBibliotecaDAO cancionesBibliotecaDAO;
+    private ListasReproduccionBibliotecaDAO listasBibliotecaDAO;
 
     /**
      * Método constructor
@@ -59,6 +63,7 @@ public class Gestor {
             System.out.println("CONNECTED TO ---> "+ url);
 
             this.artistaDAO = new ArtistaDAO(this.connection);
+            this.calificacionDAO = new CalificacionDAO(this.connection);
             this.cancionDAO = new CancionDAO(this.connection);
             this.compostorDAO = new CompositorDAO(this.connection);
             this.generoDAO = new GeneroDAO(this.connection);
@@ -69,6 +74,8 @@ public class Gestor {
             this.cancionesAlbumDAO = new CancionesAlbumDAO(this.connection);
             this.artistasAlbumDAO = new ArtistasAlbumDAO(this.connection);
             this.cancionesListaReproduccionDAO = new CancionesListaReproduccionDAO(this.connection);
+            this.cancionesBibliotecaDAO = new CancionesBibliotecaDAO(this.connection);
+            this.listasBibliotecaDAO = new ListasReproduccionBibliotecaDAO(this.connection);
         } catch (Exception e) {
             System.out.println("CANT CONNECT TO DATABASE");
             e.printStackTrace();
@@ -77,6 +84,59 @@ public class Gestor {
 
     //Metodos
 
+    public void reiniciar() {
+        usuarioIngresado = null;
+    }
+
+    /**
+     * Método usado para revisar los valores por defecto y crearlos en caso que no existan.
+     */
+    public void verificarValoresPorDefecto() {
+        Optional<Pais> paisDefecto = buscarPaisPorNombre("Desconocido");
+        Optional<Genero> generoDefecto = buscarGeneroPorNombre("Desconocido");
+        Optional<Compositor> compositorDefecto = buscarCompositorPorNombre("Desconocido");
+        Optional<Artista> artistaDefecto = buscarArtistaPorNombre("Desconocido");
+
+        if(!paisDefecto.isPresent()) {
+            System.out.println("No hay pais por defecto");
+            try {
+                crearPais("Desconocido", "Asignado por defecto");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(!generoDefecto.isPresent()) {
+            System.out.println("No hay genero por defecto");
+            try {
+                crearGenero("Desconocido", "Asignado por defecto");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        paisDefecto = buscarPaisPorNombre("Desconocido");
+        generoDefecto = buscarGeneroPorNombre("Desconocido");
+
+        if(!compositorDefecto.isPresent()) {
+            System.out.println("No hay compositor por defecto");
+            try {
+                crearCompositor("Desconocido", "", paisDefecto.get().getId(), generoDefecto.get().getId(), LocalDate.of(2001, 01, 01), 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(!artistaDefecto.isPresent()) {
+            System.out.println("No hay artista por defecto");
+            try {
+                crearArtista("Desconocido", "", "Desconocido", LocalDate.of(2001, 01, 01), null, paisDefecto.get().getId(), generoDefecto.get().getId(), 0, "Asignado por defecto");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
     /**
      * Verifica si el usuario que usa la aplicación es administrador
      * @return true si es administrador, false si no lo es
@@ -93,6 +153,15 @@ public class Gestor {
     }
 
     /**
+     * Método usado para conocer el usuario ingresado.
+     * @return instancia del usuario que está usando la app
+     */
+    public Usuario getUsuarioIngresado() {
+        usuarioIngresado = buscarUsuarioPorId(usuarioIngresado.getId()).get();
+        return usuarioIngresado;
+    }
+
+    /**
      * Metodo usado para conocer el id del usuario que está usando la aplicación
      * @return id del usuario que está usando la aplicación
      */
@@ -105,7 +174,8 @@ public class Gestor {
      * @return instancia de la clase Biblioteca que corresponde a la que le pertenece al cliente ingresado
      */
     public Biblioteca getBibliotecaUsuarioIngresado() {
-        Cliente clienteIngresado = (Cliente) usuarioIngresado;
+        Cliente clienteIngresado = (Cliente) buscarUsuarioPorId(usuarioIngresado.getId()).get();
+        usuarioIngresado = clienteIngresado;
         return clienteIngresado.getBiblioteca();
     }
 
@@ -203,7 +273,7 @@ public class Gestor {
         biblioteca.setId(idBibliotecaGuardada);
 
         //Pais pais = buscarPaisPorId(idPais).get();
-        Cliente nuevoCliente = new Cliente(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, pais, biblioteca);
+        Cliente nuevoCliente = new Cliente(correo, contrasenna, nombre, apellidos, imagenPerfil, nombreUsuario, fechaNacimiento, edad, pais, biblioteca, false);
         nuevoCliente.setBiblioteca(biblioteca);
 
         return usuarioDAO.save(nuevoCliente);
@@ -212,29 +282,111 @@ public class Gestor {
     /**
      * Método usado para modificar un usuario
      * @param id int que define el id del usuario que se va a modificar
+     * @param correo String que define el nuevo correo del usuario
      * @param pNombreUsuario String que define el nuevo nombre de usuario
      * @param pImagenPerfil String que define la nueva ruta de la imagen de perfil del usuario
-     * @param pContrasenna Strinq que define la nueva contraseña del usuario
      * @param pNombre String que define el nuevo nombre del usuario
      * @param pApellidos String que define los nuevos apellidos del usuario
      * @return true si la modificación es existosa, false si ocurre algún error
      * @throws Exception si no se puede realizar la conexión con la DB o si el usuario no existe
      */
-    public boolean modificarUsuario(int id, String pNombreUsuario, String pImagenPerfil, String pContrasenna, String pNombre, String pApellidos) throws Exception {
+    public boolean modificarUsuario(int id, String correo, String pNombreUsuario, String pImagenPerfil, String pNombre, String pApellidos) throws Exception {
         Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(id);
 
         if(usuarioEncontrado.isPresent()){
+
             Usuario usuarioModifica = usuarioEncontrado.get();
+
+            usuarioModifica.setCorreo(correo);
             usuarioModifica.setNombreUsuario(pNombreUsuario);
             usuarioModifica.setImagenPerfil(pImagenPerfil);
-            usuarioModifica.setContrasenna(pContrasenna);
             usuarioModifica.setNombre(pNombre);
             usuarioModifica.setApellidos(pApellidos);
+
+            if(usuarioIngresado.getId() == usuarioModifica.getId()) {
+                usuarioIngresado = usuarioModifica; //Actualizar info del usuario ingresado.
+            }
 
             return usuarioDAO.update(usuarioModifica);
         }
 
         return false;
+    }
+
+    /**
+     * Método usado para actualizar el estado de verificacion del correo de un usuario
+     * @param idUsuario id del usuario que verificó su correo
+     * @return tru si se actualiza correctamente, false si ocurre algún error
+     * @throws Exception si no se puede conectar con la BD
+     */
+    public boolean verificarCorreoUsuario(int idUsuario) throws Exception {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(idUsuario);
+
+        if(usuarioEncontrado.isPresent()){
+
+            Cliente usuarioModifica = (Cliente) usuarioEncontrado.get();
+
+            usuarioModifica.setCorreoVerificado(true);
+
+            if(usuarioIngresado.getId() == usuarioModifica.getId()) {
+                usuarioIngresado = usuarioModifica; //Actualizar info del usuario ingresado.
+            }
+
+            return usuarioDAO.updateEstadoCorreo(usuarioModifica);
+        }
+
+        return false;
+    }
+
+    /**
+     * Método usado para actualizar la contraseña de un usuario
+     * @param idUsuario id del usuario que verificó su correo
+     * @param nuevaContrasenna String que define la nueva contraseña
+     * @return tru si se actualiza correctamente, false si ocurre algún error
+     * @throws Exception si no se puede conectar con la BD
+     */
+    public boolean verificarCorreoUsuario(int idUsuario, String nuevaContrasenna) throws Exception {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(idUsuario);
+
+        if(usuarioEncontrado.isPresent()){
+
+            Usuario usuarioModifica = usuarioEncontrado.get();
+
+            usuarioModifica.setContrasenna(nuevaContrasenna);
+
+            if(usuarioIngresado.getId() == usuarioModifica.getId()) {
+                usuarioIngresado = usuarioModifica; //Actualizar info del usuario ingresado.
+            }
+
+            return usuarioDAO.updateContrasenna(usuarioModifica);
+        }
+
+        return false;
+    }
+
+    /**
+     * Método usado para modificar la contraseña de un usuario
+     * @param idUsuario int que define el id del usuario que se va a modificar su contraseña
+     * @param nuevaContrasenna String que define la nueva contraseña
+     * @return true si la modificacion es exitosa, false si ocurre algun error
+     */
+    public boolean modificarContrasennaUsuario(int idUsuario, String nuevaContrasenna) {
+        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorId(idUsuario);
+
+        if(usuarioEncontrado.isPresent()) {
+            Usuario usuarioModifica = usuarioEncontrado.get();
+
+            usuarioModifica.setContrasenna(nuevaContrasenna);
+
+            try {
+                usuarioDAO.updateContrasenna(usuarioModifica);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -268,16 +420,28 @@ public class Gestor {
      * @param pId int que define el id del usuario que se desea buscar
      * @return instancia de la clase Usuario si se encuentra alguno, null si no hay coincidencias
      */
-    public Usuario buscarUsuarioPorId(int pId){
-        return usuarioDAO.findByID(pId).get();
+    public Optional<Usuario> buscarUsuarioPorId(int pId){
+        try {
+            return usuarioDAO.findByID(pId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
     /**
      * Método usado para buscar un usuario por correo
      * @param pCorreo String que define el correo del usuario que se desea buscar
      * @return instancia de la clase Usuario si se encuentra alguno, null si no hay coincidencias
      */
-    public Usuario buscarUsuarioPorCorreo(String pCorreo){
-        return usuarioDAO.findByEmail(pCorreo).get();
+    public Optional<Usuario> buscarUsuarioPorCorreo(String pCorreo){
+        try {
+            return usuarioDAO.findByEmail(pCorreo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 
 
@@ -372,9 +536,6 @@ public class Gestor {
             //Busca cancion
             if(nuevaCancion.isPresent())
             {
-                //Album albumModifica = repoEncontrado.get();
-                //albumModifica.agregarCancion(nuevaCancion.get());
-                //return repoCancionesDAO.update(albumModifica);
                 return cancionesAlbumDAO.save(pIdAlbum, pIdCancion); //Modifica tabla intermedia
             }
         }
@@ -442,6 +603,16 @@ public class Gestor {
 
 
     //*********Manejo de Listas de Reproduccion***************
+    public int obtenerIdListaReproduccion(String nombre) {
+        try {
+            return repoCancionesDAO.getIdLista(nombre);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
+
     /**
      * Método usado para crear una lista de reproducción
      * @param nombre String que define el nombre de la lista
@@ -451,11 +622,14 @@ public class Gestor {
      * @return true si el registro es exitoso, false si ocurre algun error
      * @throws Exception si no se puede conectar con la DB o si la lista de reproduccion ya existe
      */
-    public boolean crearListaReproduccion(String nombre, LocalDate fechaCreacion, String imagen, String descripcion) throws Exception {
+    public int crearListaReproduccion(String nombre, LocalDate fechaCreacion, String imagen, String descripcion) throws Exception {
         ArrayList<Cancion> canciones = new ArrayList<>();   //Las listas de reproducción SIEMPRE se crea sin canciones por defecto
 
-        ListaReproduccion nuevaLista = new ListaReproduccion(nombre, fechaCreacion, canciones, 0.0, imagen, descripcion);
-        return (repoCancionesDAO.save(nuevaLista)) != -1;
+        //Si fue creada por admin está disponible en la tienda, si no solo en la biblioteca del usuario
+        TipoListaReproduccion tipoLista = (usuarioIngresadoEsAdmin()) ? TipoListaReproduccion.PARA_TIENDA : TipoListaReproduccion.PARA_USUARIO;
+        ListaReproduccion nuevaLista = new ListaReproduccion(tipoLista, nombre, fechaCreacion, canciones, 0.0, imagen, descripcion);
+
+        return repoCancionesDAO.save(nuevaLista);
     }
 
     /**
@@ -655,6 +829,23 @@ public class Gestor {
         return Optional.empty();
     }
 
+    /**
+     * Método usado para buscar un artista usando como filtro su id
+     * @param pNombre String que define el nombreArtistico del artista que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de un artista si se encuentra una coincidencia
+     * @see Optional
+     * @see Artista
+     */
+    public Optional<Artista> buscarArtistaPorNombre(String pNombre){
+        try {
+            return artistaDAO.findByNombre(pNombre);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
 
     //*******************Manejo de canciones******************
 
@@ -671,7 +862,7 @@ public class Gestor {
      * @return true si el registro es exitoso, false si ocurre algun error
      * @throws Exception si no se puede conectar con la DB o si la cancion ya existe
      */
-    public boolean crearCancion(String nombre, String recurso, double duracion, int idGenero, int idArtista, int idCompositor, LocalDate fechaLanzamiento, double precio) throws Exception {
+    public int crearCancion(String nombre, String recurso, double duracion, int idGenero, int idArtista, int idCompositor, LocalDate fechaLanzamiento, double precio) throws Exception {
         ArrayList<Calificacion> calificaciones = new ArrayList<>();
 
         TipoCancion tipoCancion;
@@ -715,6 +906,24 @@ public class Gestor {
      * @throws Exception si no se puede conectar con la DB o si la cancion no existe
      */
     public boolean eliminarCancion(int pIdCancion) throws Exception {
+        Optional<Cancion> cancionEliminar = buscarCancionPorId(pIdCancion);
+
+        if(cancionEliminar.isPresent()) {   //Si la canción está en una biblioteca primero la elimina de la biblioteca
+            if(cancionEliminar.get().getTipoCancion().equals(TipoCancion.PARA_USUARIO)) {
+                removerCancionDeBibliotecaUsuario(usuarioIngresado.getId(), pIdCancion);
+            }
+        }
+
+        //Remover referencias en repos
+        cancionesBibliotecaDAO.onDeleteCancion(pIdCancion);
+        cancionesAlbumDAO.onDeleteCancion(pIdCancion);
+        cancionesListaReproduccionDAO.onDeleteCancion(pIdCancion);
+
+        //Limpiar calificaciones de la cancion
+        for (Calificacion calificacion : cancionEliminar.get().getCalificaciones()) {
+            calificacionDAO.delete(calificacion.getId());
+        }
+
         return cancionDAO.delete(pIdCancion);
     }
 
@@ -752,8 +961,63 @@ public class Gestor {
     }
 
 
-    //Canciones de cliente
+    //Calificaciones
+    /**
+     * Método usaod para crear una calificacion
+     * @param estrellas int que define la cantidad de estrellas
+     * @param idCliente int que define el id del autor
+     * @param idCancion int que define el id de la cancion
+     * @return id de la calificacion registrada
+     */
+    public int registrarCalificacion(int estrellas, int idCliente, int idCancion) {
+        Calificacion nuevaCalificacion = new Calificacion(estrellas);
+        return calificacionDAO.save(nuevaCalificacion, idCliente, idCancion);
+    }
 
+    /**
+     * Método usado para modificar una calificacion
+     * @param idCalificacion int que define el id de la calificacion que se va a modificar
+     * @param estrellas int que define la nueva cantidad de estrellas
+     * @return true si la modificacion es exitosa, false si ocurre algun error
+     * @throws Exception si no se puede conectar con la BD
+     */
+    public boolean modificarCalificacion(int idCalificacion, int estrellas) throws Exception {
+        Optional<Calificacion> calificacionEncontrada = buscarCalificacion(idCalificacion);
+
+        if(calificacionEncontrada.isPresent()) {
+            Calificacion calificacionModifica = calificacionEncontrada.get();
+            calificacionModifica.setEstrellas(estrellas);
+
+            return calificacionDAO.update(calificacionModifica);
+        }
+
+        return false;
+    }
+
+    /**
+     * Método usado para buscar una calificacione
+     * @param idCalificacion int que define el id de la calificacion que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Calificacion si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la BD
+     */
+    public Optional<Calificacion> buscarCalificacion(int idCalificacion) throws SQLException {
+        return calificacionDAO.findByID(idCalificacion);
+    }
+
+    /**
+     * Método usado para buscar una calificacione
+     * @param idCancion int que define el id de la cancion a la que pertenece la calificacion
+     * @param idUsuario int que define el id del autor
+     * @return objeto de tipo Optional que contiene una instancia de Calificacion si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la BD
+     */
+    public Optional<Calificacion> buscarCalificacion(int idCancion, int idUsuario) throws SQLException {
+        return calificacionDAO.findByCancionYUsuario(idCancion, idUsuario);
+    }
+
+    //Biblioteca de cliente
+
+    //CANCIONES
     /**
      * Método usado para agregar una canción a la biblioteca de un usuario
      * @param pIdCliente int que define el id del cliente dueño de la biblioteca
@@ -773,9 +1037,17 @@ public class Gestor {
                 Optional<Cancion> cancionEncontrada = cancionDAO.findByID(pIdCancion);
 
                 if(cancionEncontrada.isPresent()) {     //Luego busca la cancion a ver si existe
-                    Biblioteca bibliotecaModifica = (Biblioteca) bibliotecaEncontrada.get();
-                    bibliotecaModifica.agregarCancion(cancionEncontrada.get());
-                    return repoCancionesDAO.update(bibliotecaModifica);
+                    Biblioteca bibliotecaModifica = bibliotecaEncontrada.get();
+                    boolean resultado = bibliotecaModifica.agregarCancion(cancionEncontrada.get());
+
+                    if(resultado) { //Puedo guardar esta cancion?
+                        resultado = cancionesBibliotecaDAO.save(bibliotecaModifica.getId(), cancionEncontrada.get().getId());
+
+                        if(resultado) {
+                            usuarioIngresado = buscarUsuarioPorId(usuarioIngresado.getId()).get();    //Actualizar usuario ingresado
+                            return true;
+                        }
+                    }
                 }
             }
         }
@@ -845,15 +1117,138 @@ public class Gestor {
             Optional<Biblioteca> repoEncontrado = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
 
             if(repoEncontrado.isPresent()) {    //Luego verifica que la biblioteca exista
-                Biblioteca bibliotecaModifica = (Biblioteca) repoEncontrado.get();
-                bibliotecaModifica.removerCancion(pIdCancion);
-                return repoCancionesDAO.update(bibliotecaModifica);
+                Biblioteca bibliotecaModifica = repoEncontrado.get();
+                boolean resultado = bibliotecaModifica.removerCancion(pIdCancion);
+
+                if(resultado) { //Puedo remover esta cancion?
+                    resultado = cancionesBibliotecaDAO.delete(idBiblioteca, pIdCancion);
+
+                    if(resultado) {
+                        usuarioIngresado = buscarUsuarioPorId(usuarioIngresado.getId()).get();    //Actualizar usuario ingresado
+                        return true;
+                    }
+                }
             }
         }
 
         return false;
     }
 
+    //LISTAS REPRODUCCION
+
+    /**
+     * Método usado para guardar una lista de reproducción en la biblioteca de un usuario
+     * @param pIdCliente int que define el id del usuario dueño de la biblioteca
+     * @param pIdLista int que define el id de la lista que se va a guardar
+     * @return true si se agrega correctamente, false si ocurre un error
+     * @throws Exception si no se puede conectar con la BD
+     */
+    public boolean agregarListaReproduccionABibliotecaUsuario(int pIdCliente, int pIdLista) throws Exception {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
+
+        if(usuarioEncontrado.isPresent()){  //Primero verifica que el usuario exista
+            Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
+            int idBiblioteca = clienteModifica.getBiblioteca().getId();
+
+            Optional<Biblioteca> bibliotecaEncontrada = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
+            if(bibliotecaEncontrada.isPresent()) {  //Luego verifica si la biblioteca de ese usuario existe
+                Optional<ListaReproduccion> listaEncontrada = repoCancionesDAO.findListaReproduccionById(pIdLista);
+
+                if(listaEncontrada.isPresent()) {     //Luego busca la lista a ver si existe
+                    Biblioteca bibliotecaModifica = bibliotecaEncontrada.get();
+                    boolean resultado = bibliotecaModifica.agregarListaReproduccion(listaEncontrada.get());
+
+                    if(resultado) { //Puedo guardar esta lista?
+                        resultado = listasBibliotecaDAO.save(bibliotecaModifica.getId(), listaEncontrada.get().getId());
+
+                        if(resultado) {
+                            usuarioIngresado = buscarUsuarioPorId(usuarioIngresado.getId()).get();    //Actualizar usuario ingresado
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Método usado para obtener una lista de todas las listas de reproduccion guardadas en la biblioteca de un usuario
+     * @param pIdCliente int que define el id del usuari dueño de la biblioteca
+     * @return lista de todas las listas de reproduccion guardadas en la biblioteca de un usuario
+     * @throws SQLException si no se puede conectar con la BD
+     */
+    public List<ListaReproduccion> listarListasReproduccionDeBibliotecaUsuario(int pIdCliente) throws SQLException {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
+
+        if(usuarioEncontrado.isPresent()) {  //Primero verifica que el usuario exista
+            Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
+            int idBiblioteca = clienteModifica.getBiblioteca().getId();
+            Optional<Biblioteca> repoEncontrado = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
+
+            if(repoEncontrado.isPresent()) {    //Luego verifica que la biblioteca exista
+                return Collections.unmodifiableList(repoEncontrado.get().getListasDeReproduccion());
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Método usado para buscar una lista de reproduccion en la biblioteca de un usuario
+     * @param pIdCliente int que define el id del usuario dueño de la biblioteca
+     * @param pIdLista int que define el id de la lista que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de ListaReproduccion si se encuentra una coincidencia
+     * @throws SQLException si no se puede conectar con la BD
+     */
+    public Optional<ListaReproduccion> buscarListaReproduccionEnBibliotecaUsuario(int pIdCliente, int pIdLista) throws SQLException {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
+
+        if(usuarioEncontrado.isPresent()) {  //Primero verifica que el usuario exista
+            Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
+            int idBiblioteca = clienteModifica.getBiblioteca().getId();
+            Optional<Biblioteca> repoEncontrado = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
+
+            if(repoEncontrado.isPresent()) {    //Luego verifica que la biblioteca exista
+                return repoEncontrado.get().buscarListaReproduccion(pIdLista);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Método usado para remover una lista de reproduccion de la biblioteca de un usuario
+     * @param pIdCliente int que define el id del usuario dueño de la biblioteca
+     * @param pIdLista int que define el id de la lista que se desea remover
+     * @return true si la eliminacion es exitosa, false si ocurre algun error
+     * @throws Exception si no se puede conectar con la BD
+     */
+    public boolean removerListaReproduccionDeBibliotecaUsuario(int pIdCliente, int pIdLista) throws Exception {
+        Optional<Usuario> usuarioEncontrado = usuarioDAO.findByID(pIdCliente);
+
+        if(usuarioEncontrado.isPresent()) {  //Primero verifica que el usuario exista
+            Cliente clienteModifica = (Cliente) usuarioEncontrado.get();
+            int idBiblioteca = clienteModifica.getBiblioteca().getId();
+            Optional<Biblioteca> repoEncontrado = repoCancionesDAO.findBibliotecaByID(idBiblioteca);
+
+            if(repoEncontrado.isPresent()) {    //Luego verifica que la biblioteca exista
+                Biblioteca bibliotecaModifica = repoEncontrado.get();
+                boolean resultado = bibliotecaModifica.removerListaReproduccion(pIdLista);
+
+                if(resultado) { //Puedo remover esta lista?
+                    resultado = listasBibliotecaDAO.delete(idBiblioteca, pIdLista);
+
+                    if(resultado) {
+                        usuarioIngresado = buscarUsuarioPorId(usuarioIngresado.getId()).get();    //Actualizar usuario ingresado
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     //**************Manejo de compositores********************
 
@@ -942,6 +1337,22 @@ public class Gestor {
         return Optional.empty();
     }
 
+    /**
+     * Método usado para buscar un compositor usando como filtro su id
+     * @param pNombre String que define el nombre del compositor que se desea encontrar
+     * @return un objeto de tipo Optional que contiene una instancia de Compositor si se encuentra una coincidencia
+     * @see Optional
+     * @see Compositor
+     */
+    public Optional<Compositor> buscarCompositorPorNombre(String pNombre){
+        try {
+            return compostorDAO.findByNombre(pNombre);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
 
     //******************Manejo de Generos******************
 
@@ -1018,6 +1429,20 @@ public class Gestor {
         return Optional.empty();
     }
 
+    /**
+     * Método usado para buscar un genero usando como filtro su id
+     * @param pNombre String que define el nombre del genero que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Genero si se encuentra una coincidencia
+     */
+    public Optional<Genero> buscarGeneroPorNombre(String pNombre){
+        try {
+            return generoDAO.findByNombre(pNombre);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
 
     //*****************Manejo de Paises********************
 
@@ -1089,6 +1514,23 @@ public class Gestor {
     public Optional<Pais> buscarPaisPorId(int pIdPais){
         try {
             return paisDAO.findByID(pIdPais);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Método usado para buscar un pais usando como filtro su id
+     * @param pNombre String que define el nombre del pais que se desea encontrar
+     * @return objeto de tipo Optional que contiene una instancia de Pais si se encuentra una coincidencia
+     * @see Optional
+     * @see Pais
+     */
+    public Optional<Pais> buscarPaisPorNombre(String pNombre){
+        try {
+            return paisDAO.findByNombre(pNombre);
         } catch (Exception e) {
             e.printStackTrace();
         }

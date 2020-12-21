@@ -126,6 +126,7 @@ public class ControladorRegistroCliente {
 
         if(selectedFile != null) {
             recursoImagenPerfil = selectedFile.toURI().toString();
+            urlImagenPerfil = recursoImagenPerfil;
             imagenPerfil.setImage(new Image(recursoImagenPerfil));
         }
     }
@@ -147,7 +148,7 @@ public class ControladorRegistroCliente {
         int pais = Integer.parseInt(itemPais[0]);
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().crearUsuarioCliente(correo, contrasenna, nombre, apellidos, recursoImagenPerfil, nombreUsuario, fechaNacimiento, edad, pais);
+            boolean resultado = ControladorGeneral.instancia.getGestor().crearUsuarioCliente(correo, contrasenna, nombre, apellidos, urlImagenPerfil, nombreUsuario, fechaNacimiento, edad, pais);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Registro exitoso", "Usuario registrado correctamente");
@@ -168,7 +169,7 @@ public class ControladorRegistroCliente {
         String nombreUsuario = txtNombreUsuario.getText();
 
         try {
-            boolean resultado = ControladorGeneral.instancia.getGestor().modificarUsuario(idCliente, correo, nombreUsuario, recursoImagenPerfil, nombre, apellidos);
+            boolean resultado = ControladorGeneral.instancia.getGestor().modificarUsuario(idCliente, correo, nombreUsuario, urlImagenPerfil, nombre, apellidos);
             if (resultado) {
                 AlertDialog alertDialog = new AlertDialog();
                 alertDialog.mostrar("Modificación exitosa", "Usuario modificado correctamente");

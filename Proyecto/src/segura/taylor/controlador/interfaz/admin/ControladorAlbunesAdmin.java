@@ -212,7 +212,9 @@ public class ControladorAlbunesAdmin {
             txtNombre.setText(albumSeleccionado.getNombre());
             txtFechaLanzamiento.setValue(albumSeleccionado.getFechaLanzamiento());
             System.out.println("Imagen: " + albumSeleccionado.getImagen());
-            if(!albumSeleccionado.getImagen().equals("")) {
+
+            if(!albumSeleccionado.getImagen().equals("") && !albumSeleccionado.getImagen().equals("null")) {
+                ControladorRegistroAlbum.urlImagenFondo = albumSeleccionado.getImagen();
                 imgFondo.setImage(new Image(albumSeleccionado.getImagen()));
             }
 
